@@ -32,7 +32,7 @@ public class main_KATR {
     static ArrayList<Long> timeSToE1 = new ArrayList<>();
     static ArrayList<Long> timeAllHeatTo11 = new ArrayList<>();
     public static void main(String[] args) throws InterruptedException {
-        int[] POI_Type = {43,25};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
+        int[] POI_Type = {43,25,14,28,19,26};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
         int k1 = 20;
         double a = 0.5;//α
         int num = 1; //循环次数

@@ -17,7 +17,7 @@ public class Creatbfpoint {
         FileReader file1 = null;
         ArrayList<ArrayList<Double>> c1 = new ArrayList<>();
         try {
-            file1 = new FileReader("src//DATA//calcedge//calcedge1.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/calcedge//calcedge1.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -87,7 +87,7 @@ public class Creatbfpoint {
         //划分子图
         //System.out.println("1");
         try {
-            file1 = new FileReader("src//DATA//calcedge//calcedge_100.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/calcedge//calcedge_100.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -145,7 +145,7 @@ public class Creatbfpoint {
 //        记录每个顶点的坐标
         ArrayList<CreatSG.POI_Type> POI_Type = new ArrayList<>();
         try {
-            file1 = new FileReader("src//DATA//calcedge//calcnode.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/calcedge//calcnode.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

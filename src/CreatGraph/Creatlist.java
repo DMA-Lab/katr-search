@@ -19,7 +19,7 @@ public class Creatlist {
         FileReader file1 = null;
         BufferedReader br3 = null;
         try {
-            file1 = new FileReader("src//DATA//NY_List_100.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/NY_List_100.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class Creatlist {
         FileReader file1 = null;
         BufferedReader br3 = null;
         try {
-            file1 = new FileReader("src//DATA//calcedge//calcedge_List_100.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/calcedge//calcedge_List_100.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -93,7 +93,7 @@ public class Creatlist {
         FileReader file1 = null;
         BufferedReader br3 = null;
         try {
-            file1 = new FileReader("src//DATA//COL//COL_List.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/COL//COL_List.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

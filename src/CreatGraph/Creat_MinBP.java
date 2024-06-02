@@ -11,7 +11,7 @@ public class Creat_MinBP {
         ArrayList<ArrayList<Integer>> data = new ArrayList<>();
         FileReader file1 = null;
         try {
-            file1 = new FileReader("src//DATA//calcedge//Point_MinBP.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/calcedge//Point_MinBP.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -39,7 +39,7 @@ public class Creat_MinBP {
         ArrayList<ArrayList<Integer>> data = new ArrayList<>();
         FileReader file1 = null;
         try {
-            file1 = new FileReader("src//DATA//NY//Point_MinBP.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/NY//Point_MinBP.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -67,7 +67,7 @@ public class Creat_MinBP {
         ArrayList<ArrayList<Integer>> data = new ArrayList<>();
         FileReader file1 = null;
         try {
-            file1 = new FileReader("src//DATA//COL//Point_MinBP.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/COL//Point_MinBP.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

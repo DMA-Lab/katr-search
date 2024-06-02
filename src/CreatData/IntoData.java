@@ -15,7 +15,7 @@ public class IntoData {
 
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("dataset/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -44,7 +44,7 @@ public class IntoData {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("dataset/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -88,7 +88,7 @@ public class IntoData {
         GraphData.g.createMyGraph(GraphData.g, ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("dataset/nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -14,7 +14,7 @@ public class Creatbountpoint {
         BufferedReader br3 = null;
         int num1 = 0;
         try {
-            file1 = new FileReader("src//DATA//NY_BountPoint.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/NY_BountPoint.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class Creatbountpoint {
         BufferedReader br3 = null;
         int num1 = 0;
         try {
-            file1 = new FileReader("src//DATA//calcedge//calcedge_BountPoint.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/calcedge//calcedge_BountPoint.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -70,7 +70,7 @@ public class Creatbountpoint {
         BufferedReader br3 = null;
         int num1 = 0;
         try {
-            file1 = new FileReader("src//DATA//COL//COL_BountPoint.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/COL//COL_BountPoint.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

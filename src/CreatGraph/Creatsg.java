@@ -15,7 +15,7 @@ import java.util.ArrayList;
         }
         FileReader file1 = null;
         try {
-            file1 = new FileReader("src//DATA//NY//NY_POIPoint_SG.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/NY//NY_POIPoint_SG.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -45,7 +45,7 @@ import java.util.ArrayList;
             }
             FileReader file1 = null;
             try {
-                file1 = new FileReader("src//DATA//calcedge//SG//calcedge_POIPoint_SG_POI1000.txt");
+                file1 = new FileReader("/mnt/public/share/DATA/calcedge//SG//calcedge_POIPoint_SG_POI1000.txt");
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -79,7 +79,7 @@ import java.util.ArrayList;
             }
             FileReader file1 = null;
             try {
-                file1 = new FileReader("src//DATA//COL//COL_4000.txt");
+                file1 = new FileReader("/mnt/public/share/DATA/COL//COL_4000.txt");
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -113,7 +113,7 @@ import java.util.ArrayList;
             }
             FileReader file1 = null;
             try {
-                file1 = new FileReader("src//DATA//DKSP//NY_1300.txt");
+                file1 = new FileReader("/mnt/public/share/DATA/DKSP//NY_1300.txt");
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

@@ -17,7 +17,7 @@ public class Creatbplist {
         //int num1 = 0;
         //ArrayList<ArrayList<String>> BP1 = new ArrayList<>();
         try {
-            file1 = new FileReader("src//DATA//calcedge//calcedge_BPList1_100.txt");//calcedge_BPList_1_to_100.txt
+            file1 = new FileReader("/mnt/public/share/DATA/calcedge//calcedge_BPList1_100.txt");//calcedge_BPList_1_to_100.txt
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -65,7 +65,7 @@ public class Creatbplist {
         //int num1 = 0;
         //ArrayList<ArrayList<String>> BP1 = new ArrayList<>();
         try {
-            file1 = new FileReader("src//DATA//COL//COL_BPList1_100.txt");//calcedge_BPList_1_to_100.txt
+            file1 = new FileReader("/mnt/public/share/DATA/COL//COL_BPList1_100.txt");//calcedge_BPList_1_to_100.txt
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -113,7 +113,7 @@ public class Creatbplist {
         //int num1 = 0;
         //ArrayList<ArrayList<String>> BP1 = new ArrayList<>();
         try {
-            file1 = new FileReader("src//DATA//NY//NY_BPList1_200.txt");//calcedge_BPList_1_to_100.txt
+            file1 = new FileReader("/mnt/public/share/DATA/NY//NY_BPList1_200.txt");//calcedge_BPList_1_to_100.txt
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

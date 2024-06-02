@@ -19,7 +19,7 @@ public class CreatSG {
         FileReader file1 = null;
         ArrayList<ArrayList<Integer>> cc = new ArrayList<>();
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("dataset/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -69,7 +69,7 @@ public class CreatSG {
         //划分子图
         //System.out.println("1");
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("dataset/nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

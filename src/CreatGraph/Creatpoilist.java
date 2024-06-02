@@ -20,7 +20,7 @@ public class Creatpoilist {
         FileReader file1 = null;
         BufferedReader br3 = null;
         try {
-            file1 = new FileReader("src//DATA//NY//NY_POIPoint_SG.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/NY//NY_POIPoint_SG.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class Creatpoilist {
         double num33 = 0;
         int num22 = 0;
         try {
-            file1 = new FileReader("src//DATA//NY//USA-road-node.NY.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/NY//USA-road-node.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -84,7 +84,7 @@ public class Creatpoilist {
         FileReader file1 = null;
         BufferedReader br3 = null;
         try {
-            file1 = new FileReader("src//DATA//calcedge//calcedge_POIPoint_SG_15_100.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/calcedge//calcedge_POIPoint_SG_15_100.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -113,7 +113,7 @@ public class Creatpoilist {
         double num33 = 0;
         int num22 = 0;
         try {
-            file1 = new FileReader("src//DATA//calcedge//calcnode.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/calcedge//calcnode.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -149,7 +149,7 @@ public class Creatpoilist {
         FileReader file1 = null;
         BufferedReader br3 = null;
         try {
-            file1 = new FileReader("src//DATA//BJ//BJ_POIPoint_SG.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/BJ//BJ_POIPoint_SG.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -187,7 +187,7 @@ public class Creatpoilist {
         FileReader file1 = null;
         BufferedReader br3 = null;
         try {
-            file1 = new FileReader("src//DATA//COL//COL_POIPoint_SG.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/COL//COL_POIPoint_SG.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -12,7 +12,7 @@ public class xiugai {
         FileReader file1 = null;
         ArrayList<ArrayList<Integer>> c1 = new ArrayList<>();
         try {
-            file1 = new FileReader("src//DATA//BJ//BJ_List.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/BJ//BJ_List.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

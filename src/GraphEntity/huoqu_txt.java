@@ -24,37 +24,37 @@ public class huoqu_txt {
 
         }
         suiji[0] = 10;
-
-        //1.创建字符输出流
-        FileWriter writeFile = null;
-        try {
-            //2.数据想写入的路径及文件
-            File file = new File("D://IDEA//USA-road-t.NY.gr//AHP//NY_yidongjiedian.txt");
-            //3.如果该文件不存在，就创建
-            if(!file.exists()) {
-                file.createNewFile();
-            }
-            //4.给字节输出流赋予实例
-            writeFile = new FileWriter(file);
-            //5.通过循环将数组写入txt文件中
-            for(int i = 0; i < suiji.length; i++) {
-                writeFile.write(String.valueOf(suiji[i]));
-                //8.加上换行符
-                writeFile.write("\n");
-            }
-            //9.把writeFile里的数据全部刷新一次，全部写入文件中
-            writeFile.flush();
-        } catch (Exception e) {//10.异常捕获
-            e.printStackTrace();
-        } finally {
-            try {
-                //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
-                    writeFile.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//
+//        //1.创建字符输出流
+//        FileWriter writeFile = null;
+//        try {
+//            //2.数据想写入的路径及文件
+//            File file = new File("D://IDEA//USA-road-t.NY.gr//AHP//NY_yidongjiedian.txt");
+//            //3.如果该文件不存在，就创建
+//            if(!file.exists()) {
+//                file.createNewFile();
+//            }
+//            //4.给字节输出流赋予实例
+//            writeFile = new FileWriter(file);
+//            //5.通过循环将数组写入txt文件中
+//            for(int i = 0; i < suiji.length; i++) {
+//                writeFile.write(String.valueOf(suiji[i]));
+//                //8.加上换行符
+//                writeFile.write("\n");
+//            }
+//            //9.把writeFile里的数据全部刷新一次，全部写入文件中
+//            writeFile.flush();
+//        } catch (Exception e) {//10.异常捕获
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                //11.如果writeFile不为空，就将其关闭
+//                if(writeFile != null)
+//                    writeFile.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
         System.out.println("1");
     }
     public static void WriteTxt (int[] a)throws IOException{
@@ -165,52 +165,52 @@ public class huoqu_txt {
     }
 
     public static void WriteTxt3(ArrayList<ArrayList<movePoint>> data,int num)throws IOException{
-        FileWriter writeFile = null;
-        int num2 = 0;
-        for (int i = 0; i < data.size(); i++) {
-            num2 += data.get(i).size();
-        }
-        int num1 = num;
-        //1.创建字符输出流
-        try {
-            //2.数据想写入的路径及文件
-            File file = new File("D://IDEA//POI_shuju//NY//NY_POIPoint_SG2.txt");
-            //3.如果该文件不存在，就创建
-            if(!file.exists()) {
-                file.createNewFile();
-            }
-            //4.给字节输出流赋予实例
-            writeFile = new FileWriter(file);
-            //5.通过循环将数组写入txt文件中
-            for(int i = 0; i < data.size(); i++) {
-                for (int j = 0; j < data.get(i).size(); j++) {
-                    writeFile.write(String.valueOf(i));
-                    writeFile.write(" ");
-                    writeFile.write(String.valueOf(data.get(i).get(j).number));
-                    writeFile.write(" ");
-                    writeFile.write(String.valueOf(data.get(i).get(j).type));
-                    writeFile.write(" ");
-                    writeFile.write(String.valueOf(data.get(i).get(j).type2));
-                    writeFile.write(" ");
-                    writeFile.write(String.valueOf(data.get(i).get(j).POI_num));
-                    writeFile.write("\n");
-                }
-                //8.加上换行符
-
-            }
-            //9.把writeFile里的数据全部刷新一次，全部写入文件中
-            writeFile.flush();
-        } catch (Exception e) {//10.异常捕获
-            e.printStackTrace();
-        } finally {
-            try {
-                //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
-                    writeFile.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        FileWriter writeFile = null;
+//        int num2 = 0;
+//        for (int i = 0; i < data.size(); i++) {
+//            num2 += data.get(i).size();
+//        }
+//        int num1 = num;
+//        //1.创建字符输出流
+//        try {
+//            //2.数据想写入的路径及文件
+//            File file = new File("D://IDEA//POI_shuju//NY//NY_POIPoint_SG2.txt");
+//            //3.如果该文件不存在，就创建
+//            if(!file.exists()) {
+//                file.createNewFile();
+//            }
+//            //4.给字节输出流赋予实例
+//            writeFile = new FileWriter(file);
+//            //5.通过循环将数组写入txt文件中
+//            for(int i = 0; i < data.size(); i++) {
+//                for (int j = 0; j < data.get(i).size(); j++) {
+//                    writeFile.write(String.valueOf(i));
+//                    writeFile.write(" ");
+//                    writeFile.write(String.valueOf(data.get(i).get(j).number));
+//                    writeFile.write(" ");
+//                    writeFile.write(String.valueOf(data.get(i).get(j).type));
+//                    writeFile.write(" ");
+//                    writeFile.write(String.valueOf(data.get(i).get(j).type2));
+//                    writeFile.write(" ");
+//                    writeFile.write(String.valueOf(data.get(i).get(j).POI_num));
+//                    writeFile.write("\n");
+//                }
+//                //8.加上换行符
+//
+//            }
+//            //9.把writeFile里的数据全部刷新一次，全部写入文件中
+//            writeFile.flush();
+//        } catch (Exception e) {//10.异常捕获
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                //11.如果writeFile不为空，就将其关闭
+//                if(writeFile != null)
+//                    writeFile.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public static void WriteTxt4 ( ArrayList<ArrayList<Integer>> data)throws IOException{
