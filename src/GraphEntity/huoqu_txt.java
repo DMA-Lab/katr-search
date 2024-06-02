@@ -14,10 +14,10 @@ public class huoqu_txt {
         int[] suiji = new int[50000];
         int num = 0;
         for (int i = 1; i < 1001; i++) {
-            max = 200*i;
-            min = 200*(i-1);
+            max = 200 * i;
+            min = 200 * (i - 1);
             for (int j = 0; j < 50; j++) {
-                random= (int) ((max-min+1)*Math.random()+min);
+                random = (int) ((max - min + 1) * Math.random() + min);
                 suiji[num] = random;
                 num++;
             }
@@ -57,20 +57,21 @@ public class huoqu_txt {
 //        }
         System.out.println("1");
     }
-    public static void WriteTxt (int[] a)throws IOException{
+
+    public static void WriteTxt(int[] a) throws IOException {
         //1.创建字符输出流
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
             File file = new File("D://IDEA//USA-road-t.NY.gr//AHP//NY_fenlei.txt");
             //3.如果该文件不存在，就创建
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             //4.给字节输出流赋予实例
             writeFile = new FileWriter(file);
             //5.通过循环将数组写入txt文件中
-            for(int i = 0; i < a.length; i++) {
+            for (int i = 0; i < a.length; i++) {
                 writeFile.write(String.valueOf(a[i]));
                 //8.加上换行符
                 writeFile.write("\n");
@@ -82,28 +83,29 @@ public class huoqu_txt {
         } finally {
             try {
                 //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
+                if (writeFile != null)
                     writeFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-    public static void WriteTxt1 ( ArrayList<ArrayList<Integer>> data)throws IOException{ //计算子图的边界节点到同子图的其他所有边界节点的最短路线
+
+    public static void WriteTxt1(ArrayList<ArrayList<Integer>> data) throws IOException { //计算子图的边界节点到同子图的其他所有边界节点的最短路线
         //1.创建字符输出流
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
             File file = new File("D://IDEA//USA-road-t.NY.gr//AHP//NY_20_bianjiejiedian.txt");
             //3.如果该文件不存在，就创建
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             //4.给字节输出流赋予实例
             writeFile = new FileWriter(file);
             //5.通过循环将数组写入txt文件中
-            int num ;
-            for(int i = 0; i < data.size(); i++) {
+            int num;
+            for (int i = 0; i < data.size(); i++) {
                 num = data.get(i).size();
                 for (int j = 0; j < num; j++) {
                     writeFile.write(String.valueOf(data.get(i).get(j)));
@@ -119,7 +121,7 @@ public class huoqu_txt {
         } finally {
             try {
                 //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
+                if (writeFile != null)
                     writeFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -127,7 +129,7 @@ public class huoqu_txt {
         }
     }
 
-    public static void WriteTxt2(ArrayList<ArrayList<Integer>> data,int num)throws IOException{
+    public static void WriteTxt2(ArrayList<ArrayList<Integer>> data, int num) throws IOException {
         FileWriter writeFile = null;
         int num1 = num;
         //1.创建字符输出流
@@ -135,13 +137,13 @@ public class huoqu_txt {
             //2.数据想写入的路径及文件
             File file = new File("D://IDEA//POI_shuju//calcedge//calcedge_15_100_movePoint.txt");
             //3.如果该文件不存在，就创建
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             //4.给字节输出流赋予实例
             writeFile = new FileWriter(file);
             //5.通过循环将数组写入txt文件中
-            for(int i = 0; i < data.size(); i++) {
+            for (int i = 0; i < data.size(); i++) {
                 for (int j = 0; j < num1; j++) {
                     writeFile.write(String.valueOf(data.get(i).get(j)));
                     writeFile.write(" ");
@@ -156,7 +158,7 @@ public class huoqu_txt {
         } finally {
             try {
                 //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
+                if (writeFile != null)
                     writeFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -164,7 +166,7 @@ public class huoqu_txt {
         }
     }
 
-    public static void WriteTxt3(ArrayList<ArrayList<movePoint>> data,int num)throws IOException{
+    public static void WriteTxt3(ArrayList<ArrayList<movePoint>> data, int num) throws IOException {
 //        FileWriter writeFile = null;
 //        int num2 = 0;
 //        for (int i = 0; i < data.size(); i++) {
@@ -213,21 +215,21 @@ public class huoqu_txt {
 //        }
     }
 
-    public static void WriteTxt4 ( ArrayList<ArrayList<Integer>> data)throws IOException{
+    public static void WriteTxt4(ArrayList<ArrayList<Integer>> data) throws IOException {
         //1.创建字符输出流
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
             File file = new File("D://IDEA//POI_shuju//COL//COL_List.txt");
             //3.如果该文件不存在，就创建
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             //4.给字节输出流赋予实例
             writeFile = new FileWriter(file);
             //5.通过循环将数组写入txt文件中
-            int num ;
-            for(int i = 0; i < data.size(); i++) {
+            int num;
+            for (int i = 0; i < data.size(); i++) {
                 num = data.get(i).size();
                 for (int j = 0; j < num; j++) {
                     writeFile.write(String.valueOf(data.get(i).get(j)));
@@ -243,7 +245,7 @@ public class huoqu_txt {
         } finally {
             try {
                 //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
+                if (writeFile != null)
                     writeFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -252,20 +254,20 @@ public class huoqu_txt {
     }
 
 
-    public static void WriteTxt5 ( int[] data)throws IOException{
+    public static void WriteTxt5(int[] data) throws IOException {
         //1.创建字符输出流
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
             File file = new File("D://IDEA//USA-road-t.NY.gr//DKSP//NY_1300_BountPoint.txt");
             //3.如果该文件不存在，就创建
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             //4.给字节输出流赋予实例
             writeFile = new FileWriter(file);
             //5.通过循环将数组写入txt文件中
-            for(int i = 0; i < data.length; i++) {
+            for (int i = 0; i < data.length; i++) {
                 writeFile.write(String.valueOf(data[i]));
                 writeFile.write(" ");
                 //8.加上换行符
@@ -278,7 +280,7 @@ public class huoqu_txt {
         } finally {
             try {
                 //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
+                if (writeFile != null)
                     writeFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -286,14 +288,14 @@ public class huoqu_txt {
         }
     }
 
-    public static void WriteTxt6 ( ArrayList<ArrayList<Integer>> all,int ccc,int num)throws IOException{
+    public static void WriteTxt6(ArrayList<ArrayList<Integer>> all, int ccc, int num) throws IOException {
         //1.创建字符输出流
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
             File file = new File("D://IDEA//POI_shuju//NY//NY_int.txt");
             //3.如果该文件不存在，就创建
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             //4.给字节输出流赋予实例
@@ -307,16 +309,16 @@ public class huoqu_txt {
             writeFile.write(" ");
             writeFile.write("\n");
             for (int i = 0; i < all.size(); i++) {
-                System.out.println("写入的行数为："+i);
-                System.out.println("写入的个数为："+all.get(i).size());
+                System.out.println("写入的行数为：" + i);
+                System.out.println("写入的个数为：" + all.get(i).size());
                 for (int j = 0; j < all.get(i).size(); j++) {
                     writeFile.write(String.valueOf(all.get(i).get(j)));
                     writeFile.write(" ");
                 }
                 writeFile.write("\n");
-                System.out.println("写入完毕："+i);
+                System.out.println("写入完毕：" + i);
             }
-            System.out.println("应该写入行数为："+all.size());
+            System.out.println("应该写入行数为：" + all.size());
             //9.把writeFile里的数据全部刷新一次，全部写入文件中
             writeFile.flush();
         } catch (Exception e) {//10.异常捕获
@@ -324,7 +326,7 @@ public class huoqu_txt {
         } finally {
             try {
                 //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
+                if (writeFile != null)
                     writeFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -333,21 +335,21 @@ public class huoqu_txt {
     }
 
 
-    public static void WriteTxt7 ( ArrayList<ArrayList<Integer>> data)throws IOException{
+    public static void WriteTxt7(ArrayList<ArrayList<Integer>> data) throws IOException {
         //1.创建字符输出流
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
             File file = new File("D://IDEA//POI_shuju//COL//COL_BPList1_100.txt");
             //3.如果该文件不存在，就创建
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             //4.给字节输出流赋予实例
             writeFile = new FileWriter(file);
             //5.通过循环将数组写入txt文件中
-            int num ;
-            for(int i = 0; i < data.size(); i++) {
+            int num;
+            for (int i = 0; i < data.size(); i++) {
                 num = data.get(i).size();
                 for (int j = 0; j < num; j++) {
                     writeFile.write(String.valueOf(data.get(i).get(j)));
@@ -363,7 +365,7 @@ public class huoqu_txt {
         } finally {
             try {
                 //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
+                if (writeFile != null)
                     writeFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -371,21 +373,21 @@ public class huoqu_txt {
         }
     }
 
-    public static void WriteTxt9 ( ArrayList<Integer> num111)throws IOException{
+    public static void WriteTxt9(ArrayList<Integer> num111) throws IOException {
         //1.创建字符输出流
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
             File file = new File("D://IDEA//POI_shuju//calcedge//SG//POI_Type_POI1000.txt");
             //3.如果该文件不存在，就创建
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             //4.给字节输出流赋予实例
             writeFile = new FileWriter(file);
             //5.通过循环将数组写入txt文件中
-            int num ;
-            for(int i = 0; i < num111.size(); i++) {
+            int num;
+            for (int i = 0; i < num111.size(); i++) {
                 writeFile.write(String.valueOf(num111.get(i)));
                 writeFile.write(" ");
                 //8.加上换行符
@@ -398,7 +400,7 @@ public class huoqu_txt {
         } finally {
             try {
                 //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
+                if (writeFile != null)
                     writeFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -407,21 +409,21 @@ public class huoqu_txt {
     }
 
 
-    public static void WriteTxt10 ( ArrayList<ArrayList<Integer>> num111)throws IOException{
+    public static void WriteTxt10(ArrayList<ArrayList<Integer>> num111) throws IOException {
         //1.创建字符输出流
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
             File file = new File("D://IDEA//POI_shuju//COL//Point_MinBP.txt");
             //3.如果该文件不存在，就创建
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             //4.给字节输出流赋予实例
             writeFile = new FileWriter(file);
             //5.通过循环将数组写入txt文件中
-            int num ;
-            for(int i = 0; i < num111.size(); i++) {
+            int num;
+            for (int i = 0; i < num111.size(); i++) {
                 for (int j = 0; j < num111.get(i).size(); j++) {
                     writeFile.write(String.valueOf(num111.get(i).get(j)));
                     writeFile.write(" ");
@@ -436,14 +438,13 @@ public class huoqu_txt {
         } finally {
             try {
                 //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
+                if (writeFile != null)
                     writeFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
 
 
 }

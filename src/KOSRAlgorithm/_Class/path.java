@@ -7,7 +7,7 @@ public class path {
     public ArrayList<Integer> path; //当前路线
     public int weight; //路线权值
 
-    public path(){
+    public path() {
         this.keyWordNum = 0;
         this.path = new ArrayList<>();
         this.weight = 0;

@@ -4,11 +4,13 @@ public class Point<EdegeNode> {   //这个类用于邻接表，因为每一个�
     public int data;//该点id
     public EdegeNode firstArc;//该点第一条边
     public int num = 0;//共有几个点
-    public Point() {}
-    public Point(int data)
-    {
-        this.data=data;
-        this.firstArc=null;
+
+    public Point() {
+    }
+
+    public Point(int data) {
+        this.data = data;
+        this.firstArc = null;
     }
 
 }

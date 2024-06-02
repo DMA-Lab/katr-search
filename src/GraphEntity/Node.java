@@ -10,6 +10,7 @@ public class Node {
         this.path = new Stack<Integer>();
         this.name = null;
     }
+
     public Node(Stack<Integer> path) {
         this.path = path;
         this.name = null;
@@ -19,6 +20,7 @@ public class Node {
     public void add(Integer integer) {
         this.path.add(integer);
     }
+
     public void addAll(Stack<Integer> path) {
         this.path.addAll(path);
     }

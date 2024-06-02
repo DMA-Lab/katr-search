@@ -10,19 +10,20 @@ import java.util.List;
 
 public class ORCSK {
     public static int OffsetNum = 0;
-    public static Dijkstia.MyPath OptimalPath(MyGraph g, int startIndex, int endIndex, POI[] POIList,int[] POI_Type) {
-        Dijkstia.MyPath pi = KKRSAlgorithm.Dijkstia.Dijkstra(g , startIndex , endIndex);
+
+    public static Dijkstia.MyPath OptimalPath(MyGraph g, int startIndex, int endIndex, POI[] POIList, int[] POI_Type) {
+        Dijkstia.MyPath pi = KKRSAlgorithm.Dijkstia.Dijkstra(g, startIndex, endIndex);
         //path = POIAlgorithm.Dijkstia.ShortestPath(g , startIndex , endIndex , 1);
-       // Dijkstia.Dijkstra_1_1 pi = new Dijkstia.Dijkstra_1_1(g, startIndex, endIndex, null);
-        List < Integer > pk = pi.path;
+        // Dijkstia.Dijkstra_1_1 pi = new Dijkstia.Dijkstra_1_1(g, startIndex, endIndex, null);
+        List<Integer> pk = pi.path;
         ArrayList<Dijkstia.MyPath> OffsetPath = new ArrayList<>();
         long startTime1 = System.currentTimeMillis(); //开始获取时间
-        for (int i = 0; i < pk.size() - 1; i++){ //pk.size() - 1
+        for (int i = 0; i < pk.size() - 1; i++) { //pk.size() - 1
             double w1 = 0;
             for (int j = 0; j <= i - 1; j++) {
                 w1 += NavigationUtil.getEdgeWight(g, pk.get(j), pk.get(j + 1));
             }
-            OffsetPath.add(new Dijkstia.MyPath(FindOffsetPath(g,pk.get(i),endIndex,POI_Type,POIList,(int)w1)));
+            OffsetPath.add(new Dijkstia.MyPath(FindOffsetPath(g, pk.get(i), endIndex, POI_Type, POIList, (int) w1)));
 
         }
         long endTime1 = System.currentTimeMillis(); //开始获取时间
@@ -31,25 +32,24 @@ public class ORCSK {
         double weight1 = Integer.MAX_VALUE;
         int pathIndex = Integer.MAX_VALUE;
         for (int i = 0; i < OffsetPath.size(); i++) {
-            if (OffsetPath.get(i).weight < weight1){
+            if (OffsetPath.get(i).weight < weight1) {
                 weight1 = OffsetPath.get(i).weight;
                 pathIndex = i;
             }
         }
         Dijkstia.MyPath pk1;
-        if (pathIndex != Integer.MAX_VALUE){
+        if (pathIndex != Integer.MAX_VALUE) {
             pk1 = OffsetPath.get(pathIndex);
-        }else {
+        } else {
             pk1 = pi;
         }
-
 
 
         return pk1;
     }
 
 
-    public static Dijkstia.MyPath FindOffsetPath(MyGraph g, int startIndex,int endIndex,int[] POI_Type,POI[] POIList,int w1){
+    public static Dijkstia.MyPath FindOffsetPath(MyGraph g, int startIndex, int endIndex, int[] POI_Type, POI[] POIList, int w1) {
         Dijkstia.MyPath path1 = new Dijkstia.MyPath();
         ArrayList<Integer> keyWord = new ArrayList<>();
         ArrayList<Integer> POI = new ArrayList<>();
@@ -67,7 +67,7 @@ public class ORCSK {
 
         //辅助存放需要改变的点的数组
         List<Integer> dist1 = new ArrayList<>();
-        
+
 
         // 初始化数组
         set[startIndex] = 1;
@@ -132,9 +132,7 @@ public class ORCSK {
 //            }
 //        }
 // -----------------------------------------------------------------------------------------------
-        FindPath(startIndex,POI_Type, POIList);
-
-
+        FindPath(startIndex, POI_Type, POIList);
 
 
 //        long endTime1 = System.currentTimeMillis(); //开始获取时间
@@ -159,28 +157,28 @@ public class ORCSK {
 //            path1.path.add(POI.get(i));
 //        }
         path1.path.addAll(POI);
-       // path1.weight = weight+w2;
+        // path1.weight = weight+w2;
         path1.weight = 0;
         return path1;
     }
 
 
-    public static Dijkstia.MyPath FindPath(int startIndex, int[] POI_Type, POI[] POIList ){
+    public static Dijkstia.MyPath FindPath(int startIndex, int[] POI_Type, POI[] POIList) {
         Dijkstia.MyPath path1 = new Dijkstia.MyPath();
         double[] pathWeight = new double[POI_Type.length];
         for (int i = 0; i < pathWeight.length; i++) {
             pathWeight[i] = Integer.MAX_VALUE;
         }
         int[] path = new int[POI_Type.length];
-        
-        for (int i = 0; i < Dijkstia.ORCSK_Num(POI_Type,POIList ); i++) {
+
+        for (int i = 0; i < Dijkstia.ORCSK_Num(POI_Type, POIList); i++) {
             for (int j = 0; j < Dijkstia.ORCSK_POINum(POI_Type, POIList); j++) {
-                if (j < POIList.length){
-                    if (POIList[j].POI_Type == POI_Type[i]){
+                if (j < POIList.length) {
+                    if (POIList[j].POI_Type == POI_Type[i]) {
                         path[i] = j;
                     }
-                }else {
-                    if (POIList[(j/10)].POI_Type == POI_Type[i]){
+                } else {
+                    if (POIList[(j / 10)].POI_Type == POI_Type[i]) {
                         path[i] = j;
                     }
                 }

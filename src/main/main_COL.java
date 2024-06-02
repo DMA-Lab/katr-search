@@ -1,6 +1,6 @@
 package main;
 
-import CreatGraph.*;
+import loader.*;
 import GraphEntity.*;
 import KKRSAlgorithm.*;
 
@@ -23,31 +23,32 @@ public class main_COL {
     static long timeA_db2;
     static long timeA_db3;
     static int num5 = 1; //循环次数
+
     public static void main(String[] args) throws InterruptedException {
-        int[] POI_Type = {16,12,23,9,33,58};//36,54,50,1,6,3,9多，16,12,23,9,33,58,11,21少,36,12,49,16,58,12,38
+        int[] POI_Type = {16, 12, 23, 9, 33, 58};//36,54,50,1,6,3,9多，16,12,23,9,33,58,11,21少,36,12,49,16,58,12,38
         int k1 = 3;
         double a = 0.9;//α
         int endIndex = 6000;
         int num6 = num5 - 1;
-        if (num6 == 0){
+        if (num6 == 0) {
             num6 = 1;
         }
 
         //ArrayList<Find_Topk_OSSCaling.Path> Top_k_OSSCaling = OSSCaling(POI_Type,k1,endIndex);
         //ArrayList<Find_path_MTDOSR.Path> Top_k_MTDOSR = MTDOSR(POI_Type,k1);
-        ArrayList<Lower_bound> Top_k_A = A(POI_Type,k1,a);
+        ArrayList<Lower_bound> Top_k_A = A(POI_Type, k1, a);
 
         System.out.println("————————————————————————————————————————————————————————————————————————————");
-        System.out.println("MTDOSR算法计算所消耗的时间为:"+(time2/num6)+"毫秒");
-        System.out.println("OSSCaling算法计算所消耗的时间为:"+(time_OSSCaling/num6)+"毫秒");
-        System.out.println("A的对比算法(POI顺序固定)计算所消耗的时间为:"+(timeA_db/(num6))+"毫秒");
-        System.out.println("A的对比算算法(不进行优化)计算所消耗的时间为:"+(timeA_db3/(num6))+"毫秒");
-        System.out.println("A的对比算算法(只进行网格剪枝)计算所消耗的时间为:"+(timeA/(num6))+"毫秒");
-        System.out.println("A算法(进行全部优化)计算所消耗的时间为:"+(timeA_db2/(num6))+"毫秒");
+        System.out.println("MTDOSR算法计算所消耗的时间为:" + (time2 / num6) + "毫秒");
+        System.out.println("OSSCaling算法计算所消耗的时间为:" + (time_OSSCaling / num6) + "毫秒");
+        System.out.println("A的对比算法(POI顺序固定)计算所消耗的时间为:" + (timeA_db / (num6)) + "毫秒");
+        System.out.println("A的对比算算法(不进行优化)计算所消耗的时间为:" + (timeA_db3 / (num6)) + "毫秒");
+        System.out.println("A的对比算算法(只进行网格剪枝)计算所消耗的时间为:" + (timeA / (num6)) + "毫秒");
+        System.out.println("A算法(进行全部优化)计算所消耗的时间为:" + (timeA_db2 / (num6)) + "毫秒");
     }
 
 
-    public static ArrayList<Find_Topk_OSSCaling.Path> OSSCaling(int[] POI_Type2, int k1,int endIndex) throws InterruptedException {
+    public static ArrayList<Find_Topk_OSSCaling.Path> OSSCaling(int[] POI_Type2, int k1, int endIndex) throws InterruptedException {
         FileReader file = null;
         try {
             file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
@@ -91,9 +92,7 @@ public class main_COL {
             while ((line1 = br1.readLine()) != null) {//按行读取
                 String[] sp = null;
                 sp = line1.split(" ");//按空格进行分割
-                for (int i = 1; i < 4; i++) {
-                    c[count][i] = sp[i];
-                }
+                System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
             }
             for (int i = 0; i < num; i++) {
@@ -155,7 +154,7 @@ public class main_COL {
         //______________________________________________________________________________________________
         //构建POI索引POIList，存储POI的类型和数值，并给每个顶点赋予坐标
         Creatpoilist POIList1 = new Creatpoilist();
-        POI[] POIList = POIList1.CreatPOIList_NY(ccc1,SG);
+        POI[] POIList = POIList1.CreatPOIList_NY(ccc1, SG);
         //______________________________________________________________________________________________
         // //构建距离索引list
         Creatlist list1 = new Creatlist();
@@ -164,15 +163,15 @@ public class main_COL {
         boolean flag = true;
         ArrayList<Integer> POI_Type_Num = new ArrayList<>();
         for (int i = 0; i < POIList.length; i++) {
-            if (POIList[i].POI_Type != 0){
+            if (POIList[i].POI_Type != 0) {
                 flag = true;
                 for (int j = 0; j < POI_Type_Num.size(); j++) {
-                    if (POIList[i].POI_Type == POI_Type_Num.get(j)){
+                    if (POIList[i].POI_Type == POI_Type_Num.get(j)) {
                         flag = false;
                         break;
                     }
                 }
-                if (flag == true){
+                if (flag) {
                     POI_Type_Num.add(POIList[i].POI_Type);
                 }
             }
@@ -185,20 +184,18 @@ public class main_COL {
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");
-        BPList1.CreatBPList_NY(BPList,ccc1);
+        BPList1.CreatBPList_NY(BPList, ccc1);
         //______________________________________________________________________________________________
 
         //计算全部点到最近的边界顶点的距离
-        ArrayList<ArrayList<Integer>> PointMinBP = Creat_MinBP.CreatMinBP_NY();
-
-
+        ArrayList<ArrayList<Integer>> PointMinBP = CreateMinBpTable.CreatMinBP_NY();
 
 
         //查找top_k
         int k = k1; //计算多少条路径
         int q = 56988; //查询点
         //int endIndex1 = 2000;
-        double a = 0.2 ; //α
+        double a = 0.2; //α
         int q_SG = 0;
         boolean flag1 = true;
         //int[] POI_Type = {11,12,16} ;//所求的POI的类型
@@ -207,7 +204,7 @@ public class main_COL {
         for (int ii = 0; ii < num5; ii++) {
             Find_Topk_OSSCaling topk = new Find_Topk_OSSCaling();
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k = topk.Find_Path_OSSCaling(g,q,POI_Type,ccc1,POIList,List,BPList,PointMinBP,k,endIndex);
+            Top_k = topk.Find_Path_OSSCaling(g, q, POI_Type, ccc1, POIList, List, BPList, PointMinBP, k, endIndex);
             long endTime1 = System.currentTimeMillis(); //开始获取时间
 //         if (ii != 0 || num5 == 1){
 //             time_OSSCaling += endTime1 - startTime1;
@@ -255,7 +252,7 @@ public class main_COL {
     }
 
 
-    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] POI_Type2,int k1) throws InterruptedException {
+    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] POI_Type2, int k1) throws InterruptedException {
         FileReader file = null;
         try {
             file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
@@ -299,9 +296,7 @@ public class main_COL {
             while ((line1 = br1.readLine()) != null) {//按行读取
                 String[] sp = null;
                 sp = line1.split(" ");//按空格进行分割
-                for (int i = 1; i < 4; i++) {
-                    c[count][i] = sp[i];
-                }
+                System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
             }
             for (int i = 0; i < num; i++) {
@@ -363,7 +358,7 @@ public class main_COL {
         //______________________________________________________________________________________________
         //构建POI索引POIList，存储POI的类型和数值，并给每个顶点赋予坐标
         Creatpoilist POIList1 = new Creatpoilist();
-        POI[] POIList = POIList1.CreatPOIList_NY(ccc1,SG);
+        POI[] POIList = POIList1.CreatPOIList_NY(ccc1, SG);
         //______________________________________________________________________________________________
         // //构建距离索引list
         Creatlist list1 = new Creatlist();
@@ -372,15 +367,15 @@ public class main_COL {
         boolean flag = true;
         ArrayList<Integer> POI_Type_Num = new ArrayList<>();
         for (int i = 0; i < POIList.length; i++) {
-            if (POIList[i].POI_Type != 0){
+            if (POIList[i].POI_Type != 0) {
                 flag = true;
                 for (int j = 0; j < POI_Type_Num.size(); j++) {
-                    if (POIList[i].POI_Type == POI_Type_Num.get(j)){
+                    if (POIList[i].POI_Type == POI_Type_Num.get(j)) {
                         flag = false;
                         break;
                     }
                 }
-                if (flag == true){
+                if (flag) {
                     POI_Type_Num.add(POIList[i].POI_Type);
                 }
             }
@@ -393,19 +388,17 @@ public class main_COL {
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");
-        BPList1.CreatBPList_NY(BPList,ccc1);
+        BPList1.CreatBPList_NY(BPList, ccc1);
         //______________________________________________________________________________________________
 
         //计算全部点到最近的边界顶点的距离
-        ArrayList<ArrayList<Integer>> PointMinBP = Creat_MinBP.CreatMinBP_NY();
-
-
+        ArrayList<ArrayList<Integer>> PointMinBP = CreateMinBpTable.CreatMinBP_NY();
 
 
         //查找top_k
         int k = k1; //计算多少条路径
         int q = 56988; //查询点
-        double a = 0.2 ; //α
+        double a = 0.2; //α
         int q_SG = 0;
         boolean flag1 = true;
         //int[] POI_Type = {11,12,16} ;//所求的POI的类型
@@ -415,7 +408,7 @@ public class main_COL {
             Find_path_MTDOSR topk = new Find_path_MTDOSR();
             Find_Topk_NoOpt topk_No = new Find_Topk_NoOpt();
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k = topk.Find_Path(g,q,POI_Type,ccc1,POIList,List,BPList,PointMinBP,k);
+            Top_k = topk.Find_Path(g, q, POI_Type, ccc1, POIList, List, BPList, PointMinBP, k);
             long endTime1 = System.currentTimeMillis(); //开始获取时间
 //         if (ii != 0 || num5 == 1){
 //             time2 += endTime1 - startTime1;
@@ -463,7 +456,7 @@ public class main_COL {
     }
 
 
-    public static ArrayList<Lower_bound> A(int[] POI_Type2,int k1,double a) throws InterruptedException {
+    public static ArrayList<Lower_bound> A(int[] POI_Type2, int k1, double a) throws InterruptedException {
 
         FileReader file = null;
         try {
@@ -508,9 +501,7 @@ public class main_COL {
             while ((line1 = br1.readLine()) != null) {//按行读取
                 String[] sp = null;
                 sp = line1.split(" ");//按空格进行分割
-                for (int i = 1; i < 4; i++) {
-                    c[count][i] = sp[i];
-                }
+                System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
             }
             for (int i = 0; i < num; i++) {
@@ -572,7 +563,7 @@ public class main_COL {
         //______________________________________________________________________________________________
         //构建POI索引POIList，存储POI的类型和数值，并给每个顶点赋予坐标
         Creatpoilist POIList1 = new Creatpoilist();
-        POI[] POIList = POIList1.CreatPOIList_COL(ccc1,SG);
+        POI[] POIList = POIList1.CreatPOIList_COL(ccc1, SG);
         //______________________________________________________________________________________________
         // //构建距离索引list
         Creatlist list1 = new Creatlist();
@@ -581,15 +572,15 @@ public class main_COL {
         boolean flag = true;
         ArrayList<Integer> POI_Type_Num = new ArrayList<>();
         for (int i = 0; i < POIList.length; i++) {
-            if (POIList[i].POI_Type != 0){
+            if (POIList[i].POI_Type != 0) {
                 flag = true;
                 for (int j = 0; j < POI_Type_Num.size(); j++) {
-                    if (POIList[i].POI_Type == POI_Type_Num.get(j)){
+                    if (POIList[i].POI_Type == POI_Type_Num.get(j)) {
                         flag = false;
                         break;
                     }
                 }
-                if (flag == true){
+                if (flag) {
                     POI_Type_Num.add(POIList[i].POI_Type);
                 }
             }
@@ -598,15 +589,15 @@ public class main_COL {
         // //构建边界顶点索引BPList
         ArrayList<ArrayList<Class_BPList>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList< Class_BPList>());
+            BPList.add(new ArrayList<Class_BPList>());
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");
-        BPList1.CreatBPList_COL(BPList,ccc1);
+        BPList1.CreatBPList_COL(BPList, ccc1);
         //______________________________________________________________________________________________
 
         //计算全部点到最近的边界顶点的距离
-        ArrayList<ArrayList<Integer>> PointMinBP = Creat_MinBP.CreatMinBP_COL();
+        ArrayList<ArrayList<Integer>> PointMinBP = CreateMinBpTable.CreatMinBP_COL();
 
 //测试数据集中的各个POI的数量
 //        ArrayList<ArrayList<Integer>> POI_Num = new ArrayList<>();
@@ -631,7 +622,6 @@ public class main_COL {
 //        }
 
 
-
         //查找top_k
         int k = k1; //计算多少条路径
         int q = 5678; //查询点
@@ -642,13 +632,13 @@ public class main_COL {
         int[] POI_Type = POI_Type2;
         for (int i = 0; i < SG.size(); i++) {
             for (int j = 0; j < SG.get(i).size(); j++) {
-                if (SG.get(i).get(j) == q){
+                if (SG.get(i).get(j) == q) {
                     q_SG = i;
                     flag1 = true;
                     break;
                 }
             }
-            if (flag1 == true){
+            if (flag1) {
                 break;
             }
         }
@@ -656,12 +646,12 @@ public class main_COL {
         ArrayList<Integer> path3 = new ArrayList<>();
         boolean flag4 = true;
         for (int i = 0; i < POIList.length; i++) {
-            if (POIList[i].POI_Type != 0){
+            if (POIList[i].POI_Type != 0) {
                 flag4 = true;
                 for (int j = 0; j < POI_Num2.size(); j++) {
-                    if (POI_Num2.get(j).get(0) == POIList[i].POI_Type){
+                    if (POI_Num2.get(j).get(0) == POIList[i].POI_Type) {
                         flag4 = false;
-                        if (POIList[i].POI_Num < POI_Num2.get(j).get(1)){
+                        if (POIList[i].POI_Num < POI_Num2.get(j).get(1)) {
                             path3.clear();
                             path3.add(POI_Num2.get(j).get(0));
                             path3.add(POIList[i].POI_Num);
@@ -669,7 +659,7 @@ public class main_COL {
                             POI_Num2.get(j).clear();
                             POI_Num2.get(j).addAll(path3);
                         }
-                        if (POIList[i].POI_Num > POI_Num2.get(j).get(2)){
+                        if (POIList[i].POI_Num > POI_Num2.get(j).get(2)) {
                             path3.clear();
                             path3.add(POI_Num2.get(j).get(0));
                             path3.add(POI_Num2.get(j).get(1));
@@ -679,11 +669,11 @@ public class main_COL {
                         }
                     }
                 }
-                if (flag4 == true){
+                if (flag4) {
                     POI_Num2.add(new ArrayList<Integer>());
-                    POI_Num2.get(POI_Num2.size()-1).add(POIList[i].POI_Type);
-                    POI_Num2.get(POI_Num2.size()-1).add(POIList[i].POI_Num);
-                    POI_Num2.get(POI_Num2.size()-1).add(POIList[i].POI_Num);
+                    POI_Num2.get(POI_Num2.size() - 1).add(POIList[i].POI_Type);
+                    POI_Num2.get(POI_Num2.size() - 1).add(POIList[i].POI_Num);
+                    POI_Num2.get(POI_Num2.size() - 1).add(POIList[i].POI_Num);
                 }
             }
         }
@@ -724,12 +714,11 @@ public class main_COL {
 //
 
 
-
         for (int ii = 0; ii < num5; ii++) {
 
 
             startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k_db3 = topk_db3.Top_k_db3(g,q,q_SG,k,POI_Type,SG,List,POIList,a,BPList,PointMinBP); //不进行优化
+            Top_k_db3 = topk_db3.Top_k_db3(g, q, q_SG, k, POI_Type, SG, List, POIList, a, BPList, PointMinBP); //不进行优化
             endTime1 = System.currentTimeMillis(); //开始获取时间
             time5 = endTime1 - startTime1;
 //
@@ -739,7 +728,7 @@ public class main_COL {
 //            time1 = endTime1 - startTime1;
 
             startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k_db2 = topk_db2.Top_k_db2(g,q,q_SG,k,POI_Type,SG,List,POIList,a,BPList,PointMinBP); //进行全部优化的算法
+            Top_k_db2 = topk_db2.Top_k_db2(g, q, q_SG, k, POI_Type, SG, List, POIList, a, BPList, PointMinBP); //进行全部优化的算法
             endTime1 = System.currentTimeMillis(); //开始获取时间
             time4 = endTime1 - startTime1;
 
@@ -757,14 +746,12 @@ public class main_COL {
 //               timeA_db3 += time5;
 //
 //           }
-            timeA +=  time1;
+            timeA += time1;
             timeA_db += time3;
             timeA_db2 += time4;
             timeA_db3 += time5;
 
         }
-
-
 
 
         return Top_k;

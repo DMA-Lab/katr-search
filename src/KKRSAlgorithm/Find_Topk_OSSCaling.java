@@ -10,8 +10,64 @@ import java.util.List;
 import java.util.Stack;
 
 public class Find_Topk_OSSCaling {
+    public static ArrayList<ArrayList<Integer>> Finf_Path1(ArrayList<ArrayList<Integer>> all,
+                                                           ArrayList<ArrayList<Integer>> path3, int[] POI_Type, int q) {
+        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
+        for (int n = 0; n < all.size(); n++) {
+            //找到q所在子图中所有的符合要求的poi
+            ArrayList<ArrayList<Integer>> path1 = new ArrayList<>();
+            for (int i = 0; i < POI_Type.length; i++) {
+                path1.add(new ArrayList<Integer>());
+                // path1.get(i).add(q);
+            }
+            for (int i = 0; i < POI_Type.length; i++) {
+                path1.get(i).addAll(path3.get(all.get(n).get(i)));
+            }
+            //找到所有的路线
+            ArrayList<ArrayList<Integer>> path2 = new ArrayList<>();
+            for (int i = 0; i < path1.get(0).size(); i++) {
+                path2.add(new ArrayList<Integer>());
+                path2.get(i).add(path1.get(0).get(i));
+            }
+            path.addAll(Find_Path(path1, path2, 0));
+        }
+        return path;
+
+    }
+
+    public static ArrayList<ArrayList<Integer>> Find_Path(ArrayList<ArrayList<Integer>> path1,
+                                                          ArrayList<ArrayList<Integer>> path2, int k) {
+        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
+        if (k <= path1.size() - 2) {
+            int num = 0;
+            for (int i = 0; i < path2.size(); i++) {
+                for (int j = 0; j < path1.get(k + 1).size(); j++) {
+                    path.add(new ArrayList<Integer>());
+//                    path.get(num).addAll(path2.get(i));
+//                    path.get(num).addAll(path1.get(j));
+                    for (int l = 0; l < path2.get(i).size(); l++) {
+                        path.get(num).add(path2.get(i).get(l));
+                    }
+                    path.get(num).add(path1.get(k + 1).get(j));
+//                    if (path1.get(k+1).size() > 1){
+//
+//                    }else {
+//                        path.get(num).add(path1.get(k+1).get(0));
+//                    }
+
+                    num++;
+                }
+            }
+            path2 = Find_Path(path1, path, k + 1);
+        } else if (k > path1.size() - 2) {
+            return path2;
+        }
+
+        return path2;
+    }
+
     public ArrayList<Path> Find_Path_OSSCaling(MyGraph g, int q, int[] POI_Type, int ccc1, POI[] POIList, ArrayList<ArrayList<list>> List,
-                                     ArrayList<ArrayList<Class_BPList>> BPList,ArrayList<ArrayList<Integer>> PointMinBP,int k3,int endIndex) throws InterruptedException {
+                                               ArrayList<ArrayList<Class_BPList>> BPList, ArrayList<ArrayList<Integer>> PointMinBP, int k3, int endIndex) throws InterruptedException {
         int nn1 = 0;//当只需要找一条路径的时候使用这个数来代替get(0)
         ArrayList<Path> path1 = new ArrayList<>();
         path1.add(new Path());
@@ -70,9 +126,9 @@ public class Find_Topk_OSSCaling {
 //        for (int i = 0; i < path.size(); i++) {
 //            path.get(i).add(0,q);
 //        }
-        ArrayList <Dijkstia.MyPath> path2 = new ArrayList<>();
+        ArrayList<Dijkstia.MyPath> path2 = new ArrayList<>();
         int k1 = q;
-        double MinWeight ;
+        double MinWeight;
         int w = 0;
         int index1 = q;
         int index2 = 0;
@@ -84,25 +140,24 @@ public class Find_Topk_OSSCaling {
         double w_index = 0;
 
 
-
-        for (int i = 0; i < POI_List.size()-1; i++) {
+        for (int i = 0; i < POI_List.size() - 1; i++) {
 
             for (int j = 0; j < POI_List.get(i).size(); j++) {
                 w_index = 0;
                 index2 = POI_List.get(i).get(j);
-                allPath =  dj.ShortestPath(g,index1,index2,1);
-                w_index += allPath.get(allPath.size()-1).weight;
-                if (w_index >= w_Max){
-                    allPath.remove(allPath.size()-1);
+                allPath = Dijkstia.ShortestPath(g, index1, index2, 1);
+                w_index += allPath.get(allPath.size() - 1).weight;
+                if (w_index >= w_Max) {
+                    allPath.remove(allPath.size() - 1);
                     continue;
-                }else {
+                } else {
                     w_Max = w_index;
                 }
             }
             j1 = Integer.MAX_VALUE;
             w1 = Double.MAX_VALUE;
             for (int j = 0; j < allPath.size(); j++) {
-                if (allPath.get(j).weight < w1){
+                if (allPath.get(j).weight < w1) {
                     w1 = allPath.get(j).weight;
                     j1 = j;
                 }
@@ -113,8 +168,7 @@ public class Find_Topk_OSSCaling {
 
         Dijkstia dj1 = new Dijkstia();
         List<Dijkstia.MyPath> allPath1 = new ArrayList<>();
-        allPath =  dj.ShortestPath(g,j1,endIndex,1);
-
+        allPath = Dijkstia.ShortestPath(g, j1, endIndex, 1);
 
 
 //        for (int i = 0; i < path.size(); i++) {
@@ -167,21 +221,44 @@ public class Find_Topk_OSSCaling {
 
     }
 
+    public boolean isnum(int n, ArrayList<Integer> path) {
+        boolean flag = false;
+        for (int j : path) {
+            if (j == n) {
+                flag = true;
+                break;
+            }
+        }
 
+        return flag;
+    }
 
+    public List<Integer> getMinimumPath(MyGraph g, int sIndex, int tIndex, int[] path) {
+        List<Integer> result = new ArrayList<>();
+        Stack<Integer> stack = new Stack<>();
+        stack.push(tIndex);
+        int i = path[tIndex];
+        while (i != -1) {
+            stack.push(i);
+            i = path[i];
+        }
+        while (!stack.isEmpty()) {
+            result.add(MyGraph.point[stack.pop()].data);
+        }
+        //System.out.println();
+        return result;
+    }
 
-
-
-    public class Point_List{
+    public class Point_List {
         public int num;
         public ArrayList<Integer> POI_Type; //兴趣点类型
         public int Target;
         public int OS;//顶点所在子图
         public int BS; //顶点所在x轴子图
-        public int Point_Type ;
+        public int Point_Type;
 
 
-        public Point_List(){
+        public Point_List() {
             this.num = 0;
             this.Target = 0;
             this.BS = 0;
@@ -192,103 +269,19 @@ public class Find_Topk_OSSCaling {
         }
     }
 
-    public class Path{
+    public class Path {
         public ArrayList<Integer> POI_Type; //兴趣点类型
         public ArrayList<Integer> path;
         public int OS;//顶点所在子图
         public int BS; //顶点所在x轴子图
 
 
-        public Path(){
+        public Path() {
             this.BS = 0;
             this.OS = 0;
             this.POI_Type = new ArrayList<>();
             this.path = new ArrayList<>();
 
         }
-    }
-    public boolean isnum(int n,ArrayList<Integer> path){
-        boolean flag = false;
-        for (int j:path) {
-            if (j == n){
-                flag = true;
-                break;
-            }
-        }
-
-        return flag;
-    }
-
-    public List < Integer > getMinimumPath(MyGraph g, int sIndex, int tIndex, int[] path) {
-        List < Integer > result = new ArrayList < > ();
-        Stack< Integer > stack = new Stack < > ();
-        stack.push(tIndex);
-        int i = path[tIndex];
-        while (i != -1) {
-            stack.push(i);
-            i = path[i];
-        }
-        while (!stack.isEmpty()) {
-            result.add(g.point[stack.pop()].data);
-        }
-        //System.out.println();
-        return result;
-    }
-
-    public static ArrayList<ArrayList<Integer>> Finf_Path1(ArrayList<ArrayList<Integer>> all,
-                                                           ArrayList<ArrayList<Integer>> path3,int[] POI_Type,int q){
-        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
-        for (int n = 0; n < all.size(); n++) {
-            //找到q所在子图中所有的符合要求的poi
-            ArrayList<ArrayList<Integer>> path1 = new ArrayList<>();
-            for (int i = 0; i < POI_Type.length; i++) {
-                path1.add(new ArrayList<Integer>());
-                // path1.get(i).add(q);
-            }
-            for (int i = 0; i < POI_Type.length; i++) {
-                path1.get(i).addAll(path3.get(all.get(n).get(i)));
-            }
-            //找到所有的路线
-            ArrayList<ArrayList<Integer>> path2 = new ArrayList<>();
-            for (int i = 0; i < path1.get(0).size(); i++) {
-                path2.add(new ArrayList<Integer>());
-                path2.get(i).add(path1.get(0).get(i));
-            }
-            path.addAll(Find_Path(path1, path2,0));
-        }
-        return path;
-
-    }
-
-
-    public static ArrayList<ArrayList<Integer>> Find_Path(ArrayList<ArrayList<Integer>> path1,
-                                                          ArrayList<ArrayList<Integer>> path2, int k) {
-        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
-        if (k <= path1.size()-2) {
-            int num = 0;
-            for (int i = 0; i < path2.size(); i++) {
-                for (int j = 0; j < path1.get(k+1).size(); j++) {
-                    path.add(new ArrayList<Integer>());
-//                    path.get(num).addAll(path2.get(i));
-//                    path.get(num).addAll(path1.get(j));
-                    for (int l = 0; l < path2.get(i).size(); l++) {
-                        path.get(num).add(path2.get(i).get(l));
-                    }
-                    path.get(num).add(path1.get(k+1).get(j));
-//                    if (path1.get(k+1).size() > 1){
-//
-//                    }else {
-//                        path.get(num).add(path1.get(k+1).get(0));
-//                    }
-
-                    num++;
-                }
-            }
-            path2 = Find_Path(path1,path,k+1);
-        }else if (k > path1.size()-2){
-            return path2;
-        }
-
-        return path2;
     }
 }

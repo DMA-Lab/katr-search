@@ -1,8 +1,16 @@
 package GraphEntity;
 
-public class Number implements Comparable<Number>{
+public class Number implements Comparable<Number> {
     public int num;
     public int dist;
+
+    public Number() {
+    }
+
+    public Number(int num, int dist) {
+        this.num = num;
+        this.dist = dist;
+    }
 
     public int getDist() {
         return dist;
@@ -26,14 +34,6 @@ public class Number implements Comparable<Number>{
                 "num=" + num +
                 ", dist=" + dist +
                 '}';
-    }
-
-    public Number() {
-    }
-
-    public Number(int num,int dist) {
-        this.num = num;
-        this.dist = dist;
     }
 
     @Override

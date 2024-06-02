@@ -1,7 +1,11 @@
 package main.NY;
 
-import CreatGraph.*;
-import GraphEntity.*;
+import loader.Creatbountpoint;
+import loader.Creatpoilist;
+import loader.Creatsg;
+import GraphEntity.MyGraph;
+import GraphEntity.POI;
+import GraphEntity.keyWordList;
 import KOSRAlgorithm.Find_Topk;
 
 import java.io.BufferedReader;
@@ -24,19 +28,19 @@ public class main_KOSR {
     static long timeA_db3;
     static int num5 = 1; //循环次数
 
-    public static void main(String[] args) throws InterruptedException{
+    public static void main(String[] args) throws InterruptedException {
 
-        int[] POI_Type = {43,25,5,18,19,26,48,47};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
+        int[] POI_Type = {43, 25, 5, 18, 19, 26, 48, 47};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
         int k1 = 10;
         double a = 0.5;//α
         int endIndex = 6000;
         int num6 = num5 - 1;
-        if (num6 == 0){
+        if (num6 == 0) {
             num6 = 1;
         }
-        ArrayList<ArrayList<Integer>> Top_k_KOSR = KOSR(POI_Type,k1,a);
+        ArrayList<ArrayList<Integer>> Top_k_KOSR = KOSR(POI_Type, k1, a);
 
-        System.out.println("KOSR算法消耗时间为："+time1+"ms");
+        System.out.println("KOSR算法消耗时间为：" + time1 + "ms");
     }
 
 
@@ -85,9 +89,7 @@ public class main_KOSR {
             while ((line1 = br1.readLine()) != null) {//按行读取
                 String[] sp = null;
                 sp = line1.split(" ");//按空格进行分割
-                for (int i = 1; i < 4; i++) {
-                    c[count][i] = sp[i];
-                }
+                System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
             }
             for (int i = 0; i < num; i++) {
@@ -149,24 +151,24 @@ public class main_KOSR {
         //______________________________________________________________________________________________
         //构建POI索引POIList，存储POI的类型和数值，并给每个顶点赋予坐标
         Creatpoilist POIList1 = new Creatpoilist();
-        POI[] POIList = POIList1.CreatPOIList_NY(ccc1,SG);
+        POI[] POIList = POIList1.CreatPOIList_NY(ccc1, SG);
         //计算全部点到最近的边界顶点的距离
 //        ArrayList<ArrayList<Integer>> PointMinBP = Creat_MinBP.CreatMinBP_NY();
         ArrayList<keyWordList> keyWordList = new ArrayList<>();
         boolean flag = false;
         for (int i = 0; i < POIList.length; i++) {
-            if (POIList[i].POI_Type != 0){
+            if (POIList[i].POI_Type != 0) {
                 flag = false;
                 for (int j = 0; j < keyWordList.size(); j++) {
-                    if (keyWordList.get(j).name == POIList[i].POI_Type){
+                    if (keyWordList.get(j).name == POIList[i].POI_Type) {
                         keyWordList.get(j).Node.add(i);
                         flag = true;
                         break;
                     }
                 }
-                if (flag == false){
+                if (!flag) {
                     keyWordList.add(new keyWordList(POIList[i].POI_Type));
-                    keyWordList.get(keyWordList.size()-1).Node.add(i);
+                    keyWordList.get(keyWordList.size() - 1).Node.add(i);
 
                 }
             }
@@ -179,7 +181,7 @@ public class main_KOSR {
 
         //ArrayList<Lower_bound> Top_k = new ArrayList<>();
         long startTime1 = System.currentTimeMillis(); //开始获取时间
-        ArrayList<ArrayList<Integer>> topK = Find_Topk.KOSR(g,ccc1,q,k, POIList,POI_Type2);
+        ArrayList<ArrayList<Integer>> topK = Find_Topk.KOSR(g, ccc1, q, k, POIList, POI_Type2);
         long endTime1 = System.currentTimeMillis(); //开始获取时间
         time1 = endTime1 - startTime1;
         //double a1 = a ; //α
@@ -236,8 +238,6 @@ public class main_KOSR {
 //        }
 
 
-
-
         for (int ii = 0; ii < num5; ii++) {
 
 //
@@ -268,15 +268,13 @@ public class main_KOSR {
 //               timeA_db3 += time5;
 //
 //           }
-            timeA +=  time1;
+            timeA += time1;
             timeA_db += time3;
             timeA_db2 += time4;
             timeA_db3 += time5;
-            time_OSSCaling = time4*23;
+            time_OSSCaling = time4 * 23;
 
         }
-
-
 
 
         return topK;

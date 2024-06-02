@@ -1,7 +1,10 @@
 package main.NY;
 
-import CreatGraph.*;
-import GraphEntity.*;
+import loader.*;
+import GraphEntity.Class_BPList;
+import GraphEntity.MyGraph;
+import GraphEntity.POI;
+import GraphEntity.list;
 import KKRSAlgorithm.Find_Topk_OSSCaling;
 
 import java.io.BufferedReader;
@@ -27,27 +30,26 @@ public class main_OSSCaling {
 
 
     public static void main(String[] args) throws InterruptedException {
-        int[] POI_Type = {43,25,14,28,19,26};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
+        int[] POI_Type = {43, 25, 14, 28, 19, 26};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
         int k1 = 6;
         double a = 0.5;//α
         int endIndex = 6000;
         int num6 = num5 - 1;
-        if (num6 == 0){
+        if (num6 == 0) {
             num6 = 1;
         }
 
-        ArrayList<Find_Topk_OSSCaling.Path> Top_k_OSSCaling = OSSCaling(POI_Type,k1,endIndex);
+        ArrayList<Find_Topk_OSSCaling.Path> Top_k_OSSCaling = OSSCaling(POI_Type, k1, endIndex);
 
 
         System.out.println("————————————————————————————————————————————————————————————————————————————");
-        System.out.println("MTDOSR算法计算所消耗的时间为:"+(time2/num6)+"毫秒");
-        System.out.println("OSSCaling算法计算所消耗的时间为:"+(time_OSSCaling/num6)+"毫秒");
-        System.out.println("A的对比算法(POI顺序固定)计算所消耗的时间为:"+(timeA_db/(num6))+"毫秒");
-        System.out.println("A的对比算算法(不进行优化)计算所消耗的时间为:"+(timeA_db3/(num6))+"毫秒");
-        System.out.println("A的对比算算法(只进行网格剪枝)计算所消耗的时间为:"+(timeA/(num6))+"毫秒");
-        System.out.println("A算法(进行全部优化)计算所消耗的时间为:"+(timeA_db2/(num6))+"毫秒");
+        System.out.println("MTDOSR算法计算所消耗的时间为:" + (time2 / num6) + "毫秒");
+        System.out.println("OSSCaling算法计算所消耗的时间为:" + (time_OSSCaling / num6) + "毫秒");
+        System.out.println("A的对比算法(POI顺序固定)计算所消耗的时间为:" + (timeA_db / (num6)) + "毫秒");
+        System.out.println("A的对比算算法(不进行优化)计算所消耗的时间为:" + (timeA_db3 / (num6)) + "毫秒");
+        System.out.println("A的对比算算法(只进行网格剪枝)计算所消耗的时间为:" + (timeA / (num6)) + "毫秒");
+        System.out.println("A算法(进行全部优化)计算所消耗的时间为:" + (timeA_db2 / (num6)) + "毫秒");
     }
-
 
 
     public static ArrayList<Find_Topk_OSSCaling.Path> OSSCaling(int[] POI_Type2, int k1, int endIndex) throws InterruptedException {
@@ -94,9 +96,7 @@ public class main_OSSCaling {
             while ((line1 = br1.readLine()) != null) {//按行读取
                 String[] sp = null;
                 sp = line1.split(" ");//按空格进行分割
-                for (int i = 1; i < 4; i++) {
-                    c[count][i] = sp[i];
-                }
+                System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
             }
             for (int i = 0; i < num; i++) {
@@ -158,7 +158,7 @@ public class main_OSSCaling {
         //______________________________________________________________________________________________
         //构建POI索引POIList，存储POI的类型和数值，并给每个顶点赋予坐标
         Creatpoilist POIList1 = new Creatpoilist();
-        POI[] POIList = POIList1.CreatPOIList_NY(ccc1,SG);
+        POI[] POIList = POIList1.CreatPOIList_NY(ccc1, SG);
         //______________________________________________________________________________________________
         // //构建距离索引list
         Creatlist list1 = new Creatlist();
@@ -167,15 +167,15 @@ public class main_OSSCaling {
         boolean flag = true;
         ArrayList<Integer> POI_Type_Num = new ArrayList<>();
         for (int i = 0; i < POIList.length; i++) {
-            if (POIList[i].POI_Type != 0){
+            if (POIList[i].POI_Type != 0) {
                 flag = true;
                 for (int j = 0; j < POI_Type_Num.size(); j++) {
-                    if (POIList[i].POI_Type == POI_Type_Num.get(j)){
+                    if (POIList[i].POI_Type == POI_Type_Num.get(j)) {
                         flag = false;
                         break;
                     }
                 }
-                if (flag == true){
+                if (flag) {
                     POI_Type_Num.add(POIList[i].POI_Type);
                 }
             }
@@ -188,20 +188,18 @@ public class main_OSSCaling {
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");
-        BPList1.CreatBPList_NY(BPList,ccc1);
+        BPList1.CreatBPList_NY(BPList, ccc1);
         //______________________________________________________________________________________________
 
         //计算全部点到最近的边界顶点的距离
-        ArrayList<ArrayList<Integer>> PointMinBP = Creat_MinBP.CreatMinBP_NY();
-
-
+        ArrayList<ArrayList<Integer>> PointMinBP = CreateMinBpTable.CreatMinBP_NY();
 
 
         //查找top_k
         int k = k1; //计算多少条路径
         int q = 56988; //查询点
         //int endIndex1 = 2000;
-        double a = 0.2 ; //α
+        double a = 0.2; //α
         int q_SG = 0;
         boolean flag1 = true;
         //int[] POI_Type = {11,12,16} ;//所求的POI的类型
@@ -210,7 +208,7 @@ public class main_OSSCaling {
         for (int ii = 0; ii < num5; ii++) {
             Find_Topk_OSSCaling topk = new Find_Topk_OSSCaling();
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k = topk.Find_Path_OSSCaling(g,q,POI_Type,ccc1,POIList,List,BPList,PointMinBP,k,endIndex);
+            Top_k = topk.Find_Path_OSSCaling(g, q, POI_Type, ccc1, POIList, List, BPList, PointMinBP, k, endIndex);
             long endTime1 = System.currentTimeMillis(); //开始获取时间
 //         if (ii != 0 || num5 == 1){
 //             time_OSSCaling += endTime1 - startTime1;

@@ -10,8 +10,103 @@ public class Find_Topk_NoOpt {
     long startTime1 = System.currentTimeMillis(); //开始获取时间
     long endTime1 = System.currentTimeMillis(); //开始获取时间
     long time1 = 0;
-    public ArrayList<Lower_bound> Top_k_NOOPT (MyGraph g, int q,int q_SG,int k,int[] POI_Type, ArrayList<ArrayList<Integer>> SG,ArrayList<ArrayList<list>> List , POI[] POIList,
-                                         double a,ArrayList<ArrayList<Class_BPList>> BPList,ArrayList<ArrayList<Integer>> PointMinBP) throws InterruptedException {
+
+    public static ArrayList<ArrayList<Integer>> Find_Path(ArrayList<ArrayList<Integer>> path1,
+                                                          ArrayList<ArrayList<Integer>> path2, int k) {
+        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
+        if (k <= path1.size() - 2) {
+            int num = 0;
+            for (int i = 0; i < path2.size(); i++) {
+                for (int j = 0; j < path1.get(k + 1).size(); j++) {
+                    path.add(new ArrayList<Integer>());
+//                    path.get(num).addAll(path2.get(i));
+//                    path.get(num).addAll(path1.get(j));
+                    for (int l = 0; l < path2.get(i).size(); l++) {
+                        path.get(num).add(path2.get(i).get(l));
+                    }
+                    path.get(num).add(path1.get(k + 1).get(j));
+//                    if (path1.get(k+1).size() > 1){
+//
+//                    }else {
+//                        path.get(num).add(path1.get(k+1).get(0));
+//                    }
+
+                    num++;
+                }
+            }
+            path2 = Find_Path(path1, path, k + 1);
+        } else if (k > path1.size() - 2) {
+            return path2;
+        }
+
+        return path2;
+    }
+
+    //计算多个数的全排列
+    public static ArrayList<ArrayList<Integer>> allsort(int[] a, ArrayList<ArrayList<Integer>> order, int currentlocal) // currentlocal当前指向的位置
+    {
+        ArrayList<ArrayList<Integer>> order2 = new ArrayList<>();
+        if (currentlocal == a.length - 1) // 当当前位置指到最后一个元素时，该元素后面已经没有其他元素可以跟他交换位置，即已产生一个组合数
+        {
+            order.add(new ArrayList<Integer>());
+            for (int number : a) {
+                order.get(order.size() - 1).add(number);
+            }
+            // System.out.println();
+        } else {
+            for (int i = currentlocal; i < a.length; i++) {
+                int temp = a[i];
+                a[i] = a[currentlocal];
+                a[currentlocal] = temp;
+
+                order = allsort(a, order, currentlocal + 1);//交换两个元素的位置后，对其后面的元素全排列
+
+                temp = a[i];   //两个元素交换位置后重新恢复原位
+                a[i] = a[currentlocal];
+                a[currentlocal] = temp;
+
+            }
+        }
+        return order;
+    }
+
+    public static int Find_Min(ArrayList<Integer> SP) {
+        int q = Integer.MAX_VALUE;
+        for (int i : SP) {
+            if (q > i) {
+                q = i;
+            }
+        }
+        return q;
+    }
+
+    public static ArrayList<ArrayList<Integer>> Finf_Path1(ArrayList<ArrayList<Integer>> all,
+                                                           ArrayList<ArrayList<Integer>> path3, int[] POI_Type, int q) {
+        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
+        for (int n = 0; n < all.size(); n++) {
+            //找到q所在子图中所有的符合要求的poi
+            ArrayList<ArrayList<Integer>> path1 = new ArrayList<>();
+            for (int i = 0; i < POI_Type.length; i++) {
+                path1.add(new ArrayList<Integer>());
+                // path1.get(i).add(q);
+            }
+            for (int i = 0; i < POI_Type.length; i++) {
+                path1.get(i).addAll(path3.get(all.get(n).get(i)));
+            }
+            //找到所有的路线
+            ArrayList<ArrayList<Integer>> path2 = new ArrayList<>();
+            for (int i = 0; i < path1.get(0).size(); i++) {
+                path2.add(new ArrayList<Integer>());
+                path2.get(i).add(path1.get(0).get(i));
+            }
+            path.addAll(Find_Path(path1, path2, 0));
+        }
+        return path;
+
+    }
+
+    public ArrayList<Lower_bound> Top_k_NOOPT(MyGraph g, int q, int q_SG, int k, int[] POI_Type, ArrayList<ArrayList<Integer>> SG, ArrayList<ArrayList<list>> List, POI[] POIList,
+                                              double a, ArrayList<ArrayList<Class_BPList>> BPList, ArrayList<ArrayList<Integer>> PointMinBP) throws InterruptedException {
         //找到查询点q所在的子图
         boolean flag1 = false;
         //int q_SG = 0;
@@ -24,7 +119,7 @@ public class Find_Topk_NoOpt {
 
         //获得这些数字的全排列
         ArrayList<ArrayList<Integer>> order1 = new ArrayList<>();
-        ArrayList<ArrayList<Integer>> all = allsort(a2,order1,0);
+        ArrayList<ArrayList<Integer>> all = allsort(a2, order1, 0);
         ArrayList<ArrayList<Integer>> path = new ArrayList<>();
         ArrayList<ArrayList<POI_B>> path3 = new ArrayList<>();
         boolean flag12 = true;
@@ -33,36 +128,36 @@ public class Find_Topk_NoOpt {
             path3.add(new ArrayList<POI_B>());
 
         }
-        Add_POIAsSG(path3,POI_Type,SG,POIList,all,q_SG);
+        Add_POIAsSG(path3, POI_Type, SG, POIList, all, q_SG);
         boolean flag4 = true;
         ArrayList<Integer> NoType = new ArrayList<>();
         int num44 = 0;
         for (int l = 0; l < path3.size(); l++) {//判断这个子图是否有全部的兴趣点
-            if (path3.get(l).size() == 0){
+            if (path3.get(l).size() == 0) {
                 NoType.add(l);//
                 num44++;
                 flag4 = false;
                 //break;
             }
         }
-        if (flag4 == false){
+        if (!flag4) {
             System.out.println("初始子图中不包括全部的POI类型");
             boolean flag6 = false;
             for (int m = 0; m < num44; m++) {
                 for (int i = 0; i < SG.size(); i++) {
                     flag6 = false;
                     for (int j = 0; j < SG.get(i).size(); j++) {
-                        if (POIList[SG.get(i).get(j)].POI_Type == POI_Type[NoType.get(m)]){
+                        if (POIList[SG.get(i).get(j)].POI_Type == POI_Type[NoType.get(m)]) {
                             path3.get(NoType.get(m)).add(new POI_B());
-                            path3.get(NoType.get(m)).get(path3.get(NoType.get(m)).size()-1).x = POIList[SG.get(i).get(j)].x;
-                            path3.get(NoType.get(m)).get(path3.get(NoType.get(m)).size()-1).y = POIList[SG.get(i).get(j)].y;
-                            path3.get(NoType.get(m)).get(path3.get(NoType.get(m)).size()-1).path.add(SG.get(i).get(j));
+                            path3.get(NoType.get(m)).get(path3.get(NoType.get(m)).size() - 1).x = POIList[SG.get(i).get(j)].x;
+                            path3.get(NoType.get(m)).get(path3.get(NoType.get(m)).size() - 1).y = POIList[SG.get(i).get(j)].y;
+                            path3.get(NoType.get(m)).get(path3.get(NoType.get(m)).size() - 1).path.add(SG.get(i).get(j));
 
                             flag6 = true;
                             break;
                         }
                     }
-                    if (flag6 == true){
+                    if (flag6) {
                         break;
                     }
                 }
@@ -82,13 +177,13 @@ public class Find_Topk_NoOpt {
                 path5.get(i).addAll(path3.get(i).get(j).path);
             }
         }
-        path = Finf_Path1(all,path5,POI_Type,q);
+        path = Finf_Path1(all, path5, POI_Type, q);
         startTime1 = System.currentTimeMillis();
-        ArrayList<Lower_bound> allPath = Find_allPath(path,path3, q, q_SG, List,POIList, a,g,q_BP,Min_w,all,BPList,SG,PointMinBP,k);
+        ArrayList<Lower_bound> allPath = Find_allPath(path, path3, q, q_SG, List, POIList, a, g, q_BP, Min_w, all, BPList, SG, PointMinBP, k);
         endTime1 = System.currentTimeMillis();
         time1 = endTime1 - startTime1;
-        System.out.println("路线剪枝测试成功,所用的时间为："+time1);
-        ArrayList<Lower_bound> Top_k = Find_Top_k (allPath,k);
+        System.out.println("路线剪枝测试成功,所用的时间为：" + time1);
+        ArrayList<Lower_bound> Top_k = Find_Top_k(allPath, k);
         double LB = Find_LB(Top_k);
         //找到W_max
         int w_max = 0;
@@ -97,13 +192,12 @@ public class Find_Topk_NoOpt {
         for (int i = 0; i < POI_Type.length; i++) {
             w1_Num = 0;
             for (int j = 0; j < POIList.length; j++) {
-                if (POIList[j].POI_Type == POI_Type[i] && POIList[j].POI_Num > w1_Num){
+                if (POIList[j].POI_Type == POI_Type[i] && POIList[j].POI_Num > w1_Num) {
                     w1_Num = POIList[j].POI_Num;
                 }
             }
-            w_max = w_max+w1_Num;
+            w_max = w_max + w1_Num;
         }
-
 
 
         SG_num[q_SG] = 1;
@@ -116,7 +210,6 @@ public class Find_Topk_NoOpt {
         boolean flag = true;
 
 
-
         //网格剪枝
         int num22 = 0;
         int n5 = 0; //用来标记这次循环需要检查多少个图
@@ -127,31 +220,31 @@ public class Find_Topk_NoOpt {
         for (int i = 0; i < POI_Type.length; i++) {
             NoPOI.add(new ArrayList<POI_B>());
         }
-        while (flag){
+        while (flag) {
             ArrayList<Integer> SG3 = new ArrayList<>();
             n2 = 0;//用来存放应该加入SG_n的子图编号
             n5 = 0;
             n6 = 0;
             for (int i = 0; i < SG_n.size(); i++) {
-                System.out.println("w_max="+w_max+",LB="+LB);
-                R = ((1-a) * w_max-LB)/a;
+                System.out.println("w_max=" + w_max + ",LB=" + LB);
+                R = ((1 - a) * w_max - LB) / a;
                 n = SG_n.get(i);
-                int[] n1 = {n-m+1,n-m,n-m-1,n-1,n+1,n+m-1,n+m,n+m+1};
+                int[] n1 = {n - m + 1, n - m, n - m - 1, n - 1, n + 1, n + m - 1, n + m, n + m + 1};
                 ArrayList<SGPoi> SGPoi = new ArrayList<>();
                 //计算这个子图中所有符合条件的POI
                 for (int j = 0; j < 8; j++) {
-                    if (n1[j]<SG.size()){//SG.size()
-                        if (n1[j]>=0 && SG_num[n1[j]] == 0 ){
+                    if (n1[j] < SG.size()) {//SG.size()
+                        if (n1[j] >= 0 && SG_num[n1[j]] == 0) {
                             n5++;
                             SGPoi.add(new SGPoi());
-                            SGPoi.get(SGPoi.size()-1).num = n1[j];
+                            SGPoi.get(SGPoi.size() - 1).num = n1[j];
                             SG_num[n1[j]] = 1;
                             for (int nn = 0; nn < POI_Type.length; nn++) {
-                                SGPoi.get(SGPoi.size()-1).POI.add(new ArrayList<POI_B>());
+                                SGPoi.get(SGPoi.size() - 1).POI.add(new ArrayList<POI_B>());
 
                             }
-                            Add_POIAsSG(SGPoi.get(SGPoi.size()-1).POI,POI_Type,SG,POIList,all,SGPoi.get(SGPoi.size()-1).num);
-                        }else {
+                            Add_POIAsSG(SGPoi.get(SGPoi.size() - 1).POI, POI_Type, SG, POIList, all, SGPoi.get(SGPoi.size() - 1).num);
+                        } else {
                             n2++;
                         }
                     }
@@ -168,29 +261,29 @@ public class Find_Topk_NoOpt {
                 for (int j = 0; j < SGPoi.size(); j++) {//判断这个子图周围的n个子图是否符合条件
                     //将NoPOI中的POI加入SGPoi
                     n = SGPoi.get(j).num;
-                    int[] n22 = {n-m+1,n-m,n-m-1,n-1,n+1,n+m-1,n+m,n+m+1};
+                    int[] n22 = {n - m + 1, n - m, n - m - 1, n - 1, n + 1, n + m - 1, n + m, n + m + 1};
                     for (int l = 0; l < n22.length; l++) { //只添加SGPoi.get(j)子图周围八个子图中的POI
-                        if (n22[l] < SG.size() && n22[l] > 0){
+                        if (n22[l] < SG.size() && n22[l] > 0) {
                             //System.out.println("开始添加SGPoi.get(j)子图周围八个子图中的POI");
-                            for (int o = 0; o <  NoPOI.size(); o++) {
-                                for (int p = 0; p <  NoPOI.get(o).size(); p++) {
+                            for (int o = 0; o < NoPOI.size(); o++) {
+                                for (int p = 0; p < NoPOI.get(o).size(); p++) {
                                     flag3 = true;
-                                    if (NoPOI.get(o).get(p).SG == n22[l]){
+                                    if (NoPOI.get(o).get(p).SG == n22[l]) {
                                         for (int r = 0; r < SGPoi.get(j).POI.get(o).size(); r++) {
                                             if (SGPoi.get(j).POI.get(o).get(r).x == NoPOI.get(o).get(p).x &&
-                                                    SGPoi.get(j).POI.get(o).get(r).y == NoPOI.get(o).get(p).y){
+                                                    SGPoi.get(j).POI.get(o).get(r).y == NoPOI.get(o).get(p).y) {
                                                 SGPoi.get(j).POI.get(o).get(r).path.addAll(NoPOI.get(o).get(p).path);
                                                 flag3 = false;
                                             }
                                         }
-                                        if (flag3 == false){
+                                        if (!flag3) {
                                             SGPoi.get(j).POI.get(o).add(new POI_B());
                                             //SGPoi.get(j).POI.get(o).addAll((Collection<? extends POI_B>) NoPOI.get(o).get(p));
-                                            SGPoi.get(j).POI.get(o).get(SGPoi.get(j).POI.get(o).size()-1).x = NoPOI.get(o).get(p).x;
-                                            SGPoi.get(j).POI.get(o).get(SGPoi.get(j).POI.get(o).size()-1).y = NoPOI.get(o).get(p).y;
-                                            SGPoi.get(j).POI.get(o).get(SGPoi.get(j).POI.get(o).size()-1).path.addAll(NoPOI.get(o).get(p).path);
-                                            SGPoi.get(j).POI.get(o).get(SGPoi.get(j).POI.get(o).size()-1).otherPath.addAll(NoPOI.get(o).get(p).otherPath);
-                                            SGPoi.get(j).POI.get(o).get(SGPoi.get(j).POI.get(o).size()-1).SG = NoPOI.get(o).get(p).SG;
+                                            SGPoi.get(j).POI.get(o).get(SGPoi.get(j).POI.get(o).size() - 1).x = NoPOI.get(o).get(p).x;
+                                            SGPoi.get(j).POI.get(o).get(SGPoi.get(j).POI.get(o).size() - 1).y = NoPOI.get(o).get(p).y;
+                                            SGPoi.get(j).POI.get(o).get(SGPoi.get(j).POI.get(o).size() - 1).path.addAll(NoPOI.get(o).get(p).path);
+                                            SGPoi.get(j).POI.get(o).get(SGPoi.get(j).POI.get(o).size() - 1).otherPath.addAll(NoPOI.get(o).get(p).otherPath);
+                                            SGPoi.get(j).POI.get(o).get(SGPoi.get(j).POI.get(o).size() - 1).SG = NoPOI.get(o).get(p).SG;
                                         }
                                     }
                                 }
@@ -199,17 +292,18 @@ public class Find_Topk_NoOpt {
                     }
 
                     System.out.println("判断这个子图周围的n个子图是否符合条件");
-                    if (SG_num[SGPoi.get(j).num] >= 0){
+                    if (SG_num[SGPoi.get(j).num] >= 0) {
                         flag3 = true;
                         for (int l = 0; l < SGPoi.get(j).POI.size(); l++) {//判断这个子图是否有全部的兴趣点
-                            if (SGPoi.get(j).POI.get(l).size() == 0){
+                            if (SGPoi.get(j).POI.get(l).size() == 0) {
                                 flag3 = false;
                                 //break;
+                                break;
                             }
                         }
                         int q_TargetSG_w = 0;
-                        System.out.println("判断这个子图是否有全部兴趣点："+flag3);
-                        if (flag3 == true){
+                        System.out.println("判断这个子图是否有全部兴趣点：" + flag3);
+                        if (flag3) {
                             for (int l = 0; l < NoPOI.size(); l++) {
                                 NoPOI.get(l).clear();
                             }
@@ -217,7 +311,7 @@ public class Find_Topk_NoOpt {
                             NOPOI_Num.add(SGPoi.get(j).num);
                             q_TargetSG_w = Integer.MAX_VALUE;
                             for (int l = 0; l < NOPOI_Num.size(); l++) {
-                                if (BPList.get(q_BP).get(NOPOI_Num.get(l)).w < q_TargetSG_w){
+                                if (BPList.get(q_BP).get(NOPOI_Num.get(l)).w < q_TargetSG_w) {
                                     q_TargetSG_w = BPList.get(q_BP).get(NOPOI_Num.get(l)).w;
                                 }
                             }
@@ -225,9 +319,9 @@ public class Find_Topk_NoOpt {
 
                             SG_num[SGPoi.get(j).num] = 1;
                             int min = q_TargetSG_w + Min_w; //找到这些路径中最短的一条
-                            System.out.println("min="+min+",R="+R);
+                            System.out.println("min=" + min + ",R=" + R);
                             n7++;
-                            if (true){
+                            if (true) {
                                 num22++;
                                 n2++;
                                 //n6++;
@@ -243,89 +337,90 @@ public class Find_Topk_NoOpt {
                                         path6.get(l).addAll(SGPoi.get(j).POI.get(l).get(o).path);
                                     }
                                 }
-                                ArrayList<ArrayList<Integer>> path7 = Finf_Path1(all,path6,POI_Type,q);
+                                ArrayList<ArrayList<Integer>> path7 = Finf_Path1(all, path6, POI_Type, q);
                                 //startTime1 = System.currentTimeMillis();
                                 int num33 = 0;
                                 for (int l = 0; l < SGPoi.get(j).POI.size(); l++) {
                                     num33 = 0;
-                                    for (int o = 0; o <  SGPoi.get(j).POI.get(l).size(); o++) {
-                                        num33 = num33+SGPoi.get(j).POI.get(l).get(o).path.size();
+                                    for (int o = 0; o < SGPoi.get(j).POI.get(l).size(); o++) {
+                                        num33 = num33 + SGPoi.get(j).POI.get(l).get(o).path.size();
                                     }
-                                    System.out.println("第"+l+"个POI_Type的个数为:"+num33);
+                                    System.out.println("第" + l + "个POI_Type的个数为:" + num33);
                                 }
                                 long startTime2 = System.currentTimeMillis(); //开始获取时间
-                                ArrayList<Lower_bound> allPath4 = Find_allPath(path7,SGPoi.get(j).POI, q, q_SG, List,POIList, a,g,q_BP,Min_w,all,BPList,SG,PointMinBP,k);
+                                ArrayList<Lower_bound> allPath4 = Find_allPath(path7, SGPoi.get(j).POI, q, q_SG, List, POIList, a, g, q_BP, Min_w, all, BPList, SG, PointMinBP, k);
                                 long endTime2 = System.currentTimeMillis(); //开始获取时间
                                 long time2 = endTime2 - startTime2;
 
                                 //endTime1 = System.currentTimeMillis();
                                 time2 = endTime2 - startTime2;
-                                ArrayList<Lower_bound> Top_k4 = Find_Top_k (allPath4,k);
+                                ArrayList<Lower_bound> Top_k4 = Find_Top_k(allPath4, k);
                                 int top_min;
                                 //修改Top_k
-                                System.out.println("网格剪枝阶段计算全部路径所用时间为："+time2);
+                                System.out.println("网格剪枝阶段计算全部路径所用时间为：" + time2);
                                 System.out.println("   ");
                                 System.out.println("   ");
                                 System.out.println("   ");
                                 System.out.println("   ");
 
-                                if (Top_k.size() < k){
+                                if (Top_k.size() < k) {
                                     boolean flag99 = true;
                                     for (int l = 0; l < Top_k4.size(); l++) {
                                         flag99 = true;
                                         for (int o = 0; o < Top_k.size(); o++) {
-                                            if (Top_k4.get(l).score == Top_k.get(o).score){
+                                            if (Top_k4.get(l).score == Top_k.get(o).score) {
                                                 flag99 = false;
+                                                break;
                                             }
                                         }
-                                        if (flag99 == true){
+                                        if (flag99) {
                                             Top_k.add(Top_k4.get(l));
                                         }
                                     }
-                                }else {
+                                } else {
                                     for (int l = 0; l < Top_k4.size(); l++) {
                                         top_min = Find_LB_Num(Top_k);
-                                        if (Top_k4.get(l).score > Top_k.get(top_min).score && Top_k4.get(l).score < Double.MAX_VALUE){
+                                        if (Top_k4.get(l).score > Top_k.get(top_min).score && Top_k4.get(l).score < Double.MAX_VALUE) {
                                             Top_k.remove(top_min);
                                             Top_k.add(Top_k4.get(l));
                                         }
                                     }
                                 }
-                                System.out.println("Top_K中含有的路径数目为："+Top_k.size());
+                                System.out.println("Top_K中含有的路径数目为：" + Top_k.size());
                                 //修改LB
                                 LB = Find_LB(Top_k);
                                 //System.out.println("1");
                             }
                             // System.out.println("1");
-                        }else {
+                        } else {
                             for (int l = 0; l < NoPOI.size(); l++) {
                                 NoPOI.get(l).addAll(SGPoi.get(j).POI.get(l));
                             }
                             NOPOI_Num.add(SGPoi.get(j).num);
-                            System.out.println("这个图不符合要求,加入NOPOI,目前NOPOI中的子图为："+NOPOI_Num);
+                            System.out.println("这个图不符合要求,加入NOPOI,目前NOPOI中的子图为：" + NOPOI_Num);
                             n2++;
                         }
-                    }else {
+                    } else {
                         continue;
                     }
 
                 }
                 SG_num[SG_n.get(i)] = 1;
             }
-            System.out.println("n2="+n2);
+            System.out.println("n2=" + n2);
             //判断是否需要推出循环
-            System.out.println("n5="+n5+",n6="+n6);
-            if(n6 == n5){
+            System.out.println("n5=" + n5 + ",n6=" + n6);
+            if (n6 == n5) {
                 //flag = false;
                 break;
             }
             int n8 = 0;
             for (int j = 0; j < SG_num.length; j++) {
-                if (SG_num[j] > 0){
+                if (SG_num[j] > 0) {
                     n8++;
                 }
             }
-            if (n8 == SG_num.length){
+            if (n8 == SG_num.length) {
                 //flag = false;
                 break;
             }
@@ -339,91 +434,21 @@ public class Find_Topk_NoOpt {
         int num12 = 0;
         //int num22 = 0;
         for (int i = 0; i < SG_num.length; i++) {
-            if (SG_num[i] > 0){
+            if (SG_num[i] > 0) {
                 num12++;
             }
 //            if (SG_num[i] == 2){
 //                num22++;
 //            }
         }
-        System.out.println("一共划分了"+SG_num.length+"个子图，其中计算了"+n7+"个子图,网格剪枝了"+n6+"个子图");
-        System.out.println("一共进行的路线查找次数"+num_LJ1+",其中剪枝的路线个数为"+num_LJ2);
+        System.out.println("一共划分了" + SG_num.length + "个子图，其中计算了" + n7 + "个子图,网格剪枝了" + n6 + "个子图");
+        System.out.println("一共进行的路线查找次数" + num_LJ1 + ",其中剪枝的路线个数为" + num_LJ2);
 
         return Top_k;
     }
 
-    public class POI_P{
-        public int num; //顶点编号
-        public int SG;//顶点所在子图
-        public int POI_Type; //兴趣点类型
-        public int POI_Num;//兴趣值
-        public int x; //顶点所在x轴子图
-        public int y;//顶点所在y轴子图
-
-        public POI_P(){
-
-        }
-    }
-    public class POI_B{
-        public int x; //顶点所在x轴子图
-        public int y;//顶点所在y轴子图
-        public int SG;
-        public ArrayList<Integer> path ;//在这个小小子图中的顶点的编号
-        // public ArrayList<Integer> path_SG ;//在这个小小子图中的顶点所在的子图
-        public ArrayList<Integer> otherPath;//这组顶点中对其他组进行剪枝的点的编号
-
-        public POI_B(){
-            this.x = 0;
-            this.y = 0;
-            this.SG = 0;
-            this.path = new ArrayList<>();
-            this.otherPath = new ArrayList<>();
-        }
-    }
-
-    public class SGPoi {
-        public int num; //子图的编号
-        public ArrayList<ArrayList<POI_B>> POI;
-
-        public SGPoi(){
-            this.num = 0;
-            this.POI = new ArrayList<>();
-        }
-    }
-
-    public static ArrayList<ArrayList<Integer>> Find_Path(ArrayList<ArrayList<Integer>> path1,
-                                                          ArrayList<ArrayList<Integer>> path2, int k) {
-        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
-        if (k <= path1.size()-2) {
-            int num = 0;
-            for (int i = 0; i < path2.size(); i++) {
-                for (int j = 0; j < path1.get(k+1).size(); j++) {
-                    path.add(new ArrayList<Integer>());
-//                    path.get(num).addAll(path2.get(i));
-//                    path.get(num).addAll(path1.get(j));
-                    for (int l = 0; l < path2.get(i).size(); l++) {
-                        path.get(num).add(path2.get(i).get(l));
-                    }
-                    path.get(num).add(path1.get(k+1).get(j));
-//                    if (path1.get(k+1).size() > 1){
-//
-//                    }else {
-//                        path.get(num).add(path1.get(k+1).get(0));
-//                    }
-
-                    num++;
-                }
-            }
-            path2 = Find_Path(path1,path,k+1);
-        }else if (k > path1.size()-2){
-            return path2;
-        }
-
-        return path2;
-    }
-
-    public ArrayList<Lower_bound> Find_allPath (ArrayList<ArrayList<Integer>> path,ArrayList<ArrayList<POI_B>> path3,int q,int q_SG, ArrayList<ArrayList<list>> List, POI[] POIList,double a,
-                                                MyGraph g,int q_BP,int w_BP,ArrayList<ArrayList<Integer>> all,ArrayList<ArrayList<Class_BPList>> BPList,ArrayList<ArrayList<Integer>> SG,ArrayList<ArrayList<Integer>> PointList,int k) throws InterruptedException {
+    public ArrayList<Lower_bound> Find_allPath(ArrayList<ArrayList<Integer>> path, ArrayList<ArrayList<POI_B>> path3, int q, int q_SG, ArrayList<ArrayList<list>> List, POI[] POIList, double a,
+                                               MyGraph g, int q_BP, int w_BP, ArrayList<ArrayList<Integer>> all, ArrayList<ArrayList<Class_BPList>> BPList, ArrayList<ArrayList<Integer>> SG, ArrayList<ArrayList<Integer>> PointList, int k) throws InterruptedException {
         ArrayList<Lower_bound> LB = new ArrayList<>();
         boolean flag = false;
         int num = 0;
@@ -443,7 +468,7 @@ public class Find_Topk_NoOpt {
         long time5 = 0;
         long time6 = 0;
         ArrayList<Integer> path_q2 = new ArrayList<>();
-        ArrayList <Integer> path1 = new ArrayList<>(); //存放路径
+        ArrayList<Integer> path1 = new ArrayList<>(); //存放路径
         for (int i = 0; i < path.size(); i++) {
             num_LJ1++; //路线剪枝测试
             //System.out.println("i测试："+i+",path测试："+path.size()+",all测试"+all.size());
@@ -454,20 +479,20 @@ public class Find_Topk_NoOpt {
 
             startTime2 = System.currentTimeMillis();
             for (int j = 0; j < path3.size(); j++) { //首先判断这个path路径中是否有已经被剪枝的点
-                if (flag11 == true){
+                if (flag11) {
                     //System.out.println("path3测试："+all.get(i).get(j));
 
                     for (int l = 0; l < path3.size(); l++) {//找到这条path中的编号顺序
 
                         for (int mm = 0; mm < path3.get(l).size(); mm++) {
                             for (int nn = 0; nn < path3.get(l).get(mm).path.size(); nn++) {
-                                if (path3.get(l).get(mm).path.get(nn) == path.get(i).get(j)){
-                                    if (flag11 == true){
+                                if (path3.get(l).get(mm).path.get(nn) == path.get(i).get(j)) {
+                                    if (flag11) {
                                         for (int m = 0; m < path.get(i).size(); m++) {
                                             //System.out.println("path.get(i).size()测试："+path.get(i).size()+",m="+m);
                                             for (int n = 0; n < path3.get(l).get(mm).otherPath.size(); n++) {
                                                 // System.out.println("path3.get(all.get(i).get(j)).get(k).otherPath.size()测试："+path3.get(all.get(i).get(j)).get(k).otherPath.size()+",n="+n);
-                                                if (path.get(i).get(m) == path3.get(l).get(mm).otherPath.get(n)){
+                                                if (path.get(i).get(m) == path3.get(l).get(mm).otherPath.get(n)) {
                                                     num_LJ2++;//路线剪枝测试
                                                     flag11 = false;
                                                     num11++;
@@ -487,41 +512,41 @@ public class Find_Topk_NoOpt {
             endTime2 = System.currentTimeMillis();
             time2 = endTime2 - startTime2 + time2;
 
-            if (flag11 == true){
+            if (flag11) {
                 int q_index = q;
                 int q_index1 = 0;
                 for (int j = 0; j < path.get(i).size(); j++) {
 
-                    if (q_index == q){
+                    if (q_index == q) {
                         q_index1 = path.get(i).get(j);
                     }
 
                     //寻找距离查询点q最近的一个边界顶点
-                    if (q_index != q){
+                    if (q_index != q) {
                         q_BP1 = PointList.get(q_index).get(0);
                         w_BP1 = PointList.get(q_index).get(1);
                     }
 
                     startTime2 = System.currentTimeMillis();
-                    if (POIList[q_index].SG == POIList[q_index1].SG){
+                    if (POIList[q_index].SG == POIList[q_index1].SG) {
                         startTime2 = System.currentTimeMillis();
                         for (int k1 = 0; k1 < List.get(q_index).size(); k1++) {
                             flag = false;
-                            if (List.get(q_index).get(k1).ePoint == q_index1){
-                                w = w+List.get(q_index).get(k1).w;
+                            if (List.get(q_index).get(k1).ePoint == q_index1) {
+                                w = w + List.get(q_index).get(k1).w;
                                 flag = true;
                             }
-                            if (flag == true){
+                            if (flag) {
                                 break;
                             }
                         }
 
 
-                    }else {
+                    } else {
 
-                        if (q_BP1 != Integer.MAX_VALUE){
+                        if (q_BP1 != Integer.MAX_VALUE) {
                             w = w + w_BP1 + BPList.get(q_BP1).get(POIList[q_index1].SG).w;
-                        }else {
+                        } else {
                             w = 0;
                         }
 
@@ -530,26 +555,26 @@ public class Find_Topk_NoOpt {
                     time3 = endTime2 - startTime2 + time3;
 
 
-
                     //startTime2 = System.currentTimeMillis();
                     //开始判断是否需要剪枝
                     if (w != Integer.MAX_VALUE)
-                        score1 = (-a)*w + (1-a)*POIList[q_index1].POI_Num;
+                        score1 = (-a) * w + (1 - a) * POIList[q_index1].POI_Num;
 
                     startTime2 = System.currentTimeMillis();
-                    if (LB.size() != 0){
-                        if (q_index != q){
-                            if (score1 <= score_Min || w == 0){
+                    if (LB.size() != 0) {
+                        if (q_index != q) {
+                            if (score1 <= score_Min || w == 0) {
                                 flag5 = true;
                                 //找到q_2
                                 for (int k1 = 0; k1 < path3.size(); k1++) {
-                                    if (flag5 == true){
+                                    if (flag5) {
                                         for (int l = 0; l < path3.get(k1).size(); l++) {
-                                            if (flag5 == true){
+                                            if (flag5) {
                                                 for (int m = 0; m < path3.get(k1).get(l).path.size(); m++) {
-                                                    if (path3.get(k1).get(l).path.get(m) == q_index1){
+                                                    if (path3.get(k1).get(l).path.get(m) == q_index1) {
                                                         path_q2 = path3.get(k1).get(l).path;
                                                         flag5 = false;
+                                                        break;
                                                     }
                                                 }
                                             }
@@ -559,11 +584,11 @@ public class Find_Topk_NoOpt {
                                 flag5 = true;
                                 //找到q_1
                                 for (int k1 = 0; k1 < path3.size(); k1++) {
-                                    if (flag5 == true){
+                                    if (flag5) {
                                         for (int l = 0; l < path3.get(k1).size(); l++) {
-                                            if (flag5 == true){
+                                            if (flag5) {
                                                 for (int m = 0; m < path3.get(k1).get(l).path.size(); m++) {
-                                                    if (path3.get(k1).get(l).path.get(m) == q_index){
+                                                    if (path3.get(k1).get(l).path.get(m) == q_index) {
                                                         path3.get(k1).get(l).otherPath.addAll(path_q2);
                                                         flag5 = false;
                                                     }
@@ -580,26 +605,26 @@ public class Find_Topk_NoOpt {
                     endTime2 = System.currentTimeMillis();
                     time4 = endTime2 - startTime2 + time4;
 
-                    if (j < (path.get(i).size()-1)){
+                    if (j < (path.get(i).size() - 1)) {
                         q_index = path.get(i).get(j);
-                        q_index1 = path.get(i).get(j+1);
+                        q_index1 = path.get(i).get(j + 1);
                     }
 
                 }
                 startTime2 = System.currentTimeMillis();
-                if (w != Integer.MAX_VALUE){
+                if (w != Integer.MAX_VALUE) {
                     Lower_bound nn = new Lower_bound();
-                    if (LB.size() < k){
+                    if (LB.size() < k) {
                         LB.add(new Lower_bound());
-                        LB.get(LB.size()-1).path.clear();
-                        LB.get(LB.size()-1).path.addAll(path.get(i));
-                        LB.get(LB.size()-1).dis = w;
-                        for (int kk = 0; kk < LB.get(LB.size()-1).path.size(); kk++) {
+                        LB.get(LB.size() - 1).path.clear();
+                        LB.get(LB.size() - 1).path.addAll(path.get(i));
+                        LB.get(LB.size() - 1).dis = w;
+                        for (int kk = 0; kk < LB.get(LB.size() - 1).path.size(); kk++) {
                             //LB.get(num).w_poi += POIList[LB.get(num).path.get(k)].POI_Num;
-                            LB.get(LB.size()-1).w_poi += POIList[path.get(i).get(kk)].POI_Num;
+                            LB.get(LB.size() - 1).w_poi += POIList[path.get(i).get(kk)].POI_Num;
                         }
-                        LB.get(LB.size()-1).score = (-a)*LB.get(LB.size()-1).dis+(1-a)*LB.get(LB.size()-1).w_poi;
-                    }else {
+                        LB.get(LB.size() - 1).score = (-a) * LB.get(LB.size() - 1).dis + (1 - a) * LB.get(LB.size() - 1).w_poi;
+                    } else {
                         startTime2 = System.currentTimeMillis();
                         // score_Min = Find_Top_k_Min(LB,1).get(0).score;
                         score_Min = LB.get(Find_LB_Num(LB)).score;
@@ -607,12 +632,12 @@ public class Find_Topk_NoOpt {
                         nn.path.clear();
                         nn.path.addAll(path.get(i));
                         nn.dis = w;
-                        for (int kk = 0; kk < LB.get(LB.size()-1).path.size(); kk++) {
+                        for (int kk = 0; kk < LB.get(LB.size() - 1).path.size(); kk++) {
                             //LB.get(num).w_poi += POIList[LB.get(num).path.get(k)].POI_Num;
                             nn.w_poi += POIList[path.get(i).get(kk)].POI_Num;
                         }
-                        nn.score = (-a)*nn.dis+(1-a)*nn.w_poi;
-                        if (nn.score > score_Min){
+                        nn.score = (-a) * nn.dis + (1 - a) * nn.w_poi;
+                        if (nn.score > score_Min) {
                             LB.get(Find_LB_Num(LB)).path = nn.path;
                             LB.get(Find_LB_Num(LB)).dis = nn.dis;
                             LB.get(Find_LB_Num(LB)).score = nn.score;
@@ -628,40 +653,24 @@ public class Find_Topk_NoOpt {
 
             }
         }
-        System.out.println("第一部分所消耗的时间为："+ time2);
-        System.out.println("第二部分所消耗的时间为："+ time3);
-        System.out.println("第三部分所消耗的时间为："+ time3);
-        System.out.println("第四部分所消耗的时间为："+ time4);
-        System.out.println("第五部分所消耗的时间为："+ time5);
-        System.out.println("第六部分所消耗的时间为："+ time6);
+        System.out.println("第一部分所消耗的时间为：" + time2);
+        System.out.println("第二部分所消耗的时间为：" + time3);
+        System.out.println("第三部分所消耗的时间为：" + time3);
+        System.out.println("第四部分所消耗的时间为：" + time4);
+        System.out.println("第五部分所消耗的时间为：" + time5);
+        System.out.println("第六部分所消耗的时间为：" + time6);
         return LB;
     }
 
-    public ArrayList<Lower_bound> Find_Top_k (ArrayList<Lower_bound> a,int k) {
+    public ArrayList<Lower_bound> Find_Top_k(ArrayList<Lower_bound> a, int k) {
         ArrayList<Lower_bound> top_k = new ArrayList<>();
         int n = 0;
         for (int i = 0; i < a.size(); i++) {
-            if (top_k.size() < k && a.get(i).dis != 0){
+            if (top_k.size() < k && a.get(i).dis != 0) {
                 top_k.add(a.get(i));
             } else {
                 n = Find_LB_Num(top_k);
-                if (a.get(i).score > top_k.get(n).score && a.get(i).dis != 0){
-                    top_k.remove(n);
-                    top_k.add(a.get(i));
-                }
-            }
-        }
-        return top_k;
-    }
-    public ArrayList<Lower_bound> Find_Top_k_Min (ArrayList<Lower_bound> a,int k) {
-        ArrayList<Lower_bound> top_k = new ArrayList<>();
-        int n = 0;
-        for (int i = 0; i < a.size(); i++) {
-            if (top_k.size() < k && a.get(i).dis != 0){
-                top_k.add(a.get(i));
-            } else {
-                n = Find_LB_Num_Min(top_k);
-                if (a.get(i).score < top_k.get(n).score && a.get(i).dis != 0){
+                if (a.get(i).score > top_k.get(n).score && a.get(i).dis != 0) {
                     top_k.remove(n);
                     top_k.add(a.get(i));
                 }
@@ -670,11 +679,28 @@ public class Find_Topk_NoOpt {
         return top_k;
     }
 
-    public double Find_LB (ArrayList<Lower_bound> Top_k){
+    public ArrayList<Lower_bound> Find_Top_k_Min(ArrayList<Lower_bound> a, int k) {
+        ArrayList<Lower_bound> top_k = new ArrayList<>();
+        int n = 0;
+        for (int i = 0; i < a.size(); i++) {
+            if (top_k.size() < k && a.get(i).dis != 0) {
+                top_k.add(a.get(i));
+            } else {
+                n = Find_LB_Num_Min(top_k);
+                if (a.get(i).score < top_k.get(n).score && a.get(i).dis != 0) {
+                    top_k.remove(n);
+                    top_k.add(a.get(i));
+                }
+            }
+        }
+        return top_k;
+    }
+
+    public double Find_LB(ArrayList<Lower_bound> Top_k) {
         //int LB = 0;
         double LB_score = Double.MAX_VALUE;
         for (int i = 0; i < Top_k.size(); i++) {
-            if (LB_score > Top_k.get(i).score){
+            if (LB_score > Top_k.get(i).score) {
                 LB_score = Top_k.get(i).score;
                 //LB = i;
             }
@@ -683,11 +709,11 @@ public class Find_Topk_NoOpt {
         return LB_score;
     }
 
-    public int Find_LB_Num (ArrayList<Lower_bound> Top_k){
+    public int Find_LB_Num(ArrayList<Lower_bound> Top_k) {
         int LB = 0;
         double LB_score = Double.MAX_VALUE;
         for (int i = 0; i < Top_k.size(); i++) {
-            if (LB_score > Top_k.get(i).score){
+            if (LB_score > Top_k.get(i).score) {
                 LB_score = Top_k.get(i).score;
                 LB = i;
             }
@@ -696,11 +722,11 @@ public class Find_Topk_NoOpt {
         return LB;
     }
 
-    public int Find_LB_Num_Min (ArrayList<Lower_bound> Top_k){
+    public int Find_LB_Num_Min(ArrayList<Lower_bound> Top_k) {
         int LB = 0;
         double LB_score = Double.MAX_VALUE;
         for (int i = 0; i < Top_k.size(); i++) {
-            if (LB_score < Top_k.get(i).score){
+            if (LB_score < Top_k.get(i).score) {
                 LB_score = Top_k.get(i).score;
                 LB = i;
             }
@@ -709,32 +735,44 @@ public class Find_Topk_NoOpt {
         return LB;
     }
 
-    //计算多个数的全排列
-    public static ArrayList<ArrayList<Integer>> allsort(int a[],ArrayList<ArrayList<Integer>> order, int currentlocal) // currentlocal当前指向的位置
-    {
-        ArrayList<ArrayList<Integer>> order2 = new ArrayList<>();
-        if (currentlocal == a.length - 1) // 当当前位置指到最后一个元素时，该元素后面已经没有其他元素可以跟他交换位置，即已产生一个组合数
-        {
-            order.add(new ArrayList<Integer>());
-            for (int number : a) {
-                order.get(order.size()-1).add(number);
-            }
-            // System.out.println();
-        } else {
-            for (int i = currentlocal; i < a.length; i++) {
-                int temp = a[i];
-                a[i] = a[currentlocal];
-                a[currentlocal] = temp;
+    public void Add_POIAsSG(ArrayList<ArrayList<POI_B>> path3, int[] POI_Type, ArrayList<ArrayList<Integer>> SG,
+                            POI[] POIList, ArrayList<ArrayList<Integer>> all, int q_SG) {
+        boolean flag12 = true;
+        for (int i = 0; i < POI_Type.length; i++) {
+            for (int j = 0; j < SG.get(q_SG).size(); j++) {
+                if (POIList[SG.get(q_SG).get(j)].POI_Type == POI_Type[all.get(0).get(i)]) {
+                    //path3.get(i).add(SG.get(q_SG).get(j));
+                    if (path3.get(i).size() != 0) {
+                        flag12 = true;
+                        for (int l = 0; l < path3.get(i).size(); l++) {
+                            if (POIList[SG.get(q_SG).get(j)].x == path3.get(i).get(l).x &&
+                                    POIList[SG.get(q_SG).get(j)].y == path3.get(i).get(l).y) {
+                                path3.get(i).get(l).path.add(SG.get(q_SG).get(j));
+                                //path3.get(i).get(l).path_SG.add(q_SG);
+                                flag12 = false;
+                                break;
+                            }
+                        }
+                        if (flag12) {
+                            path3.get(i).add(new POI_B());
+                            path3.get(i).get(path3.get(i).size() - 1).x = POIList[SG.get(q_SG).get(j)].x;
+                            path3.get(i).get(path3.get(i).size() - 1).y = POIList[SG.get(q_SG).get(j)].y;
+                            path3.get(i).get(path3.get(i).size() - 1).path.add(SG.get(q_SG).get(j));
+                            path3.get(i).get(path3.get(i).size() - 1).SG = POIList[SG.get(q_SG).get(j)].SG;
+                            //path3.get(i).get(path3.get(i).size()-1).path_SG.add(q_SG);
+                        }
+                    } else {
+                        path3.get(i).add(new POI_B());
+                        path3.get(i).get(path3.get(i).size() - 1).x = POIList[SG.get(q_SG).get(j)].x;
+                        path3.get(i).get(path3.get(i).size() - 1).y = POIList[SG.get(q_SG).get(j)].y;
+                        path3.get(i).get(path3.get(i).size() - 1).path.add(SG.get(q_SG).get(j));
+                        path3.get(i).get(path3.get(i).size() - 1).SG = POIList[SG.get(q_SG).get(j)].SG;
+                        // path3.get(i).get(path3.get(i).size()-1).path_SG.add(q_SG);
 
-                order = allsort(a, order,currentlocal + 1);//交换两个元素的位置后，对其后面的元素全排列
-
-                temp = a[i];   //两个元素交换位置后重新恢复原位
-                a[i] = a[currentlocal];
-                a[currentlocal] = temp;
-
+                    }
+                }
             }
         }
-        return order;
     }
 
 //    public static int BP_FindShortestPath(SGPoi a,int p,ArrayList<ArrayList<list>> List){
@@ -790,83 +828,45 @@ public class Find_Topk_NoOpt {
 //        return w1;
 //    }
 
-    public static int Find_Min (ArrayList<Integer> SP){
-        int q = Integer.MAX_VALUE;
-        for (int i:SP) {
-            if (q>i){
-                q = i;
-            }
-        }
-        return q;
-    }
+    public class POI_P {
+        public int num; //顶点编号
+        public int SG;//顶点所在子图
+        public int POI_Type; //兴趣点类型
+        public int POI_Num;//兴趣值
+        public int x; //顶点所在x轴子图
+        public int y;//顶点所在y轴子图
 
+        public POI_P() {
 
-    public static ArrayList<ArrayList<Integer>> Finf_Path1(ArrayList<ArrayList<Integer>> all,
-                                                           ArrayList<ArrayList<Integer>> path3,int[] POI_Type,int q){
-        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
-        for (int n = 0; n < all.size(); n++) {
-            //找到q所在子图中所有的符合要求的poi
-            ArrayList<ArrayList<Integer>> path1 = new ArrayList<>();
-            for (int i = 0; i < POI_Type.length; i++) {
-                path1.add(new ArrayList<Integer>());
-                // path1.get(i).add(q);
-            }
-            for (int i = 0; i < POI_Type.length; i++) {
-                path1.get(i).addAll(path3.get(all.get(n).get(i)));
-            }
-            //找到所有的路线
-            ArrayList<ArrayList<Integer>> path2 = new ArrayList<>();
-            for (int i = 0; i < path1.get(0).size(); i++) {
-                path2.add(new ArrayList<Integer>());
-                path2.get(i).add(path1.get(0).get(i));
-            }
-            path.addAll(Find_Path(path1, path2,0));
-        }
-        return path;
-
-    }
-
-    public void Add_POIAsSG(ArrayList<ArrayList<POI_B>> path3, int[] POI_Type, ArrayList<ArrayList<Integer>> SG,
-                            POI[] POIList, ArrayList<ArrayList<Integer>> all,int q_SG){
-        boolean flag12 = true;
-        for (int i = 0; i < POI_Type.length; i++) {
-            for (int j = 0; j < SG.get(q_SG).size(); j++) {
-                if (POIList[SG.get(q_SG).get(j)].POI_Type == POI_Type[all.get(0).get(i)]){
-                    //path3.get(i).add(SG.get(q_SG).get(j));
-                    if (path3.get(i).size() != 0){
-                        flag12 = true;
-                        for (int l = 0; l < path3.get(i).size(); l++) {
-                            if (POIList[SG.get(q_SG).get(j)].x == path3.get(i).get(l).x &&
-                                    POIList[SG.get(q_SG).get(j)].y == path3.get(i).get(l).y){
-                                path3.get(i).get(l).path.add(SG.get(q_SG).get(j));
-                                //path3.get(i).get(l).path_SG.add(q_SG);
-                                flag12 = false;
-                                break;
-                            }
-                        }
-                        if (flag12 == true){
-                            path3.get(i).add(new POI_B());
-                            path3.get(i).get(path3.get(i).size()-1).x = POIList[SG.get(q_SG).get(j)].x;
-                            path3.get(i).get(path3.get(i).size()-1).y = POIList[SG.get(q_SG).get(j)].y;
-                            path3.get(i).get(path3.get(i).size()-1).path.add(SG.get(q_SG).get(j));
-                            path3.get(i).get(path3.get(i).size()-1).SG = POIList[SG.get(q_SG).get(j)].SG;
-                            //path3.get(i).get(path3.get(i).size()-1).path_SG.add(q_SG);
-                        }
-                    }else {
-                        path3.get(i).add(new POI_B());
-                        path3.get(i).get(path3.get(i).size()-1).x = POIList[SG.get(q_SG).get(j)].x;
-                        path3.get(i).get(path3.get(i).size()-1).y = POIList[SG.get(q_SG).get(j)].y;
-                        path3.get(i).get(path3.get(i).size()-1).path.add(SG.get(q_SG).get(j));
-                        path3.get(i).get(path3.get(i).size()-1).SG = POIList[SG.get(q_SG).get(j)].SG;
-                        // path3.get(i).get(path3.get(i).size()-1).path_SG.add(q_SG);
-
-                    }
-                }
-            }
         }
     }
 
+    public class POI_B {
+        public int x; //顶点所在x轴子图
+        public int y;//顶点所在y轴子图
+        public int SG;
+        public ArrayList<Integer> path;//在这个小小子图中的顶点的编号
+        // public ArrayList<Integer> path_SG ;//在这个小小子图中的顶点所在的子图
+        public ArrayList<Integer> otherPath;//这组顶点中对其他组进行剪枝的点的编号
 
+        public POI_B() {
+            this.x = 0;
+            this.y = 0;
+            this.SG = 0;
+            this.path = new ArrayList<>();
+            this.otherPath = new ArrayList<>();
+        }
+    }
+
+    public class SGPoi {
+        public int num; //子图的编号
+        public ArrayList<ArrayList<POI_B>> POI;
+
+        public SGPoi() {
+            this.num = 0;
+            this.POI = new ArrayList<>();
+        }
+    }
 
 
 }

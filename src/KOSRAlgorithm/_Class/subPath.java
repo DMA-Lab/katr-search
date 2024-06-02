@@ -9,7 +9,7 @@ public class subPath {
     public boolean flag;
     //public ArrayList<subPath> next;
 
-    public subPath(){
+    public subPath() {
         this.keyWordNum = 0;
         this.subPath = new ArrayList<>();
         //this.next = new ArrayList<>();
