@@ -11,38 +11,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class IntoData {
+
     public static void CreatData(int[] POI_Type2, int k1, double a, GraphData GraphData) throws IOException {
 
-        FileReader file = null;
-        try {
-            file = new FileReader("dataset/USA-road-t.NY.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        int num = 1;
-        BufferedReader br = new BufferedReader(file);
-        String line;
-        try {
-            line = br.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            while ((line = br.readLine()) != null) {//按行读取
-                num++;
-            }
-            file.close();
-            br.close();
+        FileReader file = new FileReader("dataset/USA-road-t.NY.txt");
+        BufferedReader reader = new BufferedReader(file);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        // 跳过首行
+        String line = reader.readLine();
+
+        int lineNumber = 1;
+        while ((line = reader.readLine()) != null) {//按行读取
+            lineNumber++;
         }
+        file.close();
+
         //将流中的拘束存储到data[][]中
-        int[][] data = new int[num + 1][4];
+        int[][] data = new int[lineNumber + 1][4];
         FileReader file1 = null;
 
         //String []sp = null;
-        String[][] c = new String[num][4];
+        String[][] c = new String[lineNumber][4];
         try {
             file1 = new FileReader("dataset/USA-road-t.NY.txt");
 
@@ -59,7 +48,7 @@ public class IntoData {
                 System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
             }
-            for (int i = 0; i < num; i++) {
+            for (int i = 0; i < lineNumber; i++) {
                 for (int j = 1; j < 4; j++) {
                     data[i][j] = Integer.parseInt(c[i][j]);
                 }
@@ -67,19 +56,17 @@ public class IntoData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        data[num][0] = 0;
-        data[num][1] = 0;
-        data[num][2] = 1;
-        data[num][3] = 100;
-        int num1 = num + 1;
+        data[lineNumber][0] = 0;
+        data[lineNumber][1] = 0;
+        data[lineNumber][2] = 1;
+        data[lineNumber][3] = 100;
+        int num1 = lineNumber + 1;
         //获取数据中共有多少点
         int ccc = 0;
-        for (int i = 0; i < num; i++) {
+        for (int i = 0; i < lineNumber; i++) {
             if (data[i][1] >= ccc) {
                 ccc = data[i][1];
-
             }
-
         }
         int ccc1 = ccc + 1;
         GraphData.g = new Graph(ccc1, num1);
@@ -92,7 +79,7 @@ public class IntoData {
             e.printStackTrace();
         }
         BufferedReader br2 = new BufferedReader(file1);//读取文件
-        String[] Subgraph = new String[num];
+        String[] Subgraph = new String[lineNumber];
         try {
             String line2;
             int count = 0;
@@ -129,8 +116,8 @@ public class IntoData {
         for (int i = 0; i < GraphData.POIList.length; i++) {
             if (GraphData.POIList[i].POI_Type != 0) {
                 flag = true;
-                for (int j = 0; j < POI_Type_Num.size(); j++) {
-                    if (GraphData.POIList[i].POI_Type == POI_Type_Num.get(j)) {
+                for (Integer integer : POI_Type_Num) {
+                    if (GraphData.POIList[i].POI_Type == integer) {
                         flag = false;
                         break;
                     }
@@ -193,38 +180,34 @@ public class IntoData {
         for (int i = 0; i < GraphData.POIList.length; i++) {
             if (GraphData.POIList[i].POI_Type != 0) {
                 flag4 = true;
-                for (int j = 0; j < POI_Num2.size(); j++) {
-                    if (POI_Num2.get(j).get(0) == GraphData.POIList[i].POI_Type) {
+                for (ArrayList<Integer> integers : POI_Num2) {
+                    if (integers.get(0) == GraphData.POIList[i].POI_Type) {
                         flag4 = false;
-                        if (GraphData.POIList[i].POI_Num < POI_Num2.get(j).get(1)) {
+                        if (GraphData.POIList[i].POI_Num < integers.get(1)) {
                             path3.clear();
-                            path3.add(POI_Num2.get(j).get(0));
+                            path3.add(integers.get(0));
                             path3.add(GraphData.POIList[i].POI_Num);
-                            path3.add(POI_Num2.get(j).get(2));
-                            POI_Num2.get(j).clear();
-                            POI_Num2.get(j).addAll(path3);
+                            path3.add(integers.get(2));
+                            integers.clear();
+                            integers.addAll(path3);
                         }
-                        if (GraphData.POIList[i].POI_Num > POI_Num2.get(j).get(2)) {
+                        if (GraphData.POIList[i].POI_Num > integers.get(2)) {
                             path3.clear();
-                            path3.add(POI_Num2.get(j).get(0));
-                            path3.add(POI_Num2.get(j).get(1));
+                            path3.add(integers.get(0));
+                            path3.add(integers.get(1));
                             path3.add(GraphData.POIList[i].POI_Num);
-                            POI_Num2.get(j).clear();
-                            POI_Num2.get(j).addAll(path3);
+                            integers.clear();
+                            integers.addAll(path3);
                         }
                     }
                 }
                 if (flag4) {
                     POI_Num2.add(new ArrayList<Integer>());
-                    POI_Num2.get(POI_Num2.size() - 1).add(GraphData.POIList[i].POI_Type);
-                    POI_Num2.get(POI_Num2.size() - 1).add(GraphData.POIList[i].POI_Num);
-                    POI_Num2.get(POI_Num2.size() - 1).add(GraphData.POIList[i].POI_Num);
+                    POI_Num2.getLast().add(GraphData.POIList[i].POI_Type);
+                    POI_Num2.getLast().add(GraphData.POIList[i].POI_Num);
+                    POI_Num2.getLast().add(GraphData.POIList[i].POI_Num);
                 }
             }
         }
-
-
-        int i1 = 0;
-
     }
 }

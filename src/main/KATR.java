@@ -1,4 +1,4 @@
-package KATR;
+package main;
 
 import CreateData.GraphData;
 import CreateData.IntoData;
@@ -24,15 +24,15 @@ public class KATR {
         int[] POI_Type = {43, 25};
         // 想取的结果数
         int k = 20;
-        double a = 0.5;
+        double alpha = 0.5;
         int num = 1; //循环次数
 
         GraphData GraphData = new GraphData();
-        IntoData.CreatData(POI_Type, k, a, GraphData);
+        IntoData.CreatData(POI_Type, k, alpha, GraphData);
 
-        ArrayList<LowerBound> Top_k_KATR_SToE = KATR_SToE(POI_Type, k, a, GraphData, num);
-        ArrayList<LowerBound> Top_k_KATR = KATR(POI_Type, k, a, GraphData, num);
-        ArrayList<LowerBound> Top_k_KATRAllHeatTo1 = KATR_AllHeatTo1(POI_Type, k, a, GraphData, num);
+        ArrayList<LowerBound> Top_k_KATR_SToE = KATR_SToE(POI_Type, k, alpha, GraphData, num);
+        ArrayList<LowerBound> Top_k_KATR = KATR(POI_Type, k, alpha, GraphData, num);
+        ArrayList<LowerBound> Top_k_KATRAllHeatTo1 = KATR_AllHeatTo1(POI_Type, k, alpha, GraphData, num);
 
         if (num > 1) {
             for (int i = 1; i < timeKATR1.size(); i++) {
@@ -139,7 +139,6 @@ public class KATR {
 
     public static ArrayList<LowerBound> KATR_AllHeatTo1(int[] POI_Type2, int k, double a, GraphData GraphData, int num) throws InterruptedException {
         int q = 56988; //查询点
-        //double a1 = a ; //α
         int q_SG = 0;
         boolean flag1 = true;
         //int[] POI_Type = {11,12,16} ;//所求的POI的类型
@@ -277,9 +276,6 @@ public class KATR {
                         flag = true;
                         break;
                     }
-                    if (flag) {
-                        break;
-                    }
                 }
                 if (!flag) {
                     endIndex = i;
@@ -307,6 +303,4 @@ public class KATR {
 //        timeSToE = endTime1 - startTime1;
         return Top_k;
     }
-
-
 }

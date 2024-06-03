@@ -645,35 +645,35 @@ public class main_COL {
         ArrayList<ArrayList<Integer>> POI_Num2 = new ArrayList<>();
         ArrayList<Integer> path3 = new ArrayList<>();
         boolean flag4 = true;
-        for (int i = 0; i < POIList.length; i++) {
-            if (POIList[i].POI_Type != 0) {
+        for (POI poi : POIList) {
+            if (poi.POI_Type != 0) {
                 flag4 = true;
-                for (int j = 0; j < POI_Num2.size(); j++) {
-                    if (POI_Num2.get(j).get(0) == POIList[i].POI_Type) {
+                for (ArrayList<Integer> integers : POI_Num2) {
+                    if (integers.get(0) == poi.POI_Type) {
                         flag4 = false;
-                        if (POIList[i].POI_Num < POI_Num2.get(j).get(1)) {
+                        if (poi.POI_Num < integers.get(1)) {
                             path3.clear();
-                            path3.add(POI_Num2.get(j).get(0));
-                            path3.add(POIList[i].POI_Num);
-                            path3.add(POI_Num2.get(j).get(2));
-                            POI_Num2.get(j).clear();
-                            POI_Num2.get(j).addAll(path3);
+                            path3.add(integers.get(0));
+                            path3.add(poi.POI_Num);
+                            path3.add(integers.get(2));
+                            integers.clear();
+                            integers.addAll(path3);
                         }
-                        if (POIList[i].POI_Num > POI_Num2.get(j).get(2)) {
+                        if (poi.POI_Num > integers.get(2)) {
                             path3.clear();
-                            path3.add(POI_Num2.get(j).get(0));
-                            path3.add(POI_Num2.get(j).get(1));
-                            path3.add(POIList[i].POI_Num);
-                            POI_Num2.get(j).clear();
-                            POI_Num2.get(j).addAll(path3);
+                            path3.add(integers.get(0));
+                            path3.add(integers.get(1));
+                            path3.add(poi.POI_Num);
+                            integers.clear();
+                            integers.addAll(path3);
                         }
                     }
                 }
                 if (flag4) {
-                    POI_Num2.add(new ArrayList<Integer>());
-                    POI_Num2.get(POI_Num2.size() - 1).add(POIList[i].POI_Type);
-                    POI_Num2.get(POI_Num2.size() - 1).add(POIList[i].POI_Num);
-                    POI_Num2.get(POI_Num2.size() - 1).add(POIList[i].POI_Num);
+                    POI_Num2.add(new ArrayList<>());
+                    POI_Num2.getLast().add(poi.POI_Type);
+                    POI_Num2.getLast().add(poi.POI_Num);
+                    POI_Num2.getLast().add(poi.POI_Num);
                 }
             }
         }
@@ -714,8 +714,7 @@ public class main_COL {
 //
 
 
-        for (int ii = 0; ii < num5; ii++) {
-
+        for (int i = 0; i < num5; i++) {
 
             startTime1 = System.currentTimeMillis(); //开始获取时间
             Top_k_db3 = topk_db3.Top_k_db3(g, q, q_SG, k, POI_Type, SG, List, POIList, a, BPList, PointMinBP); //不进行优化
@@ -752,10 +751,6 @@ public class main_COL {
             timeA_db3 += time5;
 
         }
-
-
         return Top_k;
-
     }
-
 }
