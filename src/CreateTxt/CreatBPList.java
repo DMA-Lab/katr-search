@@ -3,9 +3,9 @@ package CreateTxt;
 import loader.Creatbountpoint;
 import loader.Creatpoilist;
 import loader.Creatsg;
-import GraphEntity.MyGraph;
-import GraphEntity.POI;
-import GraphEntity.huoqu_txt;
+import entity.Graph;
+import entity.POI;
+import entity.TextWriter;
 import KKRSAlgorithm.Dijkstia;
 
 import java.io.BufferedReader;
@@ -65,7 +65,7 @@ public class CreatBPList {
             }
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data1);
 
         int num = cc.size() + 1;
@@ -267,7 +267,7 @@ public class CreatBPList {
 
         }
         //--------------------------------------------------------------------------------------
-        huoqu_txt.WriteTxt7(data2);
+        TextWriter.WriteTxt7(data2);
 
 
     }

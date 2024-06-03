@@ -4,7 +4,7 @@ import loader.Creatbplist;
 import loader.Creatlist;
 import loader.Creatpoilist;
 import loader.Creatsg;
-import GraphEntity.*;
+import entity.*;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -63,7 +63,7 @@ public class CreatMinBP {
             }
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data1);
 
         int num = cc.size() + 1;
@@ -101,7 +101,7 @@ public class CreatMinBP {
         //______________________________________________________________________________________________
         // //构建距离索引list
         Creatlist list1 = new Creatlist();
-        ArrayList<ArrayList<list>> List = list1.CreatList_COL(num2);
+        ArrayList<ArrayList<Path>> List = list1.CreatList_COL(num2);
         //System.out.println("1");
         boolean flag = true;
         ArrayList<Integer> POI_Type_Num = new ArrayList<>();
@@ -121,9 +121,9 @@ public class CreatMinBP {
         }
         //______________________________________________________________________________________________
         // //构建边界顶点索引BPList
-        ArrayList<ArrayList<Class_BPList>> BPList = new ArrayList<>();
+        ArrayList<ArrayList<BpPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<Class_BPList>());
+            BPList.add(new ArrayList<BpPath>());
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");
@@ -140,17 +140,17 @@ public class CreatMinBP {
 //        }
 
         //将子图内的路径按照顶点来分类
-        ArrayList<ArrayList<list>> PointList = new ArrayList<>();
+        ArrayList<ArrayList<Path>> PointList = new ArrayList<>();
         for (int i = 0; i < BPList.size(); i++) {
-            PointList.add(new ArrayList<list>());
+            PointList.add(new ArrayList<Path>());
         }
         for (int i = 0; i < List.size(); i++) {
             for (int j = 0; j < List.get(i).size(); j++) {
-                PointList.get(List.get(i).get(j).sPoint).add(new list());
-                PointList.get(List.get(i).get(j).sPoint).get(PointList.get(List.get(i).get(j).sPoint).size() - 1).sPoint = List.get(i).get(j).sPoint;
-                PointList.get(List.get(i).get(j).sPoint).get(PointList.get(List.get(i).get(j).sPoint).size() - 1).ePoint = List.get(i).get(j).ePoint;
-                PointList.get(List.get(i).get(j).sPoint).get(PointList.get(List.get(i).get(j).sPoint).size() - 1).w = List.get(i).get(j).w;
-                PointList.get(List.get(i).get(j).sPoint).get(PointList.get(List.get(i).get(j).sPoint).size() - 1).path.addAll(List.get(i).get(j).path);
+                PointList.get(List.get(i).get(j).start).add(new Path());
+                PointList.get(List.get(i).get(j).start).get(PointList.get(List.get(i).get(j).start).size() - 1).start = List.get(i).get(j).start;
+                PointList.get(List.get(i).get(j).start).get(PointList.get(List.get(i).get(j).start).size() - 1).end = List.get(i).get(j).end;
+                PointList.get(List.get(i).get(j).start).get(PointList.get(List.get(i).get(j).start).size() - 1).weight = List.get(i).get(j).weight;
+                PointList.get(List.get(i).get(j).start).get(PointList.get(List.get(i).get(j).start).size() - 1).vertices.addAll(List.get(i).get(j).vertices);
             }
         }
 //        int num11 = 0;
@@ -168,9 +168,9 @@ public class CreatMinBP {
                 min = Integer.MAX_VALUE;
                 minPoint = Integer.MAX_VALUE;
                 for (int k = 0; k < PointList.get(i).size(); k++) {
-                    if (PointList.get(i).get(k).w < min && BPList.get(PointList.get(i).get(k).ePoint).size() != 0) {//BPList.get(PointList.get(i).get(k).ePoint).size()!= 0 //POIList[PointList.get(i).get(k).ePoint].Boundary != 0
-                        min = PointList.get(i).get(k).w;
-                        minPoint = PointList.get(i).get(k).ePoint;
+                    if (PointList.get(i).get(k).weight < min && BPList.get(PointList.get(i).get(k).end).size() != 0) {//BPList.get(PointList.get(i).get(k).ePoint).size()!= 0 //POIList[PointList.get(i).get(k).ePoint].Boundary != 0
+                        min = PointList.get(i).get(k).weight;
+                        minPoint = PointList.get(i).get(k).end;
                     }
                 }
             } else {
@@ -190,7 +190,7 @@ public class CreatMinBP {
 //            }
 //        }
 
-        huoqu_txt.WriteTxt10(MinBP);
+        TextWriter.WriteTxt10(MinBP);
         System.out.println("1");
 
 

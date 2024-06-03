@@ -1,10 +1,10 @@
 package main.NY;
 
 import loader.*;
-import GraphEntity.Class_BPList;
-import GraphEntity.MyGraph;
-import GraphEntity.POI;
-import GraphEntity.list;
+import entity.BpPath;
+import entity.Graph;
+import entity.POI;
+import entity.Path;
 import KKRSAlgorithm.Find_Topk_NoOpt;
 import KKRSAlgorithm.Find_path_MTDOSR;
 
@@ -29,7 +29,7 @@ public class main_MTDOSR {
     static long timeA_db3;
     static int num5 = 1; //循环次数
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
 
         int[] POI_Type = {43, 25, 14, 28, 19, 26};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
         int k1 = 6;
@@ -44,7 +44,7 @@ public class main_MTDOSR {
 
     }
 
-    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] POI_Type2, int k1) throws InterruptedException {
+    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] POI_Type2, int k1) throws InterruptedException, IOException {
         FileReader file = null;
         try {
             file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
@@ -114,7 +114,7 @@ public class main_MTDOSR {
 
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data);
         //划分子图
         try {
@@ -154,7 +154,7 @@ public class main_MTDOSR {
         //______________________________________________________________________________________________
         // //构建距离索引list
         Creatlist list1 = new Creatlist();
-        ArrayList<ArrayList<list>> List = list1.CreatList_NY(ccc1);
+        ArrayList<ArrayList<Path>> List = list1.CreatList_NY(ccc1);
         //System.out.println("1");
         boolean flag = true;
         ArrayList<Integer> POI_Type_Num = new ArrayList<>();
@@ -174,9 +174,9 @@ public class main_MTDOSR {
         }
         //______________________________________________________________________________________________
         // //构建边界顶点索引BPList
-        ArrayList<ArrayList<Class_BPList>> BPList = new ArrayList<>();
+        ArrayList<ArrayList<BpPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<Class_BPList>());
+            BPList.add(new ArrayList<BpPath>());
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");

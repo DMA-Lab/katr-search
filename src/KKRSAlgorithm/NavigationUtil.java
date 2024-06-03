@@ -1,7 +1,7 @@
 package KKRSAlgorithm;
 
-import GraphEntity.EdegeNode;
-import GraphEntity.MyGraph;
+import entity.EdegeNode;
+import entity.Graph;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -33,14 +33,14 @@ public class NavigationUtil {
      * @return
      */
 
-    public static double getEdgeWight(MyGraph graph, int i, int j) {
+    public static double getEdgeWight(Graph graph, int i, int j) {
         //long startTime1=System.currentTimeMillis(); //开始获取时间
         double w = 0;
         EdegeNode a = null;
-        a = (EdegeNode) MyGraph.point[i].firstArc;
+        a = (EdegeNode) Graph.point[i].firstArc;
         while (a != null) {
-            if (a.adjvex == j) {
-                return w + a.value;
+            if (a.adj_vertex == j) {
+                return w + a.weight;
             }
             a = a.nextEdge;                                                    //实际上像是一种遍历链表的行为
         }
@@ -57,12 +57,12 @@ public class NavigationUtil {
      * @param j
      * @return
      */
-    public static boolean isConnected(MyGraph graph, int i, int j) {
+    public static boolean isConnected(Graph graph, int i, int j) {
         double w = 0;
         EdegeNode a = null;
-        a = (EdegeNode) MyGraph.point[i].firstArc;
+        a = (EdegeNode) Graph.point[i].firstArc;
         while (a != null) {
-            if (a.adjvex == j) {
+            if (a.adj_vertex == j) {
                 return true;
             }
             a = a.nextEdge;                                                    //实际上像是一种遍历链表的行为
@@ -90,11 +90,11 @@ public class NavigationUtil {
     }
 
     //得到x的邻接点为y的后一个邻接点位置,为-1说明没有找到
-    public static int getNextNode(MyGraph graph, int x, int y) {
+    public static int getNextNode(Graph graph, int x, int y) {
         int next_node = -1;
-        EdegeNode edge = (EdegeNode) MyGraph.point[x].firstArc;
+        EdegeNode edge = (EdegeNode) Graph.point[x].firstArc;
         if (null != edge && y == -1) {
-            int n = edge.adjvex;
+            int n = edge.adj_vertex;
             //元素还不在stack中
             if (!states.get(n))
                 return n;
@@ -103,9 +103,9 @@ public class NavigationUtil {
 
         while (null != edge) {
             //节点未访问
-            if (edge.adjvex == y) {
+            if (edge.adj_vertex == y) {
                 if (null != edge.nextEdge) {
-                    next_node = edge.nextEdge.adjvex;
+                    next_node = edge.nextEdge.adj_vertex;
 
                     if (!states.get(next_node))
                         return next_node;
@@ -118,9 +118,9 @@ public class NavigationUtil {
     }
 
 
-    public static Stack<Integer> visit(MyGraph graph, int x, int y) {
+    public static Stack<Integer> visit(Graph graph, int x, int y) {
         //初始化所有节点在stack中的情况
-        for (int i = 0; i < MyGraph.point.length; i++) {
+        for (int i = 0; i < Graph.point.length; i++) {
             states.put(i, false);
         }
         //stack top元素

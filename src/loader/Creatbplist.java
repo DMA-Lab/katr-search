@@ -1,6 +1,6 @@
 package loader;
 
-import GraphEntity.Class_BPList;
+import entity.BpPath;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Creatbplist {
-    public ArrayList<ArrayList<Class_BPList>> CreatBPList_CA(ArrayList<ArrayList<Class_BPList>> BPList, int num) {
+    public ArrayList<ArrayList<BpPath>> CreatBPList_CA(ArrayList<ArrayList<BpPath>> BPList, int num) {
         //int[] BP = new int[num];
         FileReader file1 = null;
         int num55 = 0;
@@ -35,9 +35,9 @@ public class Creatbplist {
 //                for (int i = 0; i < sp.length; i++) {
 //                    BP1.get(BP1.size()-1).add(sp[i]);
 //                }
-                BPList.get(Integer.parseInt(sp[2])).add(new Class_BPList());
-                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).Target = Integer.parseInt(sp[3]);
-                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).w = Integer.parseInt(sp[4]);
+                BPList.get(Integer.parseInt(sp[2])).add(new BpPath());
+                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).target = Integer.parseInt(sp[3]);
+                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).weight = Integer.parseInt(sp[4]);
 //                for (int i = 6; i < sp.length; i++) {
 //                    BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size()-1).path.add(Integer.parseInt(sp[i]));
 //                }
@@ -55,7 +55,7 @@ public class Creatbplist {
     }
 
 
-    public ArrayList<ArrayList<Class_BPList>> CreatBPList_COL(ArrayList<ArrayList<Class_BPList>> BPList, int num) {
+    public ArrayList<ArrayList<BpPath>> CreatBPList_COL(ArrayList<ArrayList<BpPath>> BPList, int num) {
         //int[] BP = new int[num];
         FileReader file1 = null;
         int num55 = 0;
@@ -81,9 +81,9 @@ public class Creatbplist {
 //                for (int i = 0; i < sp.length; i++) {
 //                    BP1.get(BP1.size()-1).add(sp[i]);
 //                }
-                BPList.get(Integer.parseInt(sp[2])).add(new Class_BPList());
-                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).Target = Integer.parseInt(sp[3]);
-                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).w = Integer.parseInt(sp[4]);
+                BPList.get(Integer.parseInt(sp[2])).add(new BpPath());
+                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).target = Integer.parseInt(sp[3]);
+                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).weight = Integer.parseInt(sp[4]);
 //                for (int i = 6; i < sp.length; i++) {
 //                    BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size()-1).path.add(Integer.parseInt(sp[i]));
 //                }
@@ -101,7 +101,7 @@ public class Creatbplist {
     }
 
 
-    public ArrayList<ArrayList<Class_BPList>> CreatBPList_NY(ArrayList<ArrayList<Class_BPList>> BPList, int num) {
+    public ArrayList<ArrayList<BpPath>> CreatBPList_NY(ArrayList<ArrayList<BpPath>> BPList, int num) {
         //int[] BP = new int[num];
         FileReader file1 = null;
         int num55 = 0;
@@ -127,9 +127,9 @@ public class Creatbplist {
 //                for (int i = 0; i < sp.length; i++) {
 //                    BP1.get(BP1.size()-1).add(sp[i]);
 //                }
-                BPList.get(Integer.parseInt(sp[2])).add(new Class_BPList());
-                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).Target = Integer.parseInt(sp[3]);
-                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).w = Integer.parseInt(sp[4]);
+                BPList.get(Integer.parseInt(sp[2])).add(new BpPath());
+                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).target = Integer.parseInt(sp[3]);
+                BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size() - 1).weight = Integer.parseInt(sp[4]);
 //                for (int i = 6; i < sp.length; i++) {
 //                    BPList.get(Integer.parseInt(sp[2])).get(BPList.get(Integer.parseInt(sp[2])).size()-1).path.add(Integer.parseInt(sp[i]));
 //                }

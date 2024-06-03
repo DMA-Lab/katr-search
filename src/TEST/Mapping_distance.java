@@ -1,7 +1,7 @@
 package TEST;
 
 import CreateData.GraphData;
-import GraphEntity.MyGraph;
+import entity.Graph;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -93,7 +93,7 @@ public class Mapping_distance {
 
         }
         int ccc1 = ccc + 1;
-        GraphData.g = new MyGraph(ccc1, num1);
+        GraphData.g = new Graph(ccc1, num1);
         GraphData.g.createMyGraph(GraphData.g, ccc1, num1, data);
         //划分子图
         try {

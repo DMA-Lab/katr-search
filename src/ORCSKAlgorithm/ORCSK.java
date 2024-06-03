@@ -1,7 +1,7 @@
 package ORCSKAlgorithm;
 
-import GraphEntity.MyGraph;
-import GraphEntity.POI;
+import entity.Graph;
+import entity.POI;
 import KKRSAlgorithm.Dijkstia;
 import KKRSAlgorithm.NavigationUtil;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class ORCSK {
     public static int OffsetNum = 0;
 
-    public static Dijkstia.MyPath OptimalPath(MyGraph g, int startIndex, int endIndex, POI[] POIList, int[] POI_Type) {
+    public static Dijkstia.MyPath OptimalPath(Graph g, int startIndex, int endIndex, POI[] POIList, int[] POI_Type) {
         Dijkstia.MyPath pi = KKRSAlgorithm.Dijkstia.Dijkstra(g, startIndex, endIndex);
         //path = POIAlgorithm.Dijkstia.ShortestPath(g , startIndex , endIndex , 1);
         // Dijkstia.Dijkstra_1_1 pi = new Dijkstia.Dijkstra_1_1(g, startIndex, endIndex, null);
@@ -49,7 +49,7 @@ public class ORCSK {
     }
 
 
-    public static Dijkstia.MyPath FindOffsetPath(MyGraph g, int startIndex, int endIndex, int[] POI_Type, POI[] POIList, int w1) {
+    public static Dijkstia.MyPath FindOffsetPath(Graph g, int startIndex, int endIndex, int[] POI_Type, POI[] POIList, int w1) {
         Dijkstia.MyPath path1 = new Dijkstia.MyPath();
         ArrayList<Integer> keyWord = new ArrayList<>();
         ArrayList<Integer> POI = new ArrayList<>();

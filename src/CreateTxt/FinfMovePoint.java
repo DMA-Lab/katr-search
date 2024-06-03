@@ -1,8 +1,8 @@
 package CreateTxt;
 
 import loader.Creatsg;
-import GraphEntity.MyGraph;
-import GraphEntity.huoqu_txt;
+import entity.Graph;
+import entity.TextWriter;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -80,7 +80,7 @@ public class FinfMovePoint {
             }
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data1);
 
         int num = c1.size() + 1;
@@ -127,7 +127,7 @@ public class FinfMovePoint {
                 movePoint.get(j).add(SG.get(j).get(i));
             }
         }
-        huoqu_txt.WriteTxt2(movePoint, numPoint);
+        TextWriter.WriteTxt1(movePoint, numPoint);
         System.out.println("1");
 
 

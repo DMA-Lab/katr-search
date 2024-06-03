@@ -1,6 +1,6 @@
 package CreateTxt;
 
-import GraphEntity.huoqu_txt;
+import entity.TextWriter;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -136,7 +136,7 @@ public class Creat_metis_danbianshaung {
                 num3++;
             }
         }
-        huoqu_txt.WriteTxt6(all, ccc1, data1.length);
+        TextWriter.WriteTxt6(all, ccc1, data1.length);
         System.out.println("1");
 //        for (int i = 1; i < ccc1; i++) {
 //            g2 = (EdegeNode) g.point[i].firstArc;

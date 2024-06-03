@@ -1,9 +1,8 @@
 package KKRSAlgorithm;
 
-import GraphEntity.Class_BPList;
-import GraphEntity.MyGraph;
-import GraphEntity.POI;
-import GraphEntity.list;
+import entity.BpPath;
+import entity.Graph;
+import entity.POI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +65,8 @@ public class Find_Topk_OSSCaling {
         return path2;
     }
 
-    public ArrayList<Path> Find_Path_OSSCaling(MyGraph g, int q, int[] POI_Type, int ccc1, POI[] POIList, ArrayList<ArrayList<list>> List,
-                                               ArrayList<ArrayList<Class_BPList>> BPList, ArrayList<ArrayList<Integer>> PointMinBP, int k3, int endIndex) throws InterruptedException {
+    public ArrayList<Path> Find_Path_OSSCaling(Graph g, int q, int[] POI_Type, int ccc1, POI[] POIList, ArrayList<ArrayList<entity.Path>> List,
+                                               ArrayList<ArrayList<BpPath>> BPList, ArrayList<ArrayList<Integer>> PointMinBP, int k3, int endIndex) throws InterruptedException {
         int nn1 = 0;//当只需要找一条路径的时候使用这个数来代替get(0)
         ArrayList<Path> path1 = new ArrayList<>();
         path1.add(new Path());
@@ -233,7 +232,7 @@ public class Find_Topk_OSSCaling {
         return flag;
     }
 
-    public List<Integer> getMinimumPath(MyGraph g, int sIndex, int tIndex, int[] path) {
+    public List<Integer> getMinimumPath(Graph g, int sIndex, int tIndex, int[] path) {
         List<Integer> result = new ArrayList<>();
         Stack<Integer> stack = new Stack<>();
         stack.push(tIndex);
@@ -243,7 +242,7 @@ public class Find_Topk_OSSCaling {
             i = path[i];
         }
         while (!stack.isEmpty()) {
-            result.add(MyGraph.point[stack.pop()].data);
+            result.add(Graph.point[stack.pop()].id);
         }
         //System.out.println();
         return result;

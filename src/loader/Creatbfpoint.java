@@ -1,8 +1,8 @@
 package loader;
 
 import CreateTxt.CreatSG;
-import GraphEntity.MyGraph;
-import GraphEntity.POI;
+import entity.Graph;
+import entity.POI;
 import KKRSAlgorithm.Dijkstia;
 
 import java.io.BufferedReader;
@@ -80,7 +80,7 @@ public class Creatbfpoint {
             }
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data1);
 
         int num = c1.size() + 1;

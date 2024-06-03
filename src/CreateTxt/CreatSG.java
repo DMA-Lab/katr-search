@@ -1,9 +1,9 @@
 package CreateTxt;
 
-import GraphEntity.EdegeNode;
-import GraphEntity.MyGraph;
-import GraphEntity.huoqu_txt;
-import GraphEntity.movePoint;
+import entity.EdegeNode;
+import entity.Graph;
+import entity.TextWriter;
+import entity.MovingPoint;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -62,7 +62,7 @@ public class CreatSG {
             }
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data1);
 
         int num = cc.size() + 1;
@@ -90,13 +90,13 @@ public class CreatSG {
 
         //将各个点放入对应的子图中
         int num2 = 200; // 存储多少个子图的骨架图中的节点
-        ArrayList<ArrayList<movePoint>> SG = new ArrayList<>(); //存储前num2个子图的骨架图中的节点
+        ArrayList<ArrayList<MovingPoint>> SG = new ArrayList<>(); //存储前num2个子图的骨架图中的节点
         for (int i = 0; i < num2; i++) {
-            SG.add(new ArrayList<movePoint>());
+            SG.add(new ArrayList<MovingPoint>());
         }
         for (int i = 0; i < Subgraph.length - 1; i++) {
             if (Subgraph[i] != null && Integer.parseInt(Subgraph[i]) < num2) {
-                SG.get(Integer.parseInt(Subgraph[i])).add(new movePoint(i));
+                SG.get(Integer.parseInt(Subgraph[i])).add(new MovingPoint(i));
             }
         }
 
@@ -145,10 +145,10 @@ public class CreatSG {
             } else {
                 continue;
             }
-            index = (EdegeNode) MyGraph.point[i].firstArc;
+            index = (EdegeNode) Graph.point[i].firstArc;
             while (index != null) {
-                if (Subgraph[index.adjvex] != null) {
-                    i3 = Integer.parseInt(Subgraph[index.adjvex]);
+                if (Subgraph[index.adj_vertex] != null) {
+                    i3 = Integer.parseInt(Subgraph[index.adj_vertex]);
                     if (i1 != i3) {
                         index_1[i] = 1;
                         break;
@@ -164,8 +164,8 @@ public class CreatSG {
 
         for (int i = 0; i < num2; i++) {
             for (int j = 0; j < SG.get(i).size(); j++) {
-                if (index_1[SG.get(i).get(j).number] == 1) {
-                    SG.get(i).get(j).type2 = 1;
+                if (index_1[SG.get(i).get(j).id] == 1) {
+                    SG.get(i).get(j).isBorder = 1;
                 }
             }
         }
@@ -202,14 +202,14 @@ public class CreatSG {
             num7 = 0;
             while (true) {
                 num99 = random.nextInt(SG.get(i).size());
-                if (SG.get(i).get(num99).type == 0) {
-                    SG.get(i).get(num99).type = random.nextInt(50);
-                    SG.get(i).get(num99).POI_num = random.nextInt(50);
+                if (SG.get(i).get(num99).poiType == 0) {
+                    SG.get(i).get(num99).poiType = random.nextInt(50);
+                    SG.get(i).get(num99).hotValue = random.nextInt(50);
                     num7++;
                 }
                 num88 = 0;
                 for (int j = 0; j < SG.get(i).size(); j++) {
-                    if (SG.get(i).get(j).POI_num != 0) {
+                    if (SG.get(i).get(j).hotValue != 0) {
                         num88++;
                     }
                 }
@@ -371,7 +371,7 @@ public class CreatSG {
             num11 = num11 + SG.get(i).size();
         }
         //将构建的SG图写入txt文件
-        huoqu_txt.WriteTxt3(SG, num11);
+        TextWriter.WriteTxt3(SG, num11);
         //huoqu_txt.WriteTxt9(num111);
         System.out.println("完成");
     }

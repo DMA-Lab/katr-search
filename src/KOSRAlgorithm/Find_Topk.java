@@ -1,8 +1,8 @@
 package KOSRAlgorithm;
 
-import GraphEntity.EdegeNode;
-import GraphEntity.MyGraph;
-import GraphEntity.POI;
+import entity.EdegeNode;
+import entity.Graph;
+import entity.POI;
 import KKRSAlgorithm.NavigationUtil;
 import KOSRAlgorithm._Class.Dominance;
 import KOSRAlgorithm._Class.KOSR_Point;
@@ -20,7 +20,7 @@ public class Find_Topk {
     public static long Time1 = 0;
 
 
-    public static ArrayList<ArrayList<Integer>> KOSR(MyGraph g, int PointNum, int startNum, int k, POI[] POIList, int[] POI_Type) {
+    public static ArrayList<ArrayList<Integer>> KOSR(Graph g, int PointNum, int startNum, int k, POI[] POIList, int[] POI_Type) {
 
         ArrayList<ArrayList<Integer>> topK = new ArrayList<>();
         ArrayList<ArrayList<KOSR_Point>> KOSR_Point = new ArrayList<>();
@@ -152,7 +152,7 @@ public class Find_Topk {
     }
 
 
-    public static ArrayList<ArrayList<KOSR_Point>> FindNN(ArrayList<ArrayList<KOSR_Point>> KOSR_Point, int startIndex, int keyWordName, int k2, MyGraph g,
+    public static ArrayList<ArrayList<KOSR_Point>> FindNN(ArrayList<ArrayList<KOSR_Point>> KOSR_Point, int startIndex, int keyWordName, int k2, Graph g,
                                                           POI[] POIList) {
         ArrayList<KOSR_Point> kosr_points = KOSR_Point.get(startIndex);
         kosr_points.add(new KOSR_Point(keyWordName));
@@ -207,15 +207,15 @@ public class Find_Topk {
             set[k] = 1; // 把节点k并入
             dist1.remove(Integer.valueOf(k));
             //dist1.remove(k);
-            g2 = (EdegeNode) MyGraph.point[k].firstArc;
+            g2 = (EdegeNode) Graph.point[k].firstArc;
             // 修改dist[]、path[]
             while (g2 != null) {
-                int j = g2.adjvex;
-                if (dist[j] == MAX_VALUE || dist[k] + g2.value < dist[j]) {
+                int j = g2.adj_vertex;
+                if (dist[j] == MAX_VALUE || dist[k] + g2.weight < dist[j]) {
                     if (dist[j] == MAX_VALUE) {
                         dist1.add(j);
                     }
-                    dist[j] = dist[k] + g2.value;
+                    dist[j] = dist[k] + g2.weight;
                 }
                 g2 = g2.nextEdge;
             }

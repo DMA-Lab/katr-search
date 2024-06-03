@@ -1,6 +1,6 @@
 package KKRSAlgorithm;
 
-import GraphEntity.*;
+import entity.*;
 
 import java.util.ArrayList;
 
@@ -100,8 +100,8 @@ public class Find_Topk_A_db2 {
 
     }
 
-    public ArrayList<Lower_bound> Top_k_db2(MyGraph g, int q, int q_SG, int k, int[] POI_Type, ArrayList<ArrayList<Integer>> SG, ArrayList<ArrayList<list>> List, POI[] POIList,
-                                            double a, ArrayList<ArrayList<Class_BPList>> BPList, ArrayList<ArrayList<Integer>> PointMinBP) throws InterruptedException {
+    public ArrayList<LowerBound> Top_k_db2(Graph g, int q, int q_SG, int k, int[] POI_Type, ArrayList<ArrayList<Integer>> SG, ArrayList<ArrayList<Path>> List, POI[] POIList,
+                                           double a, ArrayList<ArrayList<BpPath>> BPList, ArrayList<ArrayList<Integer>> PointMinBP) throws InterruptedException {
         //找到查询点q所在的子图
         boolean flag1 = false;
         //int q_SG = 0;
@@ -188,7 +188,7 @@ public class Find_Topk_A_db2 {
         time11 = time11 + endTime1 - startTime1;
         // startTime1 = System.currentTimeMillis();
         startTime1 = System.currentTimeMillis();
-        ArrayList<Lower_bound> allPath = Find_allPath(path, List, POIList, a, q_BP, Min_w, BPList, PointMinBP, k);
+        ArrayList<LowerBound> allPath = Find_allPath(path, List, POIList, a, q_BP, Min_w, BPList, PointMinBP, k);
         endTime1 = System.currentTimeMillis();
         time33 = time33 + endTime1 - startTime1;
         // ArrayList<Lower_bound> allPath = new ArrayList<>();
@@ -196,7 +196,7 @@ public class Find_Topk_A_db2 {
         //time1 = endTime1 - startTime1;
         // System.out.println("路线剪枝测试成功,所用的时间为："+time1);
 
-        ArrayList<Lower_bound> Top_k = Find_Top_k(allPath, k);
+        ArrayList<LowerBound> Top_k = Find_Top_k(allPath, k);
         double LB = Find_LB(Top_k);
         //找到W_max
         int w_max = 0;
@@ -304,8 +304,8 @@ public class Find_Topk_A_db2 {
                             NOPOI_Num.add(SGPoi.get(j).num);
                             q_TargetSG_w = Integer.MAX_VALUE;
                             for (int l = 0; l < NOPOI_Num.size(); l++) {
-                                if (BPList.get(q_BP).get(NOPOI_Num.get(l)).w < q_TargetSG_w) {
-                                    q_TargetSG_w = BPList.get(q_BP).get(NOPOI_Num.get(l)).w;
+                                if (BPList.get(q_BP).get(NOPOI_Num.get(l)).weight < q_TargetSG_w) {
+                                    q_TargetSG_w = BPList.get(q_BP).get(NOPOI_Num.get(l)).weight;
                                 }
                             }
                             NOPOI_Num.clear();
@@ -346,7 +346,7 @@ public class Find_Topk_A_db2 {
                                 //path_k = Find_path_k(q,path7, k, q_SG,POIList, List,PointMinBP,BPList);
                                 //long startTime2 = System.currentTimeMillis(); //开始获取时间
                                 startTime1 = System.currentTimeMillis();
-                                ArrayList<Lower_bound> allPath4 = Find_allPath(path7, List, POIList, a, q_BP, Min_w, BPList, PointMinBP, k);
+                                ArrayList<LowerBound> allPath4 = Find_allPath(path7, List, POIList, a, q_BP, Min_w, BPList, PointMinBP, k);
                                 endTime1 = System.currentTimeMillis();
                                 time33 = time33 + endTime1 - startTime1;
                                 //long endTime2 = System.currentTimeMillis(); //开始获取时间
@@ -354,7 +354,7 @@ public class Find_Topk_A_db2 {
 
                                 //endTime1 = System.currentTimeMillis();
                                 //time2 = endTime2 - startTime2;
-                                ArrayList<Lower_bound> Top_k4 = Find_Top_k(allPath4, k);
+                                ArrayList<LowerBound> Top_k4 = Find_Top_k(allPath4, k);
                                 //System.out.println("Top_k4.size="+Top_k4.size());
 
                                 int top_min;
@@ -457,9 +457,9 @@ public class Find_Topk_A_db2 {
         return Top_k;
     }
 
-    public ArrayList<Lower_bound> Find_allPath(ArrayList<ArrayList<ArrayList<Integer>>> path, ArrayList<ArrayList<list>> List, POI[] POIList, double a,
-                                               int q_BP, int w_BP, ArrayList<ArrayList<Class_BPList>> BPList, ArrayList<ArrayList<Integer>> PointList, int k) throws InterruptedException {
-        ArrayList<Lower_bound> LB = new ArrayList<>();
+    public ArrayList<LowerBound> Find_allPath(ArrayList<ArrayList<ArrayList<Integer>>> path, ArrayList<ArrayList<Path>> List, POI[] POIList, double a,
+                                              int q_BP, int w_BP, ArrayList<ArrayList<BpPath>> BPList, ArrayList<ArrayList<Integer>> PointList, int k) throws InterruptedException {
+        ArrayList<LowerBound> LB = new ArrayList<>();
         int w = 0;
         int num = 0;
         double score_Min = 0;
@@ -518,17 +518,17 @@ public class Find_Topk_A_db2 {
                     w_BP1 = PointList.get(q_index).get(1);
                     if (POIList[q_index].SG == POIList[q_index1].SG) {
                         for (int k1 = 0; k1 < List.get(q_index).size(); k1++) {
-                            if (List.get(q_index).get(k1).ePoint == q_index1) {
-                                w = w + List.get(q_index).get(k1).w;
+                            if (List.get(q_index).get(k1).end == q_index1) {
+                                w = w + List.get(q_index).get(k1).weight;
                                 break;
                             }
                         }
                     } else {
                         if (q_BP1 != Integer.MAX_VALUE) {
-                            w = w + w_BP1 + BPList.get(q_BP1).get(POIList[q_index1].SG).w;
-                            for (int k1 = 0; k1 < List.get(BPList.get(q_BP1).get(POIList[q_index1].SG).Target).size(); k1++) {
-                                if (List.get(BPList.get(q_BP1).get(POIList[q_index1].SG).Target).get(k1).ePoint == q_index1) {
-                                    w = w + List.get(BPList.get(q_BP1).get(POIList[q_index1].SG).Target).get(k1).w;
+                            w = w + w_BP1 + BPList.get(q_BP1).get(POIList[q_index1].SG).weight;
+                            for (int k1 = 0; k1 < List.get(BPList.get(q_BP1).get(POIList[q_index1].SG).target).size(); k1++) {
+                                if (List.get(BPList.get(q_BP1).get(POIList[q_index1].SG).target).get(k1).end == q_index1) {
+                                    w = w + List.get(BPList.get(q_BP1).get(POIList[q_index1].SG).target).get(k1).weight;
                                     break;
                                 }
                             }
@@ -539,9 +539,9 @@ public class Find_Topk_A_db2 {
                 }
                 //计算这组poi的路径长度w
                 startTime2 = System.currentTimeMillis();
-                Lower_bound nn = new Lower_bound();
+                LowerBound nn = new LowerBound();
                 if (LB.size() < k) {
-                    LB.add(new Lower_bound());
+                    LB.add(new LowerBound());
                     LB.get(LB.size() - 1).path.clear();
                     LB.get(LB.size() - 1).path.addAll(path.get(i).get(ii));
                     LB.get(LB.size() - 1).dis = w;
@@ -590,8 +590,8 @@ public class Find_Topk_A_db2 {
         return LB;
     }
 
-    public ArrayList<Lower_bound> Find_Top_k(ArrayList<Lower_bound> a, int k) {
-        ArrayList<Lower_bound> top_k = new ArrayList<>();
+    public ArrayList<LowerBound> Find_Top_k(ArrayList<LowerBound> a, int k) {
+        ArrayList<LowerBound> top_k = new ArrayList<>();
         int n = 0;
         for (int i = 0; i < a.size(); i++) {
             if (top_k.size() < k && a.get(i).dis != 0) {
@@ -610,7 +610,7 @@ public class Find_Topk_A_db2 {
         return top_k;
     }
 
-    public double Find_LB(ArrayList<Lower_bound> Top_k) {
+    public double Find_LB(ArrayList<LowerBound> Top_k) {
         //int LB = 0;
         double LB_score = Double.MAX_VALUE;
         for (int i = 0; i < Top_k.size(); i++) {
@@ -623,7 +623,7 @@ public class Find_Topk_A_db2 {
         return LB_score;
     }
 
-    public int Find_LB_Num(ArrayList<Lower_bound> Top_k) {
+    public int Find_LB_Num(ArrayList<LowerBound> Top_k) {
         int LB = 0;
         double LB_score = Double.MAX_VALUE;
         for (int i = 0; i < Top_k.size(); i++) {

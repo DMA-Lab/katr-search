@@ -1,8 +1,8 @@
 package CreateData;
 
 import loader.*;
-import GraphEntity.Class_BPList;
-import GraphEntity.MyGraph;
+import entity.BpPath;
+import entity.Graph;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -82,7 +82,7 @@ public class IntoData {
 
         }
         int ccc1 = ccc + 1;
-        GraphData.g = new MyGraph(ccc1, num1);
+        GraphData.g = new Graph(ccc1, num1);
         GraphData.g.createMyGraph(GraphData.g, ccc1, num1, data);
         //划分子图
         try {
@@ -144,7 +144,7 @@ public class IntoData {
         // //构建边界顶点索引BPList
         GraphData.BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            GraphData.BPList.add(new ArrayList<Class_BPList>());
+            GraphData.BPList.add(new ArrayList<BpPath>());
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");

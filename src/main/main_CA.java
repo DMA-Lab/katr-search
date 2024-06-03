@@ -1,7 +1,7 @@
 package main;
 
 import loader.*;
-import GraphEntity.*;
+import entity.*;
 import KKRSAlgorithm.*;
 
 import java.io.BufferedReader;
@@ -24,7 +24,7 @@ public class main_CA {
     static long timeA_db3;
     static int num5 = 1; //循环次数
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         int[] POI_Type = {16, 12, 23, 9, 33, 58};//16,12,23,9,33,58,11,21少,16,12,23,9,33,58,4,55剪枝效率
         int k1 = 10;
         double a = 0.999999;//α
@@ -35,7 +35,7 @@ public class main_CA {
         }
         //ArrayList<Find_Topk_OSSCaling.Path> Top_k_OSSCaling = OSSCaling(POI_Type,k1,endIndex);
         // ArrayList<Find_path_MTDOSR.Path> Top_k_MTDOSR = MTDOSR(POI_Type,k1);
-        ArrayList<Lower_bound> Top_k_A = A(POI_Type, k1, a);
+        ArrayList<LowerBound> Top_k_A = A(POI_Type, k1, a);
 
         System.out.println("————————————————————————————————————————————————————————————————————————————");
         System.out.println("KSRG算法计算所消耗的时间为:" + (time2 / num6) + "毫秒");
@@ -116,7 +116,7 @@ public class main_CA {
             }
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data1);
 
         int num = c1.size() + 1;
@@ -154,7 +154,7 @@ public class main_CA {
         //______________________________________________________________________________________________
         // //构建距离索引list
         Creatlist list1 = new Creatlist();
-        ArrayList<ArrayList<list>> List = list1.CreatList_CA(ccc1);
+        ArrayList<ArrayList<Path>> List = list1.CreatList_CA(ccc1);
         //System.out.println("1");
         boolean flag = true;
         ArrayList<Integer> POI_Type_Num = new ArrayList<>();
@@ -174,9 +174,9 @@ public class main_CA {
         }
         //______________________________________________________________________________________________
         //构建边界顶点索引BPList
-        ArrayList<ArrayList<Class_BPList>> BPList = new ArrayList<>();
+        ArrayList<ArrayList<BpPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<Class_BPList>());
+            BPList.add(new ArrayList<BpPath>());
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");
@@ -317,7 +317,7 @@ public class main_CA {
             }
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data1);
 
         int num = c1.size() + 1;
@@ -355,7 +355,7 @@ public class main_CA {
         //______________________________________________________________________________________________
         // //构建距离索引list
         Creatlist list1 = new Creatlist();
-        ArrayList<ArrayList<list>> List = list1.CreatList_CA(ccc1);
+        ArrayList<ArrayList<Path>> List = list1.CreatList_CA(ccc1);
         //System.out.println("1");
         boolean flag = true;
         ArrayList<Integer> POI_Type_Num = new ArrayList<>();
@@ -375,9 +375,9 @@ public class main_CA {
         }
         //______________________________________________________________________________________________
         // //构建边界顶点索引BPList
-        ArrayList<ArrayList<Class_BPList>> BPList = new ArrayList<>();
+        ArrayList<ArrayList<BpPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<Class_BPList>());
+            BPList.add(new ArrayList<BpPath>());
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");
@@ -415,7 +415,7 @@ public class main_CA {
     }
 
 
-    public static ArrayList<Lower_bound> A(int[] POI_Type2, int k1, double a) throws InterruptedException, IOException {
+    public static ArrayList<LowerBound> A(int[] POI_Type2, int k1, double a) throws InterruptedException, IOException {
 
         FileReader file1 = null;
         ArrayList<ArrayList<Double>> c1 = new ArrayList<>();
@@ -483,7 +483,7 @@ public class main_CA {
             }
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data1);
 
         int num = c1.size() + 1;
@@ -526,7 +526,7 @@ public class main_CA {
         //______________________________________________________________________________________________
         // //构建距离索引list
         Creatlist list1 = new Creatlist();
-        ArrayList<ArrayList<list>> List = list1.CreatList_CA(ccc1);
+        ArrayList<ArrayList<Path>> List = list1.CreatList_CA(ccc1);
         //System.out.println("1");
         boolean flag = true;
         ArrayList<Integer> POI_Type_Num = new ArrayList<>();
@@ -546,9 +546,9 @@ public class main_CA {
         }
         //______________________________________________________________________________________________
         // //构建边界顶点索引BPList
-        ArrayList<ArrayList<Class_BPList>> BPList = new ArrayList<>();
+        ArrayList<ArrayList<BpPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<Class_BPList>());
+            BPList.add(new ArrayList<BpPath>());
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");
@@ -654,10 +654,10 @@ public class main_CA {
         Find_Topk_A_db2 topk_db2 = new Find_Topk_A_db2();
         Find_TopK_A_db3 topk_db3 = new Find_TopK_A_db3();
         Find_Topk_NoOpt topk_No = new Find_Topk_NoOpt();
-        ArrayList<Lower_bound> Top_k = new ArrayList<>();
-        ArrayList<Lower_bound> Top_k_db = new ArrayList<>();
-        ArrayList<Lower_bound> Top_k_db2 = new ArrayList<>();
-        ArrayList<Lower_bound> Top_k_db3 = new ArrayList<>();
+        ArrayList<LowerBound> Top_k = new ArrayList<>();
+        ArrayList<LowerBound> Top_k_db = new ArrayList<>();
+        ArrayList<LowerBound> Top_k_db2 = new ArrayList<>();
+        ArrayList<LowerBound> Top_k_db3 = new ArrayList<>();
 
         for (int ii = 0; ii < num5; ii++) {
 

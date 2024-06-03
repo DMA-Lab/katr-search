@@ -1,6 +1,6 @@
 package loader;
 
-import GraphEntity.POI;
+import entity.POI;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

@@ -3,9 +3,9 @@ package main.NY;
 import loader.Creatbountpoint;
 import loader.Creatpoilist;
 import loader.Creatsg;
-import GraphEntity.MyGraph;
-import GraphEntity.POI;
-import GraphEntity.keyWordList;
+import entity.Graph;
+import entity.POI;
+import entity.KeywordList;
 import KOSRAlgorithm.Find_Topk;
 
 import java.io.BufferedReader;
@@ -115,7 +115,7 @@ public class main_KOSR {
 
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data);
         //划分子图
         try {
@@ -154,21 +154,21 @@ public class main_KOSR {
         POI[] POIList = POIList1.CreatPOIList_NY(ccc1, SG);
         //计算全部点到最近的边界顶点的距离
 //        ArrayList<ArrayList<Integer>> PointMinBP = Creat_MinBP.CreatMinBP_NY();
-        ArrayList<keyWordList> keyWordList = new ArrayList<>();
+        ArrayList<KeywordList> keyWordList = new ArrayList<>();
         boolean flag = false;
         for (int i = 0; i < POIList.length; i++) {
             if (POIList[i].POI_Type != 0) {
                 flag = false;
                 for (int j = 0; j < keyWordList.size(); j++) {
-                    if (keyWordList.get(j).name == POIList[i].POI_Type) {
-                        keyWordList.get(j).Node.add(i);
+                    if (keyWordList.get(j).poiType == POIList[i].POI_Type) {
+                        keyWordList.get(j).nodes.add(i);
                         flag = true;
                         break;
                     }
                 }
                 if (!flag) {
-                    keyWordList.add(new keyWordList(POIList[i].POI_Type));
-                    keyWordList.get(keyWordList.size() - 1).Node.add(i);
+                    keyWordList.add(new KeywordList(POIList[i].POI_Type));
+                    keyWordList.get(keyWordList.size() - 1).nodes.add(i);
 
                 }
             }

@@ -1,7 +1,7 @@
 package CreateTxt;
 
 import loader.Creatsg;
-import GraphEntity.MyGraph;
+import entity.Graph;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -79,7 +79,7 @@ public class CreatPOIList {
             }
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data1);
 
         int num = c1.size() + 1;

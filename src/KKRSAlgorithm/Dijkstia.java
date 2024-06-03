@@ -1,8 +1,8 @@
 package KKRSAlgorithm;
 
-import GraphEntity.EdegeNode;
-import GraphEntity.MyGraph;
-import GraphEntity.POI;
+import entity.EdegeNode;
+import entity.Graph;
+import entity.POI;
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -11,7 +11,7 @@ public class Dijkstia {
     static Set<MyPath> candidatePaths = new HashSet<>();
     static List<MyPath> result = new ArrayList<>();
 
-    public static List<MyPath> ShortestPath(MyGraph g, int startIndex, int endIndex, int K) throws InterruptedException {
+    public static List<MyPath> ShortestPath(Graph g, int startIndex, int endIndex, int K) throws InterruptedException {
         // 结果列表
         // 候选路径列表
         // 候选路径列表中权值最小的路径，及其对应的节点个数
@@ -57,7 +57,7 @@ public class Dijkstia {
         return result;
     }
 
-    public static MyPath Dijkstra(MyGraph g, int startIndex, int endIndex) {
+    public static MyPath Dijkstra(Graph g, int startIndex, int endIndex) {
         MyPath path1 = new MyPath();
         int[] set = new int[g.numPoint]; // 是否已并入集合，该点是否已找到最短路径
         // s到i的最短路径长度
@@ -106,15 +106,15 @@ public class Dijkstia {
             set[k] = 1; // 把节点k并入
             dist1.remove(Integer.valueOf(k));
             //dist1.remove(k);
-            EdegeNode g2 = (EdegeNode) MyGraph.point[k].firstArc;
+            EdegeNode g2 = (EdegeNode) Graph.point[k].firstArc;
             // 修改dist[]、path[]
             while (g2 != null) {
-                int j = g2.adjvex;
-                if (dist[j] == Integer.MAX_VALUE || dist[k] + g2.value < dist[j]) {
+                int j = g2.adj_vertex;
+                if (dist[j] == Integer.MAX_VALUE || dist[k] + g2.weight < dist[j]) {
                     if (dist[j] == Integer.MAX_VALUE) {
                         dist1.add(j);
                     }
-                    dist[j] = dist[k] + g2.value;
+                    dist[j] = dist[k] + g2.weight;
                     path[j] = k;
                 }
                 g2 = g2.nextEdge;
@@ -139,7 +139,7 @@ public class Dijkstia {
         return path1;
     }
 
-    public static List<Integer> getMinimumPath(MyGraph g, int sIndex, int tIndex, int[] path) {
+    public static List<Integer> getMinimumPath(Graph g, int sIndex, int tIndex, int[] path) {
         List<Integer> result = new ArrayList<>();
         Stack<Integer> stack = new Stack<>();
         stack.push(tIndex);
@@ -149,7 +149,7 @@ public class Dijkstia {
             i = path[i];
         }
         while (!stack.isEmpty()) {
-            result.add(MyGraph.point[stack.pop()].data);
+            result.add(Graph.point[stack.pop()].id);
         }
         //System.out.println();
         return result;
@@ -186,7 +186,7 @@ public class Dijkstia {
     }
 
     public static class Dijkstra_1_1 extends Thread {
-        public MyGraph g;
+        public Graph g;
         public int startIndex;
         public int startIndex0;
         public int endIndex;
@@ -197,7 +197,7 @@ public class Dijkstia {
         public List<Integer> pk;
         public int i;
 
-        public Dijkstra_1_1(MyGraph g, int startIndex, int endIndex, List<Integer> unavailableNodeIndexs,
+        public Dijkstra_1_1(Graph g, int startIndex, int endIndex, List<Integer> unavailableNodeIndexs,
                             double w1, CountDownLatch cdl, int startIndex0, List<Integer> pk, int i) {
             this.g = g;
             this.startIndex = startIndex;
@@ -210,14 +210,14 @@ public class Dijkstia {
             this.i = i;
         }
 
-        public Dijkstra_1_1(MyGraph g, int startIndex, int endIndex, List<Integer> unavailableNodeIndexs) {
+        public Dijkstra_1_1(Graph g, int startIndex, int endIndex, List<Integer> unavailableNodeIndexs) {
             this.g = g;
             this.startIndex = startIndex;
             this.endIndex = endIndex;
             this.unavailableNodeIndexs = unavailableNodeIndexs;
         }
 
-        public Dijkstra_1_1(MyGraph g, int startIndex, int endIndex) {
+        public Dijkstra_1_1(Graph g, int startIndex, int endIndex) {
             this.g = g;
             this.startIndex = startIndex;
             this.endIndex = endIndex;
@@ -246,10 +246,10 @@ public class Dijkstia {
             if (unavailableNodeIndexs != null && unavailableNodeIndexs.size() != 0) {
                 Integer b1 = unavailableNodeIndexs.get(0);
                 Integer b2 = unavailableNodeIndexs.get(1);
-                a = (EdegeNode) MyGraph.point[b1].firstArc;
+                a = (EdegeNode) Graph.point[b1].firstArc;
 
                 while (a != null) {
-                    if (a.adjvex == b2)
+                    if (a.adj_vertex == b2)
                     //a.adjvex == unavailableNodeIndexs.get(endIndex))
                     {
                         //a.value = (int) Double.MAX_VALUE;
@@ -260,8 +260,8 @@ public class Dijkstia {
                     }
                 }
                 if (n == 1) {
-                    m = a.value;
-                    a.value = Integer.MAX_VALUE;
+                    m = a.weight;
+                    a.weight = Integer.MAX_VALUE;
                 }
             }
             // 初始化数组
@@ -303,15 +303,15 @@ public class Dijkstia {
                 set[k] = 1; // 把节点k并入
                 dist1.remove(Integer.valueOf(k));
                 //dist1.remove(k);
-                EdegeNode g2 = (EdegeNode) MyGraph.point[k].firstArc;
+                EdegeNode g2 = (EdegeNode) Graph.point[k].firstArc;
                 // 修改dist[]、path[]
                 while (g2 != null) {
-                    int j = g2.adjvex;
-                    if (dist[j] == Integer.MAX_VALUE || dist[k] + g2.value < dist[j]) {
+                    int j = g2.adj_vertex;
+                    if (dist[j] == Integer.MAX_VALUE || dist[k] + g2.weight < dist[j]) {
                         if (dist[j] == Integer.MAX_VALUE) {
                             dist1.add(j);
                         }
-                        dist[j] = dist[k] + g2.value;
+                        dist[j] = dist[k] + g2.weight;
                         path[j] = k;
                     }
                     g2 = g2.nextEdge;
@@ -323,7 +323,7 @@ public class Dijkstia {
             if (unavailableNodeIndexs != null && unavailableNodeIndexs.size() != 0) {
                 if (n == 1) {
 
-                    a.value = m;
+                    a.weight = m;
                 }
             }
             if (dist[endIndex] == Double.MAX_VALUE) {
@@ -370,7 +370,7 @@ public class Dijkstia {
             candidatePaths.add(p1);
         }
 
-        public List<Integer> getMinimumPath(MyGraph g, int sIndex, int tIndex, int[] path) {
+        public List<Integer> getMinimumPath(Graph g, int sIndex, int tIndex, int[] path) {
             List<Integer> result = new ArrayList<>();
             Stack<Integer> stack = new Stack<>();
             stack.push(tIndex);
@@ -380,7 +380,7 @@ public class Dijkstia {
                 i = path[i];
             }
             while (!stack.isEmpty()) {
-                result.add(MyGraph.point[stack.pop()].data);
+                result.add(Graph.point[stack.pop()].id);
             }
             //System.out.println();
             return result;

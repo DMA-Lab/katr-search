@@ -1,6 +1,6 @@
 package CreateTxt;
 
-import GraphEntity.huoqu_txt;
+import entity.TextWriter;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -149,7 +149,7 @@ public class Creat_metis {
             num111 = num111 + all.get(i).size() / 2;
         }
 
-        huoqu_txt.WriteTxt6(all, ccc1 - 1, num111 / 2);
+        TextWriter.WriteTxt6(all, ccc1 - 1, num111 / 2);
 
         //检查一下有没有size为0的点
         //int num55 = 0;

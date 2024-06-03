@@ -1,9 +1,9 @@
 package CreateTxt;
 
 import loader.Creatsg;
-import GraphEntity.EdegeNode;
-import GraphEntity.MyGraph;
-import GraphEntity.huoqu_txt;
+import entity.EdegeNode;
+import entity.Graph;
+import entity.TextWriter;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -61,7 +61,7 @@ public class CreatBountPoint {
             }
         }
         int ccc1 = ccc + 1;
-        MyGraph g = new MyGraph(ccc1, num1);
+        Graph g = new Graph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data1);
 
         int num = ccc1;
@@ -105,10 +105,10 @@ public class CreatBountPoint {
             } else {
                 continue;
             }
-            index = (EdegeNode) MyGraph.point[i].firstArc;
+            index = (EdegeNode) Graph.point[i].firstArc;
             while (index != null) {
-                if (Subgraph[index.adjvex] != null) {
-                    i3 = Integer.parseInt(Subgraph[index.adjvex]);
+                if (Subgraph[index.adj_vertex] != null) {
+                    i3 = Integer.parseInt(Subgraph[index.adj_vertex]);
                     if (i1 != i3) {
                         index_1[i] = 1;
                         break;
@@ -119,7 +119,7 @@ public class CreatBountPoint {
                 }
             }
         }
-        huoqu_txt.WriteTxt5(index_1);
+        TextWriter.writeTxt5(index_1);
 
         System.out.println("1");
     }
