@@ -7,7 +7,7 @@ import entity.POI;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
-public class Dijkstia {
+public class Dijkstra {
     static Set<MyPath> candidatePaths = new HashSet<>();
     static List<MyPath> result = new ArrayList<>();
 

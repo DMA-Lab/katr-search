@@ -1,6 +1,5 @@
 package main.NY;
 
-import KKRSAlgorithm.Dijkstia;
 import DAPrune.DAPrune;
 import entity.BpPath;
 import entity.Graph;
@@ -34,11 +33,11 @@ public class main_DAPrune {
         int endIndex = 5487;
 
 
-        Dijkstia.MyPath Top_k_ORCSK = ORCSK(POI_Type, k1, startend, endIndex);
+        KKRSAlgorithm.Dijkstra.MyPath Top_k_ORCSK = ORCSK(POI_Type, k1, startend, endIndex);
 
     }
 
-    public static Dijkstia.MyPath ORCSK(int[] POI_Type2, int k1, int startIndex, int endIndex) throws InterruptedException {
+    public static KKRSAlgorithm.Dijkstra.MyPath ORCSK(int[] POI_Type2, int k1, int startIndex, int endIndex) throws InterruptedException {
 
         FileReader file = null;
         try {
@@ -247,7 +246,7 @@ public class main_DAPrune {
 //        ArrayList<Lower_bound> Top_k = new ArrayList<>();
 //        ArrayList<Lower_bound> Top_k_db = new ArrayList<>();
 //        ArrayList<Lower_bound> Top_k_db2 = new ArrayList<>();
-        Dijkstia.MyPath Top_k = new Dijkstia.MyPath();
+        KKRSAlgorithm.Dijkstra.MyPath Top_k = new KKRSAlgorithm.Dijkstra.MyPath();
         // time2 = time2/2;
 
         for (int ii = 0; ii < num5; ii++) {

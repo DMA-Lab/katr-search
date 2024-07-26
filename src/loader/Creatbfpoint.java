@@ -1,7 +1,6 @@
 package loader;
 
 import CreateTxt.CreatSG;
-import KKRSAlgorithm.Dijkstia;
 import entity.Graph;
 import entity.POI;
 
@@ -124,7 +123,7 @@ public class Creatbfpoint {
         int num11 = 1;
         int num22 = 0;
         int num33 = 0;
-        Dijkstia ksp_00 = new Dijkstia();
+        KKRSAlgorithm.Dijkstra ksp_00 = new KKRSAlgorithm.Dijkstra();
         int sPoint = 0;
         int ePoint = 0;
 
