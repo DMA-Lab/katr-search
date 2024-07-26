@@ -1,17 +1,18 @@
-# Keywords-Aware Top-k Routes Identification in Road Networks
+# Katr-Search
 
-赵浩宇, Java, 2022-2024. 
+This repository includes the code for KATR-Search and all baseline algorithms. Each folder contains the code for its respective algorithm: "KATR-Search", "DAPrune", "ROSE-GM", "OSS-caling", and "StarKOSR".
 
+## Dataset
 
-## 使用方法
+The references for the road network and POI set included by each datset are as follows:
 
-```java
-// 43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
-int[] POI_Type = {43, 25};
-// 想取的结果数
-int k = 20;
-double alpha = 0.5;
-int num = 1; //循环次数
-```
+Road network: [9th DIMACS Implementation Challenge - Shortest Paths](https://www.diag.uniroma1.it/challenge9/download.shtml).
+Direct download link [NY](https://www.diag.uniroma1.it//challenge9/data/USA-road-d/USA-road-d.NY.gr.gz), [CAL](https://www.diag.uniroma1.it//challenge9/data/USA-road-d/USA-road-d.CAL.gr.gz), [COL](https://www.diag.uniroma1.it//challenge9/data/USA-road-d/USA-road-d.COL.gr.gz)
 
-在 `main/KATR.java` 中，修改如上参数。 POI_Type 的数量对应论文中的 `u`。
+POI set: [OpenStreetMap](https://www.openstreetmap.org)
+
+## Getting Started
+
+The `src/main` directory contains the entry points for KATR-Search and all baseline algorithms. The main class is main_KATR. You can modify the values of the parameters `POT_Type`, `k`, and `alpha` as mentioned in our evaluation. The variable `input_path` specifies the path to the dataset, allowing you to switch between different datasets by changing this variable.
+
+Starting the comparison algorithms is similar, so it is not detailed here.
