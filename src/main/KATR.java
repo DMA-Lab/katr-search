@@ -2,10 +2,10 @@ package main;
 
 import CreateData.GraphData;
 import CreateData.IntoData;
-import entity.LowerBound;
 import KATRAlgorithm.FindInitialTopk;
 import KATRAlgorithm.FindTopk;
 import KATRAlgorithm.FindTopk_SToE;
+import entity.LowerBound;
 
 import java.io.IOException;
 import java.util.ArrayList;

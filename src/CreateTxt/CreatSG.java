@@ -2,8 +2,8 @@ package CreateTxt;
 
 import entity.EdegeNode;
 import entity.Graph;
-import entity.TextWriter;
 import entity.MovingPoint;
+import entity.TextWriter;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

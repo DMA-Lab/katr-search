@@ -9,7 +9,8 @@ public class Point<EdegeNode> {
     // 共有几个点
     public int num = 0;
 
-    public Point() {}
+    public Point() {
+    }
 
     public Point(int id) {
         this.id = id;

@@ -19,8 +19,5 @@ public class GraphData {
     public GraphData() {
         this.BPList = new ArrayList<>();
         this.BvList = new ArrayList<>();
-
     }
-
-
 }

@@ -1,10 +1,10 @@
 package CreateTxt;
 
+import entity.*;
 import loader.Creatbplist;
 import loader.Creatlist;
 import loader.Creatpoilist;
 import loader.Creatsg;
-import entity.*;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

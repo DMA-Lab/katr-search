@@ -1,9 +1,9 @@
 package CreateTxt;
 
-import loader.Creatsg;
 import entity.EdegeNode;
 import entity.Graph;
 import entity.TextWriter;
+import loader.Creatsg;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

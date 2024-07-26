@@ -1,9 +1,9 @@
 package ORCSKAlgorithm;
 
-import entity.Graph;
-import entity.POI;
 import KKRSAlgorithm.Dijkstia;
 import KKRSAlgorithm.NavigationUtil;
+import entity.Graph;
+import entity.POI;
 
 import java.util.ArrayList;
 import java.util.List;

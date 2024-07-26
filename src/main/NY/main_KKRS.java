@@ -1,8 +1,8 @@
 package main.NY;
 
-import loader.*;
-import entity.*;
 import KKRSAlgorithm.*;
+import entity.*;
+import loader.*;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

@@ -10,10 +10,10 @@ public class EdegeNode {
     // 下一个节点对象
     public EdegeNode nextEdge;
 
-    public EdegeNode() {}
+    public EdegeNode() {
+    }
 
-    public EdegeNode(int adjVertex, int weight)
-    {
+    public EdegeNode(int adjVertex, int weight) {
         this.adj_vertex = adjVertex;
         this.weight = weight;
     }

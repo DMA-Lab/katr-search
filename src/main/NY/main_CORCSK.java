@@ -1,11 +1,11 @@
 package main.NY;
 
-import loader.*;
+import KKRSAlgorithm.Dijkstia;
+import ORCSKAlgorithm.ORCSK;
 import entity.BpPath;
 import entity.Graph;
 import entity.POI;
-import KKRSAlgorithm.Dijkstia;
-import ORCSKAlgorithm.ORCSK;
+import loader.*;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

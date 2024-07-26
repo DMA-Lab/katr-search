@@ -1,8 +1,8 @@
 package CreateData;
 
-import loader.*;
 import entity.BpPath;
 import entity.Graph;
+import loader.*;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

@@ -1,7 +1,7 @@
 package CreateTxt;
 
-import loader.Creatsg;
 import entity.Graph;
+import loader.Creatsg;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

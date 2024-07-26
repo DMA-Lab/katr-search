@@ -1,9 +1,9 @@
 package loader;
 
 import CreateTxt.CreatSG;
+import KKRSAlgorithm.Dijkstia;
 import entity.Graph;
 import entity.POI;
-import KKRSAlgorithm.Dijkstia;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

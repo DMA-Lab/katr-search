@@ -31,13 +31,13 @@ public class TextWriter {
             //2.数据想写入的路径及文件
             File file = new File("D://IDEA//USA-road-t.NY.gr//AHP//NY_yidongjiedian.txt");
             //3.如果该文件不存在，就创建
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             //4.给字节输出流赋予实例
             writeFile = new FileWriter(file);
             //5.通过循环将数组写入txt文件中
-            for(int i = 0; i < suiji.length; i++) {
+            for (int i = 0; i < suiji.length; i++) {
                 writeFile.write(String.valueOf(suiji[i]));
                 //8.加上换行符
                 writeFile.write("\n");
@@ -49,7 +49,7 @@ public class TextWriter {
         } finally {
             try {
                 //11.如果writeFile不为空，就将其关闭
-                if(writeFile != null)
+                if (writeFile != null)
                     writeFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -96,7 +96,7 @@ public class TextWriter {
         File file = new File(path);
         FileWriter writer = new FileWriter(file);
 
-        for (int num: data) {
+        for (int num : data) {
             writer.write(String.valueOf(num));
             writer.write('\n');
         }
@@ -106,9 +106,9 @@ public class TextWriter {
         File file = new File(path);
         FileWriter writer = new FileWriter(file);
 
-        for (ArrayList<Integer> line: data) {
+        for (ArrayList<Integer> line : data) {
             int count = 0;
-            for (Integer value: line) {
+            for (Integer value : line) {
                 if (num != 0 && count > num) {
                     break;
                 }
