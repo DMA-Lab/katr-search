@@ -1,6 +1,6 @@
 package main.NY;
 
-import KKRSAlgorithm.*;
+import baseline.KKRSAlgorithm.*;
 import entity.*;
 import loader.*;
 

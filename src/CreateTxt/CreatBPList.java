@@ -1,6 +1,6 @@
 package CreateTxt;
 
-import KKRSAlgorithm.Dijkstia;
+import baseline.KKRSAlgorithm.Dijkstia;
 import entity.Graph;
 import entity.POI;
 import entity.TextWriter;
