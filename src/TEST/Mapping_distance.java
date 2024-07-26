@@ -1,6 +1,6 @@
 package TEST;
 
-import CreateData.GraphData;
+import DataPreprocessing.GraphPreprocessing;
 import entity.Graph;
 
 import java.io.BufferedReader;
@@ -17,12 +17,12 @@ public class Mapping_distance {
         double a = 0.5;//α
         int num = 10; //循环次数
 
-        GraphData GraphData = new GraphData();
-        Mapping_distance.CreatData(POI_Type, k1, a, GraphData);
+        GraphPreprocessing GraphPreprocessing = new GraphPreprocessing();
+        Mapping_distance.CreatData(POI_Type, k1, a, GraphPreprocessing);
     }
 
 
-    public static void CreatData(int[] POI_Type2, int k1, double a, GraphData GraphData) {
+    public static void CreatData(int[] POI_Type2, int k1, double a, GraphPreprocessing GraphPreprocessing) {
 
         FileReader file = null;
         try {
@@ -93,8 +93,8 @@ public class Mapping_distance {
 
         }
         int ccc1 = ccc + 1;
-        GraphData.g = new Graph(ccc1, num1);
-        GraphData.g.createMyGraph(GraphData.g, ccc1, num1, data);
+        GraphPreprocessing.g = new Graph(ccc1, num1);
+        GraphPreprocessing.g.createMyGraph(GraphPreprocessing.g, ccc1, num1, data);
         //划分子图
         try {
             file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");

@@ -1,4 +1,4 @@
-package CreateData;
+package DataPreprocessing;
 
 import entity.BpPath;
 import entity.Graph;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class IntoData {
 
-    public static void CreatData(int[] POI_Type2, int k1, double a, GraphData GraphData) throws IOException {
+    public static void CreatData(int[] POI_Type2, int k1, double a, GraphPreprocessing GraphPreprocessing) throws IOException {
 
         FileReader file = new FileReader("dataset/USA-road-t.NY.txt");
         BufferedReader reader = new BufferedReader(file);
@@ -69,8 +69,8 @@ public class IntoData {
             }
         }
         int ccc1 = ccc + 1;
-        GraphData.g = new Graph(ccc1, num1);
-        GraphData.g.createMyGraph(GraphData.g, ccc1, num1, data);
+        GraphPreprocessing.g = new Graph(ccc1, num1);
+        GraphPreprocessing.g.createMyGraph(GraphPreprocessing.g, ccc1, num1, data);
         //划分子图
         try {
             file1 = new FileReader("dataset/nyJiaquan.txt.part_2000.txt");
@@ -96,7 +96,7 @@ public class IntoData {
         int num2 = 200; // 存储多少个子图的骨架图中的节点
         Creatsg SG1 = new Creatsg();
         //BufferedReader br3 = new BufferedReader(file1);//读取文件
-        GraphData.SG = SG1.CreatSG_NY(num2); //存储前num2个子图的骨架图中的节点
+        GraphPreprocessing.SG = SG1.CreatSG_NY(num2); //存储前num2个子图的骨架图中的节点
         //______________________________________________________________________________________________
         //构建边界顶点集合
         Creatbountpoint bp1 = new Creatbountpoint();
@@ -105,50 +105,50 @@ public class IntoData {
         //______________________________________________________________________________________________
         //构建POI索引POIList，存储POI的类型和数值，并给每个顶点赋予坐标
         Creatpoilist POIList1 = new Creatpoilist();
-        GraphData.POIList = POIList1.CreatPOIList_NY(ccc1, GraphData.SG);
+        GraphPreprocessing.POIList = POIList1.CreatPOIList_NY(ccc1, GraphPreprocessing.SG);
         //______________________________________________________________________________________________
         // //构建距离索引list
         Creatlist list1 = new Creatlist();
-        GraphData.List = list1.CreatList_NY(ccc1);
+        GraphPreprocessing.List = list1.CreatList_NY(ccc1);
         //System.out.println("1");
         boolean flag = true;
         ArrayList<Integer> POI_Type_Num = new ArrayList<>();
-        for (int i = 0; i < GraphData.POIList.length; i++) {
-            if (GraphData.POIList[i].POI_Type != 0) {
+        for (int i = 0; i < GraphPreprocessing.POIList.length; i++) {
+            if (GraphPreprocessing.POIList[i].POI_Type != 0) {
                 flag = true;
                 for (Integer integer : POI_Type_Num) {
-                    if (GraphData.POIList[i].POI_Type == integer) {
+                    if (GraphPreprocessing.POIList[i].POI_Type == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    POI_Type_Num.add(GraphData.POIList[i].POI_Type);
+                    POI_Type_Num.add(GraphPreprocessing.POIList[i].POI_Type);
                 }
             }
         }
         //______________________________________________________________________________________________
         // //构建边界顶点索引BPList
-        GraphData.BPList = new ArrayList<>();
+        GraphPreprocessing.BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            GraphData.BPList.add(new ArrayList<BpPath>());
+            GraphPreprocessing.BPList.add(new ArrayList<BpPath>());
         }
         Creatbplist BPList1 = new Creatbplist();
         //System.out.println("111");
-        BPList1.CreatBPList_NY(GraphData.BPList, ccc1);
+        BPList1.CreatBPList_NY(GraphPreprocessing.BPList, ccc1);
         //______________________________________________________________________________________________
 
         //计算全部点到最近的边界顶点的距离
-        GraphData.PointMinBP = CreateMinBpTable.CreatMinBP_NY();
+        GraphPreprocessing.PointMinBP = CreateMinBpTable.CreatMinBP_NY();
         //______________________________________________________________________________________________
         //记录每个子图中包含哪些边界顶点
-        GraphData.BvList = new ArrayList<>();
+        GraphPreprocessing.BvList = new ArrayList<>();
         for (int i = 0; i < num2 + 1; i++) {
-            GraphData.BvList.add(new ArrayList<Integer>());
+            GraphPreprocessing.BvList.add(new ArrayList<Integer>());
         }
-        for (int i = 0; i < GraphData.POIList.length; i++) {
-            if (GraphData.POIList[i].Boundary == 1) {
-                GraphData.BvList.get(GraphData.POIList[i].SG).add(i);
+        for (int i = 0; i < GraphPreprocessing.POIList.length; i++) {
+            if (GraphPreprocessing.POIList[i].Boundary == 1) {
+                GraphPreprocessing.BvList.get(GraphPreprocessing.POIList[i].SG).add(i);
             }
         }
 
@@ -162,9 +162,9 @@ public class IntoData {
         boolean flag1 = true;
         //int[] POI_Type = {11,12,16} ;//所求的POI的类型
         int[] POI_Type = POI_Type2;
-        for (int i = 0; i < GraphData.SG.size(); i++) {
-            for (int j = 0; j < GraphData.SG.get(i).size(); j++) {
-                if (GraphData.SG.get(i).get(j) == q) {
+        for (int i = 0; i < GraphPreprocessing.SG.size(); i++) {
+            for (int j = 0; j < GraphPreprocessing.SG.get(i).size(); j++) {
+                if (GraphPreprocessing.SG.get(i).get(j) == q) {
                     q_SG = i;
                     flag1 = true;
                     break;
@@ -177,25 +177,25 @@ public class IntoData {
         ArrayList<ArrayList<Integer>> POI_Num2 = new ArrayList<>();
         ArrayList<Integer> path3 = new ArrayList<>();
         boolean flag4 = true;
-        for (int i = 0; i < GraphData.POIList.length; i++) {
-            if (GraphData.POIList[i].POI_Type != 0) {
+        for (int i = 0; i < GraphPreprocessing.POIList.length; i++) {
+            if (GraphPreprocessing.POIList[i].POI_Type != 0) {
                 flag4 = true;
                 for (ArrayList<Integer> integers : POI_Num2) {
-                    if (integers.get(0) == GraphData.POIList[i].POI_Type) {
+                    if (integers.get(0) == GraphPreprocessing.POIList[i].POI_Type) {
                         flag4 = false;
-                        if (GraphData.POIList[i].POI_Num < integers.get(1)) {
+                        if (GraphPreprocessing.POIList[i].POI_Num < integers.get(1)) {
                             path3.clear();
                             path3.add(integers.get(0));
-                            path3.add(GraphData.POIList[i].POI_Num);
+                            path3.add(GraphPreprocessing.POIList[i].POI_Num);
                             path3.add(integers.get(2));
                             integers.clear();
                             integers.addAll(path3);
                         }
-                        if (GraphData.POIList[i].POI_Num > integers.get(2)) {
+                        if (GraphPreprocessing.POIList[i].POI_Num > integers.get(2)) {
                             path3.clear();
                             path3.add(integers.get(0));
                             path3.add(integers.get(1));
-                            path3.add(GraphData.POIList[i].POI_Num);
+                            path3.add(GraphPreprocessing.POIList[i].POI_Num);
                             integers.clear();
                             integers.addAll(path3);
                         }
@@ -203,9 +203,9 @@ public class IntoData {
                 }
                 if (flag4) {
                     POI_Num2.add(new ArrayList<Integer>());
-                    POI_Num2.getLast().add(GraphData.POIList[i].POI_Type);
-                    POI_Num2.getLast().add(GraphData.POIList[i].POI_Num);
-                    POI_Num2.getLast().add(GraphData.POIList[i].POI_Num);
+                    POI_Num2.getLast().add(GraphPreprocessing.POIList[i].POI_Type);
+                    POI_Num2.getLast().add(GraphPreprocessing.POIList[i].POI_Num);
+                    POI_Num2.getLast().add(GraphPreprocessing.POIList[i].POI_Num);
                 }
             }
         }

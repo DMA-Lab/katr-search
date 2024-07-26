@@ -1,4 +1,4 @@
-package CreateData;
+package DataPreprocessing;
 
 import entity.BpPath;
 import entity.Graph;
@@ -7,7 +7,7 @@ import entity.Path;
 
 import java.util.ArrayList;
 
-public class GraphData {
+public class GraphPreprocessing {
     public ArrayList<ArrayList<Integer>> SG;
     public POI[] POIList;
     public ArrayList<ArrayList<Path>> List;
@@ -16,7 +16,7 @@ public class GraphData {
     public ArrayList<ArrayList<Integer>> BvList;
     public Graph g;
 
-    public GraphData() {
+    public GraphPreprocessing() {
         this.BPList = new ArrayList<>();
         this.BvList = new ArrayList<>();
     }
