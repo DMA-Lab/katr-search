@@ -1,6 +1,6 @@
-# Katr-Search
+# KATR-Search
 
-This repository includes the code for KATR-Search and all baseline algorithms. Each folder contains the code for its respective algorithm: "KATR-Search", "DAPrune", "ROSE-GM", "OSS-caling", and "StarKOSR".
+This repository contains the code for KATR-Search and all baseline algorithms. You can access the code in `src/main/NY`.
 
 ## Dataset
 
