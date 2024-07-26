@@ -6,12 +6,14 @@ This repository includes the code for KATR-Search and all baseline algorithms. E
 
 The references for the road network and POI set included by each datset are as follows:
 
-Road network: [9th DIMACS Implementation Challenge - Shortest Paths](https://www.diag.uniroma1.it/challenge9/download.shtml).
-graph file: [NY](https://www.diag.uniroma1.it//challenge9/data/USA-road-d/USA-road-d.NY.gr.gz), [CAL](https://www.diag.uniroma1.it//challenge9/data/USA-road-d/USA-road-d.CAL.gr.gz), [COL](https://www.diag.uniroma1.it//challenge9/data/USA-road-d/USA-road-d.COL.gr.gz) (direct link, gziped)
+Road network are from [9th DIMACS Implementation Challenge - Shortest Paths](https://www.diag.uniroma1.it/challenge9/download.shtml).
 
-POI set: [OpenStreetMap](https://www.openstreetmap.org)
+|     | ROAD NETWORK                                                                                                                                                                                  | POI SET                                                                                               |
+|-----|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| CA  | [Direct](https://www.diag.uniroma1.it//challenge9/data/USA-road-d/USA-road-d.CAL.gr.gz), [Google Drive](https://drive.google.com/file/d/153jKmeP_43DsPFH-7vegfKrBvg7e8hqc/view?usp=drive_link) | [Google Drive](https://drive.google.com/file/d/184Zk81Et1gI57EKsdw-GBn423z_kg-js/view?usp=drive_link) |
+| COL | [Direct](https://www.diag.uniroma1.it//challenge9/data/USA-road-d/USA-road-d.COL.gr.gz), [Google Drive](https://drive.google.com/file/d/1h-OlQ0ZWE-psMUh04Vn5z1NW2ROs1OhF/view?usp=drive_link) | [Google Drive]()                                                                                      |
+| BJ  | [Google Drive](https://drive.google.com/file/d/1uNEpO455SnvYN9DQVGYZVF3ItSzISe2E/view?usp=drive_link)                                                                                                                                                                              | [Google Drive](https://drive.google.com/file/d/1HVb4NPtvAt_kAciPYb4WkkteJGHhH2S9/view?usp=drive_link) |
 
-All can be found on [Google drive](https://drive.google.com/drive/folders/1LncerbFXiM8UbE5fhuvu06L6afE3I8kY?usp=drive_link).
 
 ## Getting Started
 
