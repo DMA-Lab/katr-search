@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import baseline.ROSE.Dijkstra;
 
 public class Creatbfpoint {
     public static ArrayList<ArrayList<Integer>> Creatbfpoint() {
@@ -123,7 +124,7 @@ public class Creatbfpoint {
         int num11 = 1;
         int num22 = 0;
         int num33 = 0;
-        KKRSAlgorithm.Dijkstra ksp_00 = new KKRSAlgorithm.Dijkstra();
+        Dijkstra ksp_00 = new Dijkstra();
         int sPoint = 0;
         int ePoint = 0;
 

@@ -2,9 +2,9 @@ package main;
 
 import DataPreprocessing.GraphPreprocessing;
 import DataPreprocessing.IntoData;
-import KATRAlgorithm.FindInitialTopk;
-import KATRAlgorithm.FindTopk;
-import KATRAlgorithm.FindTopk_SToE;
+import baseline.KATRAlgorithm.FindInitialTopk;
+import baseline.KATRAlgorithm.FindTopk;
+import baseline.KATRAlgorithm.FindTopk_SToE;
 import entity.LowerBound;
 
 import java.io.IOException;

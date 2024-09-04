@@ -1,10 +1,10 @@
-package StarKOSR;
+package baseline.StarKOSR;
 
-import KKRSAlgorithm.NavigationUtil;
-import StarKOSR._Class.Dominance;
-import StarKOSR._Class.KOSR_Point;
-import StarKOSR._Class.headNode;
-import StarKOSR._Class.subPath;
+import baseline.ROSE.NavigationUtil;
+import baseline.StarKOSR._Class.Dominance;
+import baseline.StarKOSR._Class.KOSR_Point;
+import baseline.StarKOSR._Class.headNode;
+import baseline.StarKOSR._Class.subPath;
 import entity.EdegeNode;
 import entity.Graph;
 import entity.POI;

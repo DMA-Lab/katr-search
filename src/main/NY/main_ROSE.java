@@ -3,8 +3,8 @@
 
 package main.NY;
 
-import KKRSAlgorithm.Find_Topk_NoOpt;
-import KKRSAlgorithm.Find_path_MTDOSR;
+import baseline.ROSE.Find_Topk_NoOpt;
+import baseline.ROSE.Find_path_MTDOSR;
 import entity.BpPath;
 import entity.Graph;
 import entity.POI;
@@ -43,8 +43,6 @@ public class main_ROSE {
             num6 = 1;
         }
         ArrayList<Find_path_MTDOSR.Path> Top_k_MTDOSR = MTDOSR(POI_Type, k1);
-
-
     }
 
     public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] POI_Type2, int k1) throws InterruptedException, IOException {

@@ -1,6 +1,6 @@
 package main.NY;
 
-import KKRSAlgorithm.Find_Topk_OSSCaling;
+import baseline.ROSE.Find_Topk_OSSCaling;
 import entity.BpPath;
 import entity.Graph;
 import entity.POI;

@@ -1,6 +1,7 @@
 package main.NY;
 
-import DAPrune.DAPrune;
+import baseline.DAPrune.DAPrune;
+import baseline.ROSE.Dijkstra;
 import entity.BpPath;
 import entity.Graph;
 import entity.POI;
@@ -32,13 +33,10 @@ public class main_DAPrune {
         int startend = 1000;
         int endIndex = 5487;
 
-
-        KKRSAlgorithm.Dijkstra.MyPath Top_k_ORCSK = ORCSK(POI_Type, k1, startend, endIndex);
-
+        Dijkstra.MyPath Top_k_ORCSK = ORCSK(POI_Type, k1, startend, endIndex);
     }
 
-    public static KKRSAlgorithm.Dijkstra.MyPath ORCSK(int[] POI_Type2, int k1, int startIndex, int endIndex) throws InterruptedException {
-
+    public static Dijkstra.MyPath ORCSK(int[] POI_Type2, int k1, int startIndex, int endIndex) throws InterruptedException {
         FileReader file = null;
         try {
             file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
@@ -246,7 +244,7 @@ public class main_DAPrune {
 //        ArrayList<Lower_bound> Top_k = new ArrayList<>();
 //        ArrayList<Lower_bound> Top_k_db = new ArrayList<>();
 //        ArrayList<Lower_bound> Top_k_db2 = new ArrayList<>();
-        KKRSAlgorithm.Dijkstra.MyPath Top_k = new KKRSAlgorithm.Dijkstra.MyPath();
+        Dijkstra.MyPath Top_k = new Dijkstra.MyPath();
         // time2 = time2/2;
 
         for (int ii = 0; ii < num5; ii++) {
@@ -287,10 +285,6 @@ public class main_DAPrune {
             // time_OSSCaling = time4*23;
 
         }
-
-
         return Top_k;
-
     }
-
 }

@@ -1,4 +1,4 @@
-package KATRAlgorithm;
+package baseline.KATRAlgorithm;
 
 import entity.*;
 

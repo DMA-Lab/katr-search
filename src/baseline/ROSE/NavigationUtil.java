@@ -1,4 +1,4 @@
-package KKRSAlgorithm;
+package baseline.ROSE;
 
 import entity.EdegeNode;
 import entity.Graph;

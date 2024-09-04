@@ -1,9 +1,10 @@
 // Continuously Monitoring Optimal Routes with Collective Spatial Keywords on Road Networks
 // https://ieeexplore.ieee.org/document/10189471
 
-package DAPrune;
+package baseline.DAPrune;
 
-import KKRSAlgorithm.NavigationUtil;
+import baseline.ROSE.NavigationUtil;
+import baseline.ROSE.Dijkstra;
 import entity.Graph;
 import entity.POI;
 
@@ -13,19 +14,19 @@ import java.util.List;
 public class DAPrune {
     public static int OffsetNum = 0;
 
-    public static KKRSAlgorithm.Dijkstra.MyPath OptimalPath(Graph g, int startIndex, int endIndex, POI[] POIList, int[] POI_Type) {
-        KKRSAlgorithm.Dijkstra.MyPath pi = KKRSAlgorithm.Dijkstra.Dijkstra(g, startIndex, endIndex);
-        //path = POIAlgorithm.Dijkstia.ShortestPath(g , startIndex , endIndex , 1);
-        // Dijkstia.Dijkstra_1_1 pi = new Dijkstia.Dijkstra_1_1(g, startIndex, endIndex, null);
+    public static Dijkstra.MyPath OptimalPath(Graph g, int startIndex, int endIndex, POI[] POIList, int[] POI_Type) {
+        Dijkstra.MyPath pi = Dijkstra.Dijkstra(g, startIndex, endIndex);
+        //path = POIAlgorithm.Dijkstra.ShortestPath(g , startIndex , endIndex , 1);
+        // Dijkstra.Dijkstra_1_1 pi = new Dijkstra.Dijkstra_1_1(g, startIndex, endIndex, null);
         List<Integer> pk = pi.path;
-        ArrayList<KKRSAlgorithm.Dijkstra.MyPath> OffsetPath = new ArrayList<>();
+        ArrayList<Dijkstra.MyPath> OffsetPath = new ArrayList<>();
         long startTime1 = System.currentTimeMillis(); //开始获取时间
         for (int i = 0; i < pk.size() - 1; i++) { //pk.size() - 1
             double w1 = 0;
             for (int j = 0; j <= i - 1; j++) {
                 w1 += NavigationUtil.getEdgeWight(g, pk.get(j), pk.get(j + 1));
             }
-            OffsetPath.add(new KKRSAlgorithm.Dijkstra.MyPath(FindOffsetPath(g, pk.get(i), endIndex, POI_Type, POIList, (int) w1)));
+            OffsetPath.add(new Dijkstra.MyPath(FindOffsetPath(g, pk.get(i), endIndex, POI_Type, POIList, (int) w1)));
 
         }
         long endTime1 = System.currentTimeMillis(); //开始获取时间
@@ -39,7 +40,7 @@ public class DAPrune {
                 pathIndex = i;
             }
         }
-        KKRSAlgorithm.Dijkstra.MyPath pk1;
+        Dijkstra.MyPath pk1;
         if (pathIndex != Integer.MAX_VALUE) {
             pk1 = OffsetPath.get(pathIndex);
         } else {
@@ -51,8 +52,8 @@ public class DAPrune {
     }
 
 
-    public static KKRSAlgorithm.Dijkstra.MyPath FindOffsetPath(Graph g, int startIndex, int endIndex, int[] POI_Type, POI[] POIList, int w1) {
-        KKRSAlgorithm.Dijkstra.MyPath path1 = new KKRSAlgorithm.Dijkstra.MyPath();
+    public static Dijkstra.MyPath FindOffsetPath(Graph g, int startIndex, int endIndex, int[] POI_Type, POI[] POIList, int w1) {
+        Dijkstra.MyPath path1 = new Dijkstra.MyPath();
         ArrayList<Integer> keyWord = new ArrayList<>();
         ArrayList<Integer> POI = new ArrayList<>();
 
@@ -165,16 +166,16 @@ public class DAPrune {
     }
 
 
-    public static KKRSAlgorithm.Dijkstra.MyPath FindPath(int startIndex, int[] POI_Type, POI[] POIList) {
-        KKRSAlgorithm.Dijkstra.MyPath path1 = new KKRSAlgorithm.Dijkstra.MyPath();
+    public static Dijkstra.MyPath FindPath(int startIndex, int[] POI_Type, POI[] POIList) {
+        Dijkstra.MyPath path1 = new Dijkstra.MyPath();
         double[] pathWeight = new double[POI_Type.length];
         for (int i = 0; i < pathWeight.length; i++) {
             pathWeight[i] = Integer.MAX_VALUE;
         }
         int[] path = new int[POI_Type.length];
 
-        for (int i = 0; i < KKRSAlgorithm.Dijkstra.ORCSK_Num(POI_Type, POIList); i++) {
-            for (int j = 0; j < KKRSAlgorithm.Dijkstra.ORCSK_POINum(POI_Type, POIList); j++) {
+        for (int i = 0; i < Dijkstra.ORCSK_Num(POI_Type, POIList); i++) {
+            for (int j = 0; j < Dijkstra.ORCSK_POINum(POI_Type, POIList); j++) {
                 if (j < POIList.length) {
                     if (POIList[j].POI_Type == POI_Type[i]) {
                         path[i] = j;
@@ -184,12 +185,8 @@ public class DAPrune {
                         path[i] = j;
                     }
                 }
-
             }
         }
-
         return path1;
     }
-
-
 }

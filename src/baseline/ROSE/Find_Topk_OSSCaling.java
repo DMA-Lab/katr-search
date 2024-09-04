@@ -1,4 +1,4 @@
-package KKRSAlgorithm;
+package baseline.ROSE;
 
 import entity.BpPath;
 import entity.Graph;
@@ -125,7 +125,7 @@ public class Find_Topk_OSSCaling {
 //        for (int i = 0; i < path.size(); i++) {
 //            path.get(i).add(0,q);
 //        }
-        ArrayList<Dijkstia.MyPath> path2 = new ArrayList<>();
+        ArrayList<Dijkstra.MyPath> path2 = new ArrayList<>();
         int k1 = q;
         double MinWeight;
         int w = 0;
@@ -133,8 +133,8 @@ public class Find_Topk_OSSCaling {
         int index2 = 0;
         double w1 = Double.MAX_VALUE;
         int j1 = Integer.MAX_VALUE;
-        Dijkstia dj = new Dijkstia();
-        List<Dijkstia.MyPath> allPath = new ArrayList<>();
+        Dijkstra dj = new Dijkstra();
+        List<Dijkstra.MyPath> allPath = new ArrayList<>();
         double w_Max = Double.MAX_VALUE;
         double w_index = 0;
 
@@ -144,7 +144,7 @@ public class Find_Topk_OSSCaling {
             for (int j = 0; j < POI_List.get(i).size(); j++) {
                 w_index = 0;
                 index2 = POI_List.get(i).get(j);
-                allPath = Dijkstia.ShortestPath(g, index1, index2, 1);
+                allPath = Dijkstra.ShortestPath(g, index1, index2, 1);
                 w_index += allPath.get(allPath.size() - 1).weight;
                 if (w_index >= w_Max) {
                     allPath.remove(allPath.size() - 1);
@@ -165,9 +165,9 @@ public class Find_Topk_OSSCaling {
             index1 = POI_List.get(i).get(j1);
         }
 
-        Dijkstia dj1 = new Dijkstia();
-        List<Dijkstia.MyPath> allPath1 = new ArrayList<>();
-        allPath = Dijkstia.ShortestPath(g, j1, endIndex, 1);
+        Dijkstra dj1 = new Dijkstra();
+        List<Dijkstra.MyPath> allPath1 = new ArrayList<>();
+        allPath = Dijkstra.ShortestPath(g, j1, endIndex, 1);
 
 
 //        for (int i = 0; i < path.size(); i++) {

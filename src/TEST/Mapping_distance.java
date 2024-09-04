@@ -129,6 +129,5 @@ public class Mapping_distance {
         int Mul = distMAX / 100;
 
         int nu = 0;
-
     }
 }

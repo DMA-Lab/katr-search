@@ -1,6 +1,6 @@
 package CreateTxt;
 
-import baseline.ROSE.Dijkstia;
+import baseline.ROSE.Dijkstra;
 import entity.Graph;
 import entity.POI;
 import entity.TextWriter;
@@ -110,7 +110,7 @@ public class CreatBPList {
         int num11 = 1;
         int num22 = 0;
         int num33 = 0;
-        Dijkstia ksp_00 = new Dijkstia();
+        Dijkstra ksp_00 = new Dijkstra();
         int sPoint = 0;
         int ePoint = 0;
 
@@ -234,13 +234,13 @@ public class CreatBPList {
 //        }
 
         //--------------------------------------------------------------------------------------
-        List<Dijkstia.MyPath> p00 = null;
-        Dijkstia.MyPath p00_min = null;
+        List<Dijkstra.MyPath> p00 = null;
+        Dijkstra.MyPath p00_min = null;
         for (int i = 0; i < SGBP.size(); i++) {//循环多少个子图,SGBP.size()
             for (int j = 0; j < SGBP.get(i).size(); j++) {//计算每个边界顶点到其他顶点的最短路径,SGBP.get(i).size()
                 for (int k = 0; k < SGBP.size(); k++) { // 这个顶点到其他99个子图的最短路径
                     for (int l = 0; l < 1; l++) { //SGBP.get(k).size()
-                        p00 = Dijkstia.ShortestPath(g, SGBP.get(i).get(j), SGBP.get(k).get(l), 1);
+                        p00 = Dijkstra.ShortestPath(g, SGBP.get(i).get(j), SGBP.get(k).get(l), 1);
                     }
                     int NUM = Integer.MAX_VALUE;
                     for (int l = 0; l < p00.size(); l++) {
