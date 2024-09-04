@@ -8,14 +8,14 @@ public class LowerBound {
     // 路径距离
     public int dis;
     // 路径上兴趣点的兴趣值之和
-    public int w_poi;
+    public int totalInterest;
     // 路径的评分
     public double score;
 
     public LowerBound() {
         this.path = new ArrayList<>();
         this.dis = 0;
-        this.w_poi = 0;
+        this.totalInterest = 0;
         this.score = 0;
     }
 }

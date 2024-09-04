@@ -24,5 +24,4 @@ public class Path {
         this.end = end;
         this.vertices = vertices;
     }
-
 }

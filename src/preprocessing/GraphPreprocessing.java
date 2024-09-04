@@ -1,20 +1,20 @@
-package DataPreprocessing;
+package preprocessing;
 
-import entity.BpPath;
+import entity.PoiPath;
 import entity.Graph;
-import entity.POI;
+import entity.Poi;
 import entity.Path;
 
 import java.util.ArrayList;
 
 public class GraphPreprocessing {
     public ArrayList<ArrayList<Integer>> SG;
-    public POI[] POIList;
+    public Poi[] PoiList;
     public ArrayList<ArrayList<Path>> List;
-    public ArrayList<ArrayList<BpPath>> BPList;
+    public ArrayList<ArrayList<PoiPath>> BPList;
     public ArrayList<ArrayList<Integer>> PointMinBP;
     public ArrayList<ArrayList<Integer>> BvList;
-    public Graph g;
+    public Graph graph;
 
     public GraphPreprocessing() {
         this.BPList = new ArrayList<>();

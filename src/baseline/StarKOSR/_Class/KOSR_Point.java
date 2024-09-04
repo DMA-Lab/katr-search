@@ -7,12 +7,6 @@ public class KOSR_Point {
     public ArrayList<Integer> poi;
     public ArrayList<Integer> poiWeight;
 
-    public KOSR_Point() {
-        this.kewWordName = 0;
-        this.poi = new ArrayList<>();
-        this.poiWeight = new ArrayList<>();
-    }
-
     public KOSR_Point(int n) {
         this.kewWordName = n;
         this.poi = new ArrayList<>();

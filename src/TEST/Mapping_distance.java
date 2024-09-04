@@ -1,6 +1,6 @@
 package TEST;
 
-import DataPreprocessing.GraphPreprocessing;
+import preprocessing.GraphPreprocessing;
 import entity.Graph;
 
 import java.io.BufferedReader;
@@ -12,17 +12,17 @@ public class Mapping_distance {
 
     public static void main(String[] args) {
 
-        int[] POI_Type = {43, 25, 5, 18, 19, 26, 48, 47};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
+        int[] Poi_Type = {43, 25, 5, 18, 19, 26, 48, 47};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
         int k1 = 10;
         double a = 0.5;//α
         int num = 10; //循环次数
 
         GraphPreprocessing GraphPreprocessing = new GraphPreprocessing();
-        Mapping_distance.CreatData(POI_Type, k1, a, GraphPreprocessing);
+        Mapping_distance.CreatData(Poi_Type, k1, a, GraphPreprocessing);
     }
 
 
-    public static void CreatData(int[] POI_Type2, int k1, double a, GraphPreprocessing GraphPreprocessing) {
+    public static void CreatData(int[] Poi_Type2, int k1, double a, GraphPreprocessing GraphPreprocessing) {
 
         FileReader file = null;
         try {
@@ -93,8 +93,8 @@ public class Mapping_distance {
 
         }
         int ccc1 = ccc + 1;
-        GraphPreprocessing.g = new Graph(ccc1, num1);
-        GraphPreprocessing.g.createMyGraph(GraphPreprocessing.g, ccc1, num1, data);
+        GraphPreprocessing.graph = new Graph(ccc1, num1);
+        GraphPreprocessing.graph.init(ccc1, num1, data);
         //划分子图
         try {
             file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
@@ -118,16 +118,13 @@ public class Mapping_distance {
         //______________________________________________________________________________________________
         int distMin = Integer.MAX_VALUE;
         int distMAX = 0;
-        for (int i = 0; i < data.length; i++) {
-            if (data[i][3] > distMAX) {
-                distMAX = data[i][3];
+        for (int[] datum : data) {
+            if (datum[3] > distMAX) {
+                distMAX = datum[3];
             }
-            if (data[i][3] < distMin) {
-                distMin = data[i][3];
+            if (datum[3] < distMin) {
+                distMin = datum[3];
             }
         }
-        int Mul = distMAX / 100;
-
-        int nu = 0;
     }
 }

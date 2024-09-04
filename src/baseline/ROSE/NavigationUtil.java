@@ -1,6 +1,6 @@
 package baseline.ROSE;
 
-import entity.EdegeNode;
+import entity.EdgeNode;
 import entity.Graph;
 
 import java.util.HashMap;
@@ -10,9 +10,9 @@ import java.util.Stack;
 
 public class NavigationUtil {
     //代表某节点是否在stack中,避免产生回路
-    public static Map<Integer, Boolean> states = new HashMap();
+    public static Map<Integer, Boolean> states = new HashMap<>();
     //存放放入stack中的节点
-    public static Stack<Integer> stack = new Stack();
+    public static Stack<Integer> stack = new Stack<>();
     /**
      * 查找两点之间的最短路径
      *
@@ -32,20 +32,16 @@ public class NavigationUtil {
      * @param j
      * @return
      */
-
-    public static double getEdgeWight(Graph graph, int i, int j) {
-        //long startTime1=System.currentTimeMillis(); //开始获取时间
-        double w = 0;
-        EdegeNode a = null;
-        a = (EdegeNode) Graph.point[i].firstArc;
-        while (a != null) {
-            if (a.adj_vertex == j) {
-                return w + a.weight;
+    public static double getWeight(Graph graph, int i, int j) {
+        double weight = 0;
+        EdgeNode edge = graph.vertices[i].firstArc;
+        while (edge != null) {
+            if (edge.adjVertex == j) {
+                return weight + edge.weight;
             }
-            a = a.nextEdge;                                                    //实际上像是一种遍历链表的行为
+            // 实际上像是一种遍历链表的行为
+            edge = edge.next;
         }
-        // long endTime1=System.currentTimeMillis(); //获取结束时间
-        //System.out.println("获取两点之间权值的时间为"+(endTime1 - startTime1));
         return -1;
     }
 
@@ -59,42 +55,22 @@ public class NavigationUtil {
      */
     public static boolean isConnected(Graph graph, int i, int j) {
         double w = 0;
-        EdegeNode a = null;
-        a = (EdegeNode) Graph.point[i].firstArc;
+        EdgeNode a = graph.vertices[i].firstArc;
         while (a != null) {
-            if (a.adj_vertex == j) {
+            if (a.adjVertex == j) {
                 return true;
             }
-            a = a.nextEdge;                                                    //实际上像是一种遍历链表的行为
+            a = a.next; // 实际上像是一种遍历链表的行为
         }
         return false;
-    }
-
-    //打印stack中信息,即路径信息
-    public static void printPath() {
-        if (flag) {
-            for (Integer i : stack) {
-                linkedList.add(i);
-            }
-            flag = false;
-        }
-        if (linkedList.size() < stack.size()) {
-            return;
-        }
-        linkedList.clear();
-        //StringBuilder sb = new StringBuilder();
-        for (Integer i : stack) {
-            linkedList.add(i);
-        }
-
     }
 
     //得到x的邻接点为y的后一个邻接点位置,为-1说明没有找到
     public static int getNextNode(Graph graph, int x, int y) {
         int next_node = -1;
-        EdegeNode edge = (EdegeNode) Graph.point[x].firstArc;
+        EdgeNode edge = graph.vertices[x].firstArc;
         if (null != edge && y == -1) {
-            int n = edge.adj_vertex;
+            int n = edge.adjVertex;
             //元素还不在stack中
             if (!states.get(n))
                 return n;
@@ -103,24 +79,24 @@ public class NavigationUtil {
 
         while (null != edge) {
             //节点未访问
-            if (edge.adj_vertex == y) {
-                if (null != edge.nextEdge) {
-                    next_node = edge.nextEdge.adj_vertex;
+            if (edge.adjVertex == y) {
+                if (null != edge.next) {
+                    next_node = edge.next.adjVertex;
 
                     if (!states.get(next_node))
                         return next_node;
                 } else
                     return -1;
             }
-            edge = edge.nextEdge;
+            edge = edge.next;
         }
         return -1;
     }
 
-
     public static Stack<Integer> visit(Graph graph, int x, int y) {
         //初始化所有节点在stack中的情况
-        for (int i = 0; i < Graph.point.length; i++) {
+        // TODO: sunnysab: 这里的代码逻辑有问题，应该是初始化所有节点的状态为 false，而不是初始化下标.
+        for (int i = 0; i < graph.vertices.length; i++) {
             states.put(i, false);
         }
         //stack top元素

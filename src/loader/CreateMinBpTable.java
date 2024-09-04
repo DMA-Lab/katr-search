@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class CreateMinBpTable {
-
     public static ArrayList<ArrayList<Integer>> load(String path) throws IOException {
         ArrayList<ArrayList<Integer>> data = new ArrayList<>();
         FileReader reader = new FileReader(path);

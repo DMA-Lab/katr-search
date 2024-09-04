@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Creatbountpoint {
+public class CreateBoundPoint {
     public int[] CreatBP_NY(int num) {
         int[] BP = new int[num];
         FileReader file1 = null;

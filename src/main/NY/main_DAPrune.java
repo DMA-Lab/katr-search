@@ -2,9 +2,9 @@ package main.NY;
 
 import baseline.DAPrune.DAPrune;
 import baseline.ROSE.Dijkstra;
-import entity.BpPath;
+import entity.PoiPath;
 import entity.Graph;
-import entity.POI;
+import entity.Poi;
 import loader.*;
 
 import java.io.BufferedReader;
@@ -27,16 +27,16 @@ public class main_DAPrune {
     static long timeA_db3;
     static int num5 = 1; //循环次数
 
-    public static void main(String[] args) throws InterruptedException {
-        int[] POI_Type = {43, 25, 5, 18, 19, 26, 48, 47};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
+    public static void main(String[] args) {
+        int[] Poi_Type = {43, 25, 5, 18, 19, 26, 48, 47};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
         int k1 = 10;
         int startend = 1000;
         int endIndex = 5487;
 
-        Dijkstra.MyPath Top_k_ORCSK = ORCSK(POI_Type, k1, startend, endIndex);
+        Dijkstra.Path Top_k_ORCSK = ORCSK(Poi_Type, k1, startend, endIndex);
     }
 
-    public static Dijkstra.MyPath ORCSK(int[] POI_Type2, int k1, int startIndex, int endIndex) throws InterruptedException {
+    public static Dijkstra.Path ORCSK(int[] Poi_Type2, int k1, int startIndex, int endIndex) {
         FileReader file = null;
         try {
             file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
@@ -107,7 +107,7 @@ public class main_DAPrune {
         }
         int ccc1 = ccc + 1;
         Graph g = new Graph(ccc1, num1);
-        g.createMyGraph(g, ccc1, num1, data);
+        g.init(ccc1, num1, data);
         //划分子图
         try {
             file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
@@ -131,46 +131,46 @@ public class main_DAPrune {
         //______________________________________________________________________________________________
         //将各个点放入对应的子图中
         int num2 = 200; // 存储多少个子图的骨架图中的节点
-        Creatsg SG1 = new Creatsg();
+        CreateSubgraph SG1 = new CreateSubgraph();
         //BufferedReader br3 = new BufferedReader(file1);//读取文件
         ArrayList<ArrayList<Integer>> SG = SG1.CreatSG_NY(num2); //存储前num2个子图的骨架图中的节点
         //______________________________________________________________________________________________
         //构建边界顶点集合
-        Creatbountpoint bp1 = new Creatbountpoint();
+        CreateBoundPoint bp1 = new CreateBoundPoint();
         //int[] BP = bp1.CreatBP_ca(num);
 
         //______________________________________________________________________________________________
-        //构建POI索引POIList，存储POI的类型和数值，并给每个顶点赋予坐标
-        Creatpoilist POIList1 = new Creatpoilist();
-        POI[] POIList = POIList1.CreatPOIList_NY(ccc1, SG);
+        //构建Poi索引PoiList，存储Poi的类型和数值，并给每个顶点赋予坐标
+        CreatePoiList PoiList1 = new CreatePoiList();
+        Poi[] PoiList = PoiList1.CreatPoiList_NY(ccc1, SG);
         //______________________________________________________________________________________________
         // //构建距离索引list
-        Creatlist list1 = new Creatlist();
+        CreateList list1 = new CreateList();
         //ArrayList<ArrayList<list>> List = list1.CreatList_NY(ccc1);
         //System.out.println("1");
         boolean flag = true;
-        ArrayList<Integer> POI_Type_Num = new ArrayList<>();
-        for (int i = 0; i < POIList.length; i++) {
-            if (POIList[i].POI_Type != 0) {
+        ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
+        for (int i = 0; i < PoiList.length; i++) {
+            if (PoiList[i].Poi_Type != 0) {
                 flag = true;
-                for (int j = 0; j < POI_Type_Num.size(); j++) {
-                    if (POIList[i].POI_Type == POI_Type_Num.get(j)) {
+                for (int j = 0; j < Poi_Type_Num.size(); j++) {
+                    if (PoiList[i].Poi_Type == Poi_Type_Num.get(j)) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    POI_Type_Num.add(POIList[i].POI_Type);
+                    Poi_Type_Num.add(PoiList[i].Poi_Type);
                 }
             }
         }
         //______________________________________________________________________________________________
         // //构建边界顶点索引BPList
-        ArrayList<ArrayList<BpPath>> BPList = new ArrayList<>();
+        ArrayList<ArrayList<PoiPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<BpPath>());
+            BPList.add(new ArrayList<PoiPath>());
         }
-        Creatbplist BPList1 = new Creatbplist();
+        CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
         BPList1.CreatBPList_NY(BPList, ccc1);
         //______________________________________________________________________________________________
@@ -185,8 +185,8 @@ public class main_DAPrune {
         //double a1 = a ; //α
         int q_SG = 0;
         boolean flag1 = true;
-        //int[] POI_Type = {11,12,16} ;//所求的POI的类型
-        int[] POI_Type = POI_Type2;
+        //int[] Poi_Type = {11,12,16} ;//所求的Poi的类型
+        int[] Poi_Type = Poi_Type2;
         for (int i = 0; i < SG.size(); i++) {
             for (int j = 0; j < SG.get(i).size(); j++) {
                 if (SG.get(i).get(j) == q) {
@@ -199,38 +199,38 @@ public class main_DAPrune {
                 break;
             }
         }
-        ArrayList<ArrayList<Integer>> POI_Num2 = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> Poi_Num2 = new ArrayList<>();
         ArrayList<Integer> path3 = new ArrayList<>();
         boolean flag4 = true;
-        for (int i = 0; i < POIList.length; i++) {
-            if (POIList[i].POI_Type != 0) {
+        for (int i = 0; i < PoiList.length; i++) {
+            if (PoiList[i].Poi_Type != 0) {
                 flag4 = true;
-                for (int j = 0; j < POI_Num2.size(); j++) {
-                    if (POI_Num2.get(j).get(0) == POIList[i].POI_Type) {
+                for (int j = 0; j < Poi_Num2.size(); j++) {
+                    if (Poi_Num2.get(j).get(0) == PoiList[i].Poi_Type) {
                         flag4 = false;
-                        if (POIList[i].POI_Num < POI_Num2.get(j).get(1)) {
+                        if (PoiList[i].Poi_Num < Poi_Num2.get(j).get(1)) {
                             path3.clear();
-                            path3.add(POI_Num2.get(j).get(0));
-                            path3.add(POIList[i].POI_Num);
-                            path3.add(POI_Num2.get(j).get(2));
-                            POI_Num2.get(j).clear();
-                            POI_Num2.get(j).addAll(path3);
+                            path3.add(Poi_Num2.get(j).get(0));
+                            path3.add(PoiList[i].Poi_Num);
+                            path3.add(Poi_Num2.get(j).get(2));
+                            Poi_Num2.get(j).clear();
+                            Poi_Num2.get(j).addAll(path3);
                         }
-                        if (POIList[i].POI_Num > POI_Num2.get(j).get(2)) {
+                        if (PoiList[i].Poi_Num > Poi_Num2.get(j).get(2)) {
                             path3.clear();
-                            path3.add(POI_Num2.get(j).get(0));
-                            path3.add(POI_Num2.get(j).get(1));
-                            path3.add(POIList[i].POI_Num);
-                            POI_Num2.get(j).clear();
-                            POI_Num2.get(j).addAll(path3);
+                            path3.add(Poi_Num2.get(j).get(0));
+                            path3.add(Poi_Num2.get(j).get(1));
+                            path3.add(PoiList[i].Poi_Num);
+                            Poi_Num2.get(j).clear();
+                            Poi_Num2.get(j).addAll(path3);
                         }
                     }
                 }
                 if (flag4) {
-                    POI_Num2.add(new ArrayList<Integer>());
-                    POI_Num2.get(POI_Num2.size() - 1).add(POIList[i].POI_Type);
-                    POI_Num2.get(POI_Num2.size() - 1).add(POIList[i].POI_Num);
-                    POI_Num2.get(POI_Num2.size() - 1).add(POIList[i].POI_Num);
+                    Poi_Num2.add(new ArrayList<Integer>());
+                    Poi_Num2.get(Poi_Num2.size() - 1).add(PoiList[i].Poi_Type);
+                    Poi_Num2.get(Poi_Num2.size() - 1).add(PoiList[i].Poi_Num);
+                    Poi_Num2.get(Poi_Num2.size() - 1).add(PoiList[i].Poi_Num);
                 }
             }
         }
@@ -244,30 +244,30 @@ public class main_DAPrune {
 //        ArrayList<Lower_bound> Top_k = new ArrayList<>();
 //        ArrayList<Lower_bound> Top_k_db = new ArrayList<>();
 //        ArrayList<Lower_bound> Top_k_db2 = new ArrayList<>();
-        Dijkstra.MyPath Top_k = new Dijkstra.MyPath();
+        Dijkstra.Path Top_k = new Dijkstra.Path();
         // time2 = time2/2;
 
         for (int ii = 0; ii < num5; ii++) {
 
 
             startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k = DAPrune.OptimalPath(g, startIndex, endIndex, POIList, POI_Type);//不进行优化
+            Top_k = DAPrune.OptimalPath(g, startIndex, endIndex, PoiList, Poi_Type);//不进行优化
             endTime1 = System.currentTimeMillis(); //开始获取时间
             time5 = endTime1 - startTime1;
             System.out.println("Time=" + time5);
 //
 //            startTime1 = System.currentTimeMillis(); //开始获取时间
-//            Top_k = topk.Top_k(g,q,q_SG,k,POI_Type,SG,List,POIList,a,BPList,PointMinBP);//只进行网格剪枝优化
+//            Top_k = topk.Top_k(g,q,q_SG,k,Poi_Type,SG,List,PoiList,a,BPList,PointMinBP);//只进行网格剪枝优化
 //            endTime1 = System.currentTimeMillis(); //开始获取时间
 //            time1 = endTime1 - startTime1;
 //
 //            startTime1 = System.currentTimeMillis(); //开始获取时间
-//            Top_k_db2 = topk_db2.Top_k_db2(g,q,q_SG,k,POI_Type,SG,List,POIList,a,BPList,PointMinBP); //进行全部优化的算法
+//            Top_k_db2 = topk_db2.Top_k_db2(g,q,q_SG,k,Poi_Type,SG,List,PoiList,a,BPList,PointMinBP); //进行全部优化的算法
 //            endTime1 = System.currentTimeMillis(); //开始获取时间
 //            time4 = endTime1 - startTime1;
 //
 //            startTime1 = System.currentTimeMillis(); //开始获取时间
-//            Top_k_db = topk_db.Top_k_db(g,q,q_SG,k,POI_Type,SG,List,POIList,a,BPList,PointMinBP); //POI有顺序
+//            Top_k_db = topk_db.Top_k_db(g,q,q_SG,k,Poi_Type,SG,List,PoiList,a,BPList,PointMinBP); //Poi有顺序
 //            endTime1 = System.currentTimeMillis(); //开始获取时间
 //            time3 = endTime1 - startTime1;
 

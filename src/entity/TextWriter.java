@@ -134,7 +134,7 @@ public class TextWriter {
 //        //1.创建字符输出流
 //        try {
 //            //2.数据想写入的路径及文件
-//            File file = new File("D://IDEA//POI_shuju//NY//NY_POIPoint_SG2.txt");
+//            File file = new File("D://IDEA//Poi_shuju//NY//NY_PoiPoint_SG2.txt");
 //            //3.如果该文件不存在，就创建
 //            if(!file.exists()) {
 //                file.createNewFile();
@@ -152,7 +152,7 @@ public class TextWriter {
 //                    writeFile.write(" ");
 //                    writeFile.write(String.valueOf(data.get(i).get(j).type2));
 //                    writeFile.write(" ");
-//                    writeFile.write(String.valueOf(data.get(i).get(j).POI_num));
+//                    writeFile.write(String.valueOf(data.get(i).get(j).Poi_num));
 //                    writeFile.write("\n");
 //                }
 //                //8.加上换行符
@@ -174,7 +174,7 @@ public class TextWriter {
     }
 
     public static void writeTxt4(ArrayList<ArrayList<Integer>> data) throws IOException {
-        TextWriter.writeMatrix("D://IDEA//POI_shuju//COL//COL_List.txt", data, 0);
+        TextWriter.writeMatrix("D://IDEA//Poi_shuju//COL//COL_List.txt", data, 0);
     }
 
 
@@ -187,7 +187,7 @@ public class TextWriter {
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
-            File file = new File("D://IDEA//POI_shuju//NY//NY_int.txt");
+            File file = new File("D://IDEA//Poi_shuju//NY//NY_int.txt");
             //3.如果该文件不存在，就创建
             if (!file.exists()) {
                 file.createNewFile();
@@ -234,7 +234,7 @@ public class TextWriter {
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
-            File file = new File("D://IDEA//POI_shuju//COL//COL_BPList1_100.txt");
+            File file = new File("D://IDEA//Poi_shuju//COL//COL_BPList1_100.txt");
             //3.如果该文件不存在，就创建
             if (!file.exists()) {
                 file.createNewFile();
@@ -273,7 +273,7 @@ public class TextWriter {
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
-            File file = new File("D://IDEA//POI_shuju//COL//Point_MinBP.txt");
+            File file = new File("D://IDEA//Poi_shuju//COL//Point_MinBP.txt");
             //3.如果该文件不存在，就创建
             if (!file.exists()) {
                 file.createNewFile();

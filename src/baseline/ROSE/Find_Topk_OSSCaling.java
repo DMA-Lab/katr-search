@@ -1,8 +1,8 @@
 package baseline.ROSE;
 
-import entity.BpPath;
+import entity.PoiPath;
 import entity.Graph;
-import entity.POI;
+import entity.Poi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +10,16 @@ import java.util.Stack;
 
 public class Find_Topk_OSSCaling {
     public static ArrayList<ArrayList<Integer>> Finf_Path1(ArrayList<ArrayList<Integer>> all,
-                                                           ArrayList<ArrayList<Integer>> path3, int[] POI_Type, int q) {
+                                                           ArrayList<ArrayList<Integer>> path3, int[] Poi_Type, int q) {
         ArrayList<ArrayList<Integer>> path = new ArrayList<>();
         for (int n = 0; n < all.size(); n++) {
             //找到q所在子图中所有的符合要求的poi
             ArrayList<ArrayList<Integer>> path1 = new ArrayList<>();
-            for (int i = 0; i < POI_Type.length; i++) {
+            for (int i = 0; i < Poi_Type.length; i++) {
                 path1.add(new ArrayList<Integer>());
                 // path1.get(i).add(q);
             }
-            for (int i = 0; i < POI_Type.length; i++) {
+            for (int i = 0; i < Poi_Type.length; i++) {
                 path1.get(i).addAll(path3.get(all.get(n).get(i)));
             }
             //找到所有的路线
@@ -65,90 +65,87 @@ public class Find_Topk_OSSCaling {
         return path2;
     }
 
-    public ArrayList<Path> Find_Path_OSSCaling(Graph g, int q, int[] POI_Type, int ccc1, POI[] POIList, ArrayList<ArrayList<entity.Path>> List,
-                                               ArrayList<ArrayList<BpPath>> BPList, ArrayList<ArrayList<Integer>> PointMinBP, int k3, int endIndex) throws InterruptedException {
+    public ArrayList<Path> Find_Path_OSSCaling(Graph g, int q, int[] Poi_Type, int ccc1, Poi[] PoiList, ArrayList<ArrayList<entity.Path>> List,
+                                               ArrayList<ArrayList<PoiPath>> BPList, ArrayList<ArrayList<Integer>> PointMinBP, int k3, int endIndex) {
         int nn1 = 0;//当只需要找一条路径的时候使用这个数来代替get(0)
         ArrayList<Path> path1 = new ArrayList<>();
         path1.add(new Path());
         //创建顶点标签
-        ArrayList<ArrayList<Integer>> POI_List = new ArrayList<>();
-        ArrayList<Integer> POI_Type1 = new ArrayList<>();
-        for (int i = 0; i < POI_Type.length; i++) {
-            POI_Type1.add(POI_Type[i]);
+        ArrayList<ArrayList<Integer>> Poi_List = new ArrayList<>();
+        ArrayList<Integer> Poi_Type1 = new ArrayList<>();
+        for (int i = 0; i < Poi_Type.length; i++) {
+            Poi_Type1.add(Poi_Type[i]);
         }
-        for (int i = 0; i < POI_Type.length; i++) {
-            POI_List.add(new ArrayList<Integer>());
+        for (int i = 0; i < Poi_Type.length; i++) {
+            Poi_List.add(new ArrayList<Integer>());
         }
         boolean flag = true;
         boolean flag1 = true;
         int q_Index = q;
         int startIndex = q;
 
-        //查找全部类型的POI各自有那些顶顶点
-        for (int i = 0; i < POIList.length; i++) {
-            for (int j = 0; j < POI_List.size(); j++) {
-                if (POIList[i].POI_Type == POI_Type[j]) {
-                    POI_List.get(j).add(i);
+        //查找全部类型的Poi各自有那些顶顶点
+        for (int i = 0; i < PoiList.length; i++) {
+            for (int j = 0; j < Poi_List.size(); j++) {
+                if (PoiList[i].Poi_Type == Poi_Type[j]) {
+                    Poi_List.get(j).add(i);
                 }
             }
         }
         //计算这些兴趣点的平均值
-//        int[] Average_POI = new int[POI_Type.length];
-//        int[] Max_POI = new int[POI_Type.length];
-//        int[] Min_POI = new int[POI_Type.length];
-//        for (int i = 0; i < Min_POI.length; i++) {
-//            Min_POI[i] = Integer.MAX_VALUE;
+//        int[] Average_Poi = new int[Poi_Type.length];
+//        int[] Max_Poi = new int[Poi_Type.length];
+//        int[] Min_Poi = new int[Poi_Type.length];
+//        for (int i = 0; i < Min_Poi.length; i++) {
+//            Min_Poi[i] = Integer.MAX_VALUE;
 //        }
-//        for (int i = 0; i < POI_List.size(); i++) {
-//            for (int j = 0; j < POI_List.get(i).size(); j++) {
-//                if (POIList[POI_List.get(i).get(j)].POI_Num > Max_POI[i]){
-//                    Max_POI[i] = POIList[POI_List.get(i).get(j)].POI_Num;
+//        for (int i = 0; i < Poi_List.size(); i++) {
+//            for (int j = 0; j < Poi_List.get(i).size(); j++) {
+//                if (PoiList[Poi_List.get(i).get(j)].Poi_Num > Max_Poi[i]){
+//                    Max_Poi[i] = PoiList[Poi_List.get(i).get(j)].Poi_Num;
 //                }
-//                if (POIList[POI_List.get(i).get(j)].POI_Num < Min_POI[i]){
-//                    Min_POI[i] = POIList[POI_List.get(i).get(j)].POI_Num;
+//                if (PoiList[Poi_List.get(i).get(j)].Poi_Num < Min_Poi[i]){
+//                    Min_Poi[i] = PoiList[Poi_List.get(i).get(j)].Poi_Num;
 //                }
 //            }
 //        }
-//        for (int i = 0; i < Average_POI.length; i++) {
-//            Average_POI[i] = (Max_POI[i]+Min_POI[i])/2;
+//        for (int i = 0; i < Average_Poi.length; i++) {
+//            Average_Poi[i] = (Max_Poi[i]+Min_Poi[i])/2;
 //        }
 //
 //        //排列全部组合
 //        ArrayList<ArrayList<Integer>> all = new ArrayList<>();
 //        all.add(new ArrayList<>());
-//        for (int i = 0; i < POI_Type.length; i++) {
+//        for (int i = 0; i < Poi_Type.length; i++) {
 //            all.get(0).add(i);
 //        }
 //
 //        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
-//         path = Finf_Path1(all,POI_List,POI_Type,q);
+//         path = Finf_Path1(all,Poi_List,Poi_Type,q);
 //        for (int i = 0; i < path.size(); i++) {
 //            path.get(i).add(0,q);
 //        }
-        ArrayList<Dijkstra.MyPath> path2 = new ArrayList<>();
+        ArrayList<Dijkstra.Path> path2 = new ArrayList<>();
         int k1 = q;
         double MinWeight;
         int w = 0;
-        int index1 = q;
-        int index2 = 0;
+        int src = q;
+        int dst = 0;
         double w1 = Double.MAX_VALUE;
         int j1 = Integer.MAX_VALUE;
-        Dijkstra dj = new Dijkstra();
-        List<Dijkstra.MyPath> allPath = new ArrayList<>();
+        Dijkstra dijkstra = new Dijkstra();
+        List<Dijkstra.Path> allPath = new ArrayList<>();
         double w_Max = Double.MAX_VALUE;
         double w_index = 0;
 
-
-        for (int i = 0; i < POI_List.size() - 1; i++) {
-
-            for (int j = 0; j < POI_List.get(i).size(); j++) {
+        for (int i = 0; i < Poi_List.size() - 1; i++) {
+            for (int j = 0; j < Poi_List.get(i).size(); j++) {
                 w_index = 0;
-                index2 = POI_List.get(i).get(j);
-                allPath = Dijkstra.ShortestPath(g, index1, index2, 1);
-                w_index += allPath.get(allPath.size() - 1).weight;
+                dst = Poi_List.get(i).get(j);
+                allPath = dijkstra.ShortestPath(g, src, dst);
+                w_index += allPath.getLast().length;
                 if (w_index >= w_Max) {
                     allPath.remove(allPath.size() - 1);
-                    continue;
                 } else {
                     w_Max = w_index;
                 }
@@ -156,26 +153,24 @@ public class Find_Topk_OSSCaling {
             j1 = Integer.MAX_VALUE;
             w1 = Double.MAX_VALUE;
             for (int j = 0; j < allPath.size(); j++) {
-                if (allPath.get(j).weight < w1) {
-                    w1 = allPath.get(j).weight;
+                if (allPath.get(j).length < w1) {
+                    w1 = allPath.get(j).length;
                     j1 = j;
                 }
             }
 
-            index1 = POI_List.get(i).get(j1);
+            src = Poi_List.get(i).get(j1);
         }
 
-        Dijkstra dj1 = new Dijkstra();
-        List<Dijkstra.MyPath> allPath1 = new ArrayList<>();
-        allPath = Dijkstra.ShortestPath(g, j1, endIndex, 1);
-
+        List<Dijkstra.Path> allPath1 = new ArrayList<>();
+        allPath = dijkstra.ShortestPath(g, j1, endIndex);
 
 //        for (int i = 0; i < path.size(); i++) {
 //            w = 0;
 //            for (int j = 0; j < path.get(i).size()-1; j++) {
 //                q_BP1 = PointMinBP.get(path.get(i).get(j)).get(0);
 //                w_BP1 = PointMinBP.get(path.get(i).get(j)).get(1);
-//                if (POIList[path.get(i).get(j)].SG == POIList[path.get(i).get(j+1)].SG){
+//                if (PoiList[path.get(i).get(j)].SG == PoiList[path.get(i).get(j+1)].SG){
 //                    for (int k = 0; k < List.get(path.get(i).get(j)).size(); k++) {
 //                        if (List.get(path.get(i).get(j)).get(k).ePoint == path.get(i).get(j+1)){
 //                            w += List.get(path.get(i).get(j)).get(k).w;
@@ -184,10 +179,10 @@ public class Find_Topk_OSSCaling {
 //                    }
 //                }else {
 //                    if (q_BP1 != Integer.MAX_VALUE){
-//                        w = w + w_BP1 + BPList.get(q_BP1).get(POIList[path.get(i).get(j+1)].SG).w;
-//                        for (int k2 = 0; k2 < List.get(BPList.get(q_BP1).get(POIList[path.get(i).get(j+1)].SG).Target).size(); k2++) {
-//                            if (List.get(BPList.get(q_BP1).get(POIList[path.get(i).get(j+1)].SG).Target).get(k2).ePoint == path.get(i).get(j+1)){
-//                                w = w+List.get(BPList.get(q_BP1).get(POIList[path.get(i).get(j+1)].SG).Target).get(k2).w;
+//                        w = w + w_BP1 + BPList.get(q_BP1).get(PoiList[path.get(i).get(j+1)].SG).w;
+//                        for (int k2 = 0; k2 < List.get(BPList.get(q_BP1).get(PoiList[path.get(i).get(j+1)].SG).Target).size(); k2++) {
+//                            if (List.get(BPList.get(q_BP1).get(PoiList[path.get(i).get(j+1)].SG).Target).get(k2).ePoint == path.get(i).get(j+1)){
+//                                w = w+List.get(BPList.get(q_BP1).get(PoiList[path.get(i).get(j+1)].SG).Target).get(k2).w;
 //                                break;
 //                            }
 //                        }
@@ -215,9 +210,7 @@ public class Find_Topk_OSSCaling {
 //        }
         // System.out.println("1");
 
-
         return path1;
-
     }
 
     public boolean isnum(int n, ArrayList<Integer> path) {
@@ -228,7 +221,6 @@ public class Find_Topk_OSSCaling {
                 break;
             }
         }
-
         return flag;
     }
 
@@ -242,43 +234,22 @@ public class Find_Topk_OSSCaling {
             i = path[i];
         }
         while (!stack.isEmpty()) {
-            result.add(Graph.point[stack.pop()].id);
+            result.add(g.vertices[stack.pop()].id);
         }
         //System.out.println();
         return result;
     }
 
-    public class Point_List {
-        public int num;
-        public ArrayList<Integer> POI_Type; //兴趣点类型
-        public int Target;
-        public int OS;//顶点所在子图
-        public int BS; //顶点所在x轴子图
-        public int Point_Type;
-
-
-        public Point_List() {
-            this.num = 0;
-            this.Target = 0;
-            this.BS = 0;
-            this.OS = 0;
-            this.POI_Type = new ArrayList<>();
-            this.Point_Type = 0;
-
-        }
-    }
-
     public class Path {
-        public ArrayList<Integer> POI_Type; //兴趣点类型
+        public ArrayList<Integer> Poi_Type; //兴趣点类型
         public ArrayList<Integer> path;
         public int OS;//顶点所在子图
         public int BS; //顶点所在x轴子图
 
-
         public Path() {
             this.BS = 0;
             this.OS = 0;
-            this.POI_Type = new ArrayList<>();
+            this.Poi_Type = new ArrayList<>();
             this.path = new ArrayList<>();
 
         }

@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Creatsg {
+public class CreateSubgraph {
 
     public ArrayList<ArrayList<Integer>> CreatSG_NY(int num2) {
         ArrayList<ArrayList<Integer>> SG = new ArrayList<>();
@@ -15,7 +15,7 @@ public class Creatsg {
         }
         FileReader file1 = null;
         try {
-            file1 = new FileReader("/mnt/public/share/DATA/NY//NY_POIPoint_SG.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/NY//NY_PoiPoint_SG.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -45,7 +45,7 @@ public class Creatsg {
         }
         FileReader file1 = null;
         try {
-            file1 = new FileReader("/mnt/public/share/DATA/calcedge//SG//calcedge_POIPoint_SG_POI1000.txt");
+            file1 = new FileReader("/mnt/public/share/DATA/calcedge//SG//calcedge_PoiPoint_SG_Poi1000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
