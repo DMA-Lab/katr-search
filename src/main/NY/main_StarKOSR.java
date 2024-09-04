@@ -8,7 +8,6 @@ import baseline.StarKOSR.FindTopK;
 import entity.Graph;
 import entity.KeywordList;
 import entity.Poi;
-import loader.CreateBoundPoint;
 import loader.CreatePoiList;
 import loader.CreateSubgraph;
 
@@ -48,7 +47,7 @@ public class main_StarKOSR {
     }
 
 
-    public static ArrayList<ArrayList<Integer>> KOSR(int[] Poi_Type2, int k1, double a) {
+    public static ArrayList<ArrayList<Integer>> KOSR(int[] Poi_Type2, int k, double a) {
 
         FileReader file = null;
         try {
@@ -147,10 +146,6 @@ public class main_StarKOSR {
         CreateSubgraph SG1 = new CreateSubgraph();
         //BufferedReader br3 = new BufferedReader(file1);//读取文件
         ArrayList<ArrayList<Integer>> SG = SG1.CreatSG_NY(num2); //存储前num2个子图的骨架图中的节点
-        //______________________________________________________________________________________________
-        //构建边界顶点集合
-        CreateBoundPoint bp1 = new CreateBoundPoint();
-        //int[] BP = bp1.CreatBP_ca(num);
 
         //______________________________________________________________________________________________
         //构建Poi索引PoiList，存储Poi的类型和数值，并给每个顶点赋予坐标
@@ -163,24 +158,23 @@ public class main_StarKOSR {
         for (int i = 0; i < PoiList.length; i++) {
             if (PoiList[i].Poi_Type != 0) {
                 flag = false;
-                for (int j = 0; j < keyWordList.size(); j++) {
-                    if (keyWordList.get(j).poiType == PoiList[i].Poi_Type) {
-                        keyWordList.get(j).nodes.add(i);
+                for (KeywordList keywordList : keyWordList) {
+                    if (keywordList.poiType == PoiList[i].Poi_Type) {
+                        keywordList.nodes.add(i);
                         flag = true;
                         break;
                     }
                 }
                 if (!flag) {
                     keyWordList.add(new KeywordList(PoiList[i].Poi_Type));
-                    keyWordList.get(keyWordList.size() - 1).nodes.add(i);
+                    keyWordList.getLast().nodes.add(i);
 
                 }
             }
         }
 
-
         //查找top_k
-        int k = k1; //计算多少条路径
+        //计算多少条路径
         int q = 56988; //查询点
 
         //ArrayList<Lower_bound> Top_k = new ArrayList<>();

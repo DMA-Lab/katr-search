@@ -144,10 +144,6 @@ public class main_KKRS {
         CreateSubgraph SG1 = new CreateSubgraph();
         //BufferedReader br3 = new BufferedReader(file1);//读取文件
         ArrayList<ArrayList<Integer>> SG = SG1.CreatSG_NY(num2); //存储前num2个子图的骨架图中的节点
-        //______________________________________________________________________________________________
-        //构建边界顶点集合
-        CreateBoundPoint bp1 = new CreateBoundPoint();
-        //int[] BP = bp1.CreatBP_ca(num);
 
         //______________________________________________________________________________________________
         //构建Poi索引PoiList，存储Poi的类型和数值，并给每个顶点赋予坐标
