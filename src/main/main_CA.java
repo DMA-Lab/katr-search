@@ -22,9 +22,9 @@ public class main_CA {
     static long timeA_db;
     static long timeA_db2;
     static long timeA_db3;
-    static int num5 = 1; //循环次数
+    static final int num5 = 1; //循环次数
 
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws IOException {
         int[] Poi_Type = {16, 12, 23, 9, 33, 58};//16,12,23,9,33,58,11,21少,16,12,23,9,33,58,4,55剪枝效率
         int k1 = 10;
         double a = 0.999999;//α
@@ -47,7 +47,7 @@ public class main_CA {
     }
 
 
-    public static ArrayList<Find_Topk_OSSCaling.Path> OSSCaling(int[] Poi_Type2, int k1, int endIndex) throws InterruptedException, IOException {
+    public static ArrayList<Find_Topk_OSSCaling.Path> OSSCaling(int[] Poi_Type2, int k1, int endIndex) throws IOException {
 
         FileReader file = null;
         FileReader file1 = null;
@@ -64,19 +64,19 @@ public class main_CA {
             while ((line1 = br1.readLine()) != null) {//按行读取
                 String[] sp = null;
                 sp = line1.split(" ");//按空格进行分割
-                c1.add(new ArrayList<Double>());
+                c1.add(new ArrayList<>());
                 for (int i = 1; i < 4; i++) {
-                    c1.get(c1.size() - 1).add(Double.valueOf(sp[i]));
+                    c1.getLast().add(Double.valueOf(sp[i]));
                 }
-                c1.add(new ArrayList<Double>());
+                c1.add(new ArrayList<>());
                 for (int i = 1; i < 4; i++) {
                     //c[count][i] = sp[i];
                     if (i == 1) {
-                        c1.get(c1.size() - 1).add(Double.valueOf(sp[2]));
+                        c1.getLast().add(Double.valueOf(sp[2]));
                     } else if (i == 2) {
-                        c1.get(c1.size() - 1).add(Double.valueOf(sp[1]));
+                        c1.getLast().add(Double.valueOf(sp[1]));
                     } else if (i == 3) {
-                        c1.get(c1.size() - 1).add(Double.valueOf(sp[3]));
+                        c1.getLast().add(Double.valueOf(sp[3]));
                     }
 
                 }
@@ -110,9 +110,9 @@ public class main_CA {
         int num1 = c1.size() + 1;
         //获取数据中共有多少点
         int ccc = 0;
-        for (int i = 0; i < data1.length; i++) {
-            if (data1[i][1] >= ccc) {
-                ccc = data1[i][1];
+        for (int[] ints : data1) {
+            if (ints[1] >= ccc) {
+                ccc = ints[1];
             }
         }
         int ccc1 = ccc + 1;
@@ -158,17 +158,17 @@ public class main_CA {
         //System.out.println("1");
         boolean flag = true;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
-        for (int i = 0; i < PoiList.length; i++) {
-            if (PoiList[i].Poi_Type != 0) {
+        for (Poi poi : PoiList) {
+            if (poi.Poi_Type != 0) {
                 flag = true;
-                for (int j = 0; j < Poi_Type_Num.size(); j++) {
-                    if (PoiList[i].Poi_Type == Poi_Type_Num.get(j)) {
+                for (Integer integer : Poi_Type_Num) {
+                    if (poi.Poi_Type == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    Poi_Type_Num.add(PoiList[i].Poi_Type);
+                    Poi_Type_Num.add(poi.Poi_Type);
                 }
             }
         }
@@ -176,11 +176,11 @@ public class main_CA {
         //构建边界顶点索引BPList
         ArrayList<ArrayList<PoiPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<PoiPath>());
+            BPList.add(new ArrayList<>());
         }
         CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
-        BPList1.CreatBPList_CA(BPList, ccc1);
+        BPList1.CreatBPList_CA(BPList);
         //______________________________________________________________________________________________
 
         //计算全部点到最近的边界顶点的距离
@@ -248,7 +248,7 @@ public class main_CA {
     }
 
 
-    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws InterruptedException, IOException {
+    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws IOException {
 
         FileReader file = null;
         FileReader file1 = null;
@@ -265,19 +265,19 @@ public class main_CA {
             while ((line1 = br1.readLine()) != null) {//按行读取
                 String[] sp = null;
                 sp = line1.split(" ");//按空格进行分割
-                c1.add(new ArrayList<Double>());
+                c1.add(new ArrayList<>());
                 for (int i = 1; i < 4; i++) {
-                    c1.get(c1.size() - 1).add(Double.valueOf(sp[i]));
+                    c1.getLast().add(Double.valueOf(sp[i]));
                 }
-                c1.add(new ArrayList<Double>());
+                c1.add(new ArrayList<>());
                 for (int i = 1; i < 4; i++) {
                     //c[count][i] = sp[i];
                     if (i == 1) {
-                        c1.get(c1.size() - 1).add(Double.valueOf(sp[2]));
+                        c1.getLast().add(Double.valueOf(sp[2]));
                     } else if (i == 2) {
-                        c1.get(c1.size() - 1).add(Double.valueOf(sp[1]));
+                        c1.getLast().add(Double.valueOf(sp[1]));
                     } else if (i == 3) {
-                        c1.get(c1.size() - 1).add(Double.valueOf(sp[3]));
+                        c1.getLast().add(Double.valueOf(sp[3]));
                     }
 
                 }
@@ -311,9 +311,9 @@ public class main_CA {
         int num1 = c1.size() + 1;
         //获取数据中共有多少点
         int ccc = 0;
-        for (int i = 0; i < data1.length; i++) {
-            if (data1[i][1] >= ccc) {
-                ccc = data1[i][1];
+        for (int[] ints : data1) {
+            if (ints[1] >= ccc) {
+                ccc = ints[1];
             }
         }
         int ccc1 = ccc + 1;
@@ -377,11 +377,11 @@ public class main_CA {
         // //构建边界顶点索引BPList
         ArrayList<ArrayList<PoiPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<PoiPath>());
+            BPList.add(new ArrayList<>());
         }
         CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
-        BPList1.CreatBPList_CA(BPList, ccc1);
+        BPList1.CreatBPList_CA(BPList);
         //______________________________________________________________________________________________
 
         //计算全部点到最近的边界顶点的距离
@@ -415,7 +415,7 @@ public class main_CA {
     }
 
 
-    public static ArrayList<LowerBound> A(int[] Poi_Type2, int k1, double a) throws InterruptedException, IOException {
+    public static ArrayList<LowerBound> A(int[] Poi_Type2, int k1, double a) throws IOException {
 
         FileReader file1 = null;
         ArrayList<ArrayList<Double>> c1 = new ArrayList<>();
@@ -425,25 +425,26 @@ public class main_CA {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br1 = new BufferedReader(file1);//读取文件
         try {
             String line1;
             while ((line1 = br1.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
-                c1.add(new ArrayList<Double>());
+                c1.add(new ArrayList<>());
                 for (int i = 1; i < 4; i++) {
-                    c1.get(c1.size() - 1).add(Double.valueOf(sp[i]));
+                    c1.getLast().add(Double.valueOf(sp[i]));
                 }
-                c1.add(new ArrayList<Double>());
+                c1.add(new ArrayList<>());
                 for (int i = 1; i < 4; i++) {
                     //c[count][i] = sp[i];
                     if (i == 1) {
-                        c1.get(c1.size() - 1).add(Double.valueOf(sp[2]));
+                        c1.getLast().add(Double.valueOf(sp[2]));
                     } else if (i == 2) {
-                        c1.get(c1.size() - 1).add(Double.valueOf(sp[1]));
+                        c1.getLast().add(Double.valueOf(sp[1]));
                     } else if (i == 3) {
-                        c1.get(c1.size() - 1).add(Double.valueOf(sp[3]));
+                        c1.getLast().add(Double.valueOf(sp[3]));
                     }
 
                 }
@@ -459,7 +460,7 @@ public class main_CA {
             }
         }
         int[][] data1 = new int[data.length + 1][4];
-        int n1 = 0;
+        int n1;
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < 4; j++) {
                 if (j == 3) {
@@ -477,9 +478,9 @@ public class main_CA {
         int num1 = c1.size() + 1;
         //获取数据中共有多少点
         int ccc = 0;
-        for (int i = 0; i < data1.length; i++) {
-            if (data1[i][1] >= ccc) {
-                ccc = data1[i][1];
+        for (int[] ints : data1) {
+            if (ints[1] >= ccc) {
+                ccc = ints[1];
             }
         }
         int ccc1 = ccc + 1;
@@ -524,19 +525,19 @@ public class main_CA {
         CreateList list1 = new CreateList();
         ArrayList<ArrayList<Path>> List = list1.CreatList_CA(ccc1);
         //System.out.println("1");
-        boolean flag = true;
+        boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
-        for (int i = 0; i < PoiList.length; i++) {
-            if (PoiList[i].Poi_Type != 0) {
+        for (Poi value : PoiList) {
+            if (value.Poi_Type != 0) {
                 flag = true;
-                for (int j = 0; j < Poi_Type_Num.size(); j++) {
-                    if (PoiList[i].Poi_Type == Poi_Type_Num.get(j)) {
+                for (Integer integer : Poi_Type_Num) {
+                    if (value.Poi_Type == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    Poi_Type_Num.add(PoiList[i].Poi_Type);
+                    Poi_Type_Num.add(value.Poi_Type);
                 }
             }
         }
@@ -544,11 +545,11 @@ public class main_CA {
         // //构建边界顶点索引BPList
         ArrayList<ArrayList<PoiPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<PoiPath>());
+            BPList.add(new ArrayList<>());
         }
         CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
-        BPList1.CreatBPList_CA(BPList, ccc1);
+        BPList1.CreatBPList_CA(BPList);
         //______________________________________________________________________________________________
 
         //计算全部点到最近的边界顶点的距离
@@ -598,8 +599,6 @@ public class main_CA {
         for (int i = 0; i < SG.size(); i++) {
             for (int j = 0; j < SG.get(i).size(); j++) {
                 if (SG.get(i).get(j) == q) {
-                    q_SG = i;
-                    flag1 = true;
                     break;
                 }
             }
@@ -610,41 +609,43 @@ public class main_CA {
         time2 = time2 / 2;
         ArrayList<ArrayList<Integer>> Poi_Num2 = new ArrayList<>();
         ArrayList<Integer> path3 = new ArrayList<>();
-        boolean flag4 = true;
-        for (int i = 0; i < PoiList.length; i++) {
-            if (PoiList[i].Poi_Type != 0) {
+        boolean flag4;
+        for (Poi poi : PoiList) {
+            if (poi.Poi_Type != 0) {
                 flag4 = true;
-                for (int j = 0; j < Poi_Num2.size(); j++) {
-                    if (Poi_Num2.get(j).get(0) == PoiList[i].Poi_Type) {
+                for (ArrayList<Integer> integers : Poi_Num2) {
+                    if (integers.get(0) == poi.Poi_Type) {
                         flag4 = false;
-                        if (PoiList[i].Poi_Num < Poi_Num2.get(j).get(1)) {
+                        if (poi.Poi_Num < integers.get(1)) {
                             path3.clear();
-                            path3.add(Poi_Num2.get(j).get(0));
-                            path3.add(PoiList[i].Poi_Num);
-                            path3.add(Poi_Num2.get(j).get(2));
-                            Poi_Num2.get(j).clear();
-                            Poi_Num2.get(j).addAll(path3);
+                            path3.add(integers.get(0));
+                            path3.add(poi.Poi_Num);
+                            path3.add(integers.get(2));
+                            integers.clear();
+                            integers.addAll(path3);
                         }
-                        if (PoiList[i].Poi_Num > Poi_Num2.get(j).get(2)) {
+                        if (poi.Poi_Num > integers.get(2)) {
                             path3.clear();
-                            path3.add(Poi_Num2.get(j).get(0));
-                            path3.add(Poi_Num2.get(j).get(1));
-                            path3.add(PoiList[i].Poi_Num);
-                            Poi_Num2.get(j).clear();
-                            Poi_Num2.get(j).addAll(path3);
+                            path3.add(integers.get(0));
+                            path3.add(integers.get(1));
+                            path3.add(poi.Poi_Num);
+                            integers.clear();
+                            integers.addAll(path3);
                         }
                     }
                 }
                 if (flag4) {
-                    Poi_Num2.add(new ArrayList<Integer>());
-                    Poi_Num2.get(Poi_Num2.size() - 1).add(PoiList[i].Poi_Type);
-                    Poi_Num2.get(Poi_Num2.size() - 1).add(PoiList[i].Poi_Num);
-                    Poi_Num2.get(Poi_Num2.size() - 1).add(PoiList[i].Poi_Num);
+                    Poi_Num2.add(new ArrayList<>());
+                    Poi_Num2.getLast().add(poi.Poi_Type);
+                    Poi_Num2.getLast().add(poi.Poi_Num);
+                    Poi_Num2.getLast().add(poi.Poi_Num);
                 }
             }
         }
-        long startTime1 = System.currentTimeMillis(); //开始获取时间
-        long endTime1 = System.currentTimeMillis(); //开始获取时间
+        System.currentTimeMillis();
+        long startTime1; //开始获取时间
+        System.currentTimeMillis();
+        long endTime1; //开始获取时间
         Find_TopK_A topk = new Find_TopK_A();
         Find_Topk_A_db topk_db = new Find_Topk_A_db();
         Find_Topk_A_db2 topk_db2 = new Find_Topk_A_db2();
@@ -659,7 +660,7 @@ public class main_CA {
 
 
             startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k_db3 = topk_db3.Top_k_db3(g, q, q_SG, k, Poi_Type, SG, List, PoiList, a, BPList, PointMinBP); //不进行优化
+            topk_db3.Top_k_db3(g, q, q_SG, k, Poi_Type, SG, List, PoiList, a, BPList, PointMinBP);
             endTime1 = System.currentTimeMillis(); //开始获取时间
             time5 = endTime1 - startTime1;
 
@@ -669,12 +670,12 @@ public class main_CA {
             time1 = endTime1 - startTime1;
 
             startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k_db2 = topk_db2.Top_k_db2(g, q, q_SG, k, Poi_Type, SG, List, PoiList, a, BPList, PointMinBP); //进行全部优化的算法
+            topk_db2.Top_k_db2(g, q, q_SG, k, Poi_Type, SG, List, PoiList, a, BPList, PointMinBP);
             endTime1 = System.currentTimeMillis(); //开始获取时间
             time4 = endTime1 - startTime1;
 
             startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k_db = topk_db.Top_k_db(g, q, q_SG, k, Poi_Type, SG, List, PoiList, a, BPList, PointMinBP); //Poi有顺序
+            topk_db.Top_k_db(g, q, q_SG, k, Poi_Type, SG, List, PoiList, a, BPList, PointMinBP);
             endTime1 = System.currentTimeMillis(); //开始获取时间
             time3 = endTime1 - startTime1;
 

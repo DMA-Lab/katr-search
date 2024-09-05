@@ -14,18 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class main_DAPrune {
-    static long time1;
-    static long time2;
-    static long time3;
-    static long time4;
     static long time5;
-    static long time_OSSCaling;
-
-    static long timeA;
-    static long timeA_db;
-    static long timeA_db2;
-    static long timeA_db3;
-    static int num5 = 1; //循环次数
+    static final int num5 = 1; //循环次数
 
     public static void main(String[] args) {
         int[] Poi_Type = {43, 25, 5, 18, 19, 26, 48, 47};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
@@ -44,15 +34,16 @@ public class main_DAPrune {
             e.printStackTrace();
         }
         int num = 1;
+        assert file != null;
         BufferedReader br = new BufferedReader(file);
         String line;
         try {
-            line = br.readLine();
+            br.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            while ((line = br.readLine()) != null) {//按行读取
+            while (br.readLine() != null) {//按行读取
                 num++;
             }
             file.close();
@@ -73,12 +64,13 @@ public class main_DAPrune {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br1 = new BufferedReader(file1);//读取文件
         try {
             String line1;
             int count = 0;
             while ((line1 = br1.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
@@ -144,19 +136,19 @@ public class main_DAPrune {
         CreateList list1 = new CreateList();
         //ArrayList<ArrayList<list>> List = list1.CreatList_NY(ccc1);
         //System.out.println("1");
-        boolean flag = true;
+        boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
-        for (int i = 0; i < PoiList.length; i++) {
-            if (PoiList[i].Poi_Type != 0) {
+        for (Poi value : PoiList) {
+            if (value.Poi_Type != 0) {
                 flag = true;
-                for (int j = 0; j < Poi_Type_Num.size(); j++) {
-                    if (PoiList[i].Poi_Type == Poi_Type_Num.get(j)) {
+                for (Integer integer : Poi_Type_Num) {
+                    if (value.Poi_Type == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    Poi_Type_Num.add(PoiList[i].Poi_Type);
+                    Poi_Type_Num.add(value.Poi_Type);
                 }
             }
         }
@@ -164,7 +156,7 @@ public class main_DAPrune {
         // //构建边界顶点索引BPList
         ArrayList<ArrayList<PoiPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<PoiPath>());
+            BPList.add(new ArrayList<>());
         }
         CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
@@ -186,8 +178,6 @@ public class main_DAPrune {
         for (int i = 0; i < SG.size(); i++) {
             for (int j = 0; j < SG.get(i).size(); j++) {
                 if (SG.get(i).get(j) == q) {
-                    q_SG = i;
-                    flag1 = true;
                     break;
                 }
             }
@@ -197,41 +187,43 @@ public class main_DAPrune {
         }
         ArrayList<ArrayList<Integer>> Poi_Num2 = new ArrayList<>();
         ArrayList<Integer> path3 = new ArrayList<>();
-        boolean flag4 = true;
-        for (int i = 0; i < PoiList.length; i++) {
-            if (PoiList[i].Poi_Type != 0) {
+        boolean flag4;
+        for (Poi poi : PoiList) {
+            if (poi.Poi_Type != 0) {
                 flag4 = true;
-                for (int j = 0; j < Poi_Num2.size(); j++) {
-                    if (Poi_Num2.get(j).get(0) == PoiList[i].Poi_Type) {
+                for (ArrayList<Integer> integers : Poi_Num2) {
+                    if (integers.get(0) == poi.Poi_Type) {
                         flag4 = false;
-                        if (PoiList[i].Poi_Num < Poi_Num2.get(j).get(1)) {
+                        if (poi.Poi_Num < integers.get(1)) {
                             path3.clear();
-                            path3.add(Poi_Num2.get(j).get(0));
-                            path3.add(PoiList[i].Poi_Num);
-                            path3.add(Poi_Num2.get(j).get(2));
-                            Poi_Num2.get(j).clear();
-                            Poi_Num2.get(j).addAll(path3);
+                            path3.add(integers.get(0));
+                            path3.add(poi.Poi_Num);
+                            path3.add(integers.get(2));
+                            integers.clear();
+                            integers.addAll(path3);
                         }
-                        if (PoiList[i].Poi_Num > Poi_Num2.get(j).get(2)) {
+                        if (poi.Poi_Num > integers.get(2)) {
                             path3.clear();
-                            path3.add(Poi_Num2.get(j).get(0));
-                            path3.add(Poi_Num2.get(j).get(1));
-                            path3.add(PoiList[i].Poi_Num);
-                            Poi_Num2.get(j).clear();
-                            Poi_Num2.get(j).addAll(path3);
+                            path3.add(integers.get(0));
+                            path3.add(integers.get(1));
+                            path3.add(poi.Poi_Num);
+                            integers.clear();
+                            integers.addAll(path3);
                         }
                     }
                 }
                 if (flag4) {
-                    Poi_Num2.add(new ArrayList<Integer>());
-                    Poi_Num2.get(Poi_Num2.size() - 1).add(PoiList[i].Poi_Type);
-                    Poi_Num2.get(Poi_Num2.size() - 1).add(PoiList[i].Poi_Num);
-                    Poi_Num2.get(Poi_Num2.size() - 1).add(PoiList[i].Poi_Num);
+                    Poi_Num2.add(new ArrayList<>());
+                    Poi_Num2.getLast().add(poi.Poi_Type);
+                    Poi_Num2.getLast().add(poi.Poi_Num);
+                    Poi_Num2.getLast().add(poi.Poi_Num);
                 }
             }
         }
-        long startTime1 = System.currentTimeMillis(); //开始获取时间
-        long endTime1 = System.currentTimeMillis(); //开始获取时间
+        System.currentTimeMillis();
+        long startTime1; //开始获取时间
+        System.currentTimeMillis();
+        long endTime1; //开始获取时间
 //        Find_Topk_A topk = new Find_Topk_A();
 //        Find_Topk_A_db topk_db = new Find_Topk_A_db();
 //        Find_Topk_A_db2 topk_db2 = new Find_Topk_A_db2();

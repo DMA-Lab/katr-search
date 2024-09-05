@@ -3,9 +3,9 @@ package baseline.StarKOSR._Class;
 import java.util.ArrayList;
 
 public class Dominance {
-    public int pointName;
-    public ArrayList<Integer> keyWordNum;
-    public ArrayList<Integer> minPathWegh;
+    public final int pointName;
+    public final ArrayList<Integer> keyWordNum;
+    public final ArrayList<Integer> minPathWegh;
 
     public Dominance() {
         this.pointName = 0;

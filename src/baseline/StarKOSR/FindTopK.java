@@ -28,11 +28,11 @@ public class FindTopK {
         }
         int nowPoint;
         //初始化头节点
-        HeadNode headNode = new HeadNode();
+        HeadNode headnode = new HeadNode();
         //将起点作为子路径加入头节点
         Subpath subPath = new Subpath();
         subPath.subpath.add(startNum);
-        headNode.next = subPath;
+        headnode.next = subPath;
         //扩展子路径
         //subPath minPath;
         //int minPathLastPoint;

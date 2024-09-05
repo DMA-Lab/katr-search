@@ -1,6 +1,5 @@
 package preprocessing;
 
-import entity.PoiPath;
 import entity.Graph;
 import loader.*;
 
@@ -21,7 +20,7 @@ public class IntoData {
         String line = reader.readLine();
 
         int lineNumber = 1;
-        while ((line = reader.readLine()) != null) {//按行读取
+        while (reader.readLine() != null) {//按行读取
             lineNumber++;
         }
         file.close();
@@ -38,12 +37,13 @@ public class IntoData {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br1 = new BufferedReader(file1);//读取文件
         try {
             String line1;
             int count = 0;
             while ((line1 = br1.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
@@ -107,7 +107,7 @@ public class IntoData {
         CreateList list1 = new CreateList();
         GraphPreprocessing.List = list1.CreatList_NY(ccc1);
         //System.out.println("1");
-        boolean flag = true;
+        boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
         for (int i = 0; i < GraphPreprocessing.PoiList.length; i++) {
             if (GraphPreprocessing.PoiList[i].Poi_Type != 0) {
@@ -127,7 +127,7 @@ public class IntoData {
         // //构建边界顶点索引BPList
         GraphPreprocessing.BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            GraphPreprocessing.BPList.add(new ArrayList<PoiPath>());
+            GraphPreprocessing.BPList.add(new ArrayList<>());
         }
         CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
@@ -140,7 +140,7 @@ public class IntoData {
         //记录每个子图中包含哪些边界顶点
         GraphPreprocessing.BvList = new ArrayList<>();
         for (int i = 0; i < num2 + 1; i++) {
-            GraphPreprocessing.BvList.add(new ArrayList<Integer>());
+            GraphPreprocessing.BvList.add(new ArrayList<>());
         }
         for (int i = 0; i < GraphPreprocessing.PoiList.length; i++) {
             if (GraphPreprocessing.PoiList[i].Boundary == 1) {
@@ -159,8 +159,6 @@ public class IntoData {
         for (int i = 0; i < GraphPreprocessing.SG.size(); i++) {
             for (int j = 0; j < GraphPreprocessing.SG.get(i).size(); j++) {
                 if (GraphPreprocessing.SG.get(i).get(j) == q) {
-                    q_SG = i;
-                    flag1 = true;
                     break;
                 }
             }
@@ -170,7 +168,7 @@ public class IntoData {
         }
         ArrayList<ArrayList<Integer>> Poi_Num2 = new ArrayList<>();
         ArrayList<Integer> path3 = new ArrayList<>();
-        boolean flag4 = true;
+        boolean flag4;
         for (int i = 0; i < GraphPreprocessing.PoiList.length; i++) {
             if (GraphPreprocessing.PoiList[i].Poi_Type != 0) {
                 flag4 = true;
@@ -196,7 +194,7 @@ public class IntoData {
                     }
                 }
                 if (flag4) {
-                    Poi_Num2.add(new ArrayList<Integer>());
+                    Poi_Num2.add(new ArrayList<>());
                     Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Type);
                     Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Num);
                     Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Num);

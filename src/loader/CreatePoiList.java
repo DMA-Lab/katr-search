@@ -16,19 +16,19 @@ public class CreatePoiList {
         }
 
         FileReader file1 = null;
-        BufferedReader br3 = null;
         try {
             file1 = new FileReader("/mnt/public/share/DATA/NY//NY_PoiPoint_SG.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br4 = new BufferedReader(file1);//读取文件
         try {
             String line1;
 
             while ((line1 = br4.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 //SG.get(Integer.parseInt(sp[0])).add(Integer.parseInt(sp[1]));
                 PoiList[Integer.parseInt(sp[1])].Boundary = Integer.parseInt(sp[3]);
@@ -44,7 +44,7 @@ public class CreatePoiList {
             }
         }
         //给每个顶点赋予坐标
-        double num33 = 0;
+        double num33;
         int num22 = 0;
         try {
             file1 = new FileReader("/mnt/public/share/DATA/NY//USA-road-node.NY.txt");
@@ -57,7 +57,7 @@ public class CreatePoiList {
             String line1;
 
             while ((line1 = br4.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 num33 = Double.parseDouble(sp[2]);
                 PoiList[num22].x = (int) (num33);
@@ -80,19 +80,19 @@ public class CreatePoiList {
         }
 
         FileReader file1 = null;
-        BufferedReader br3 = null;
         try {
             file1 = new FileReader("/mnt/public/share/DATA/calcedge//calcedge_PoiPoint_SG_15_100.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br4 = new BufferedReader(file1);//读取文件
         try {
             String line1;
 
             while ((line1 = br4.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 //SG.get(Integer.parseInt(sp[0])).add(Integer.parseInt(sp[1]));
                 PoiList[Integer.parseInt(sp[1])].Boundary = Integer.parseInt(sp[3]);
@@ -108,7 +108,7 @@ public class CreatePoiList {
             }
         }
         //给每个顶点赋予坐标
-        double num33 = 0;
+        double num33;
         int num22 = 0;
         try {
             file1 = new FileReader("/mnt/public/share/DATA/calcedge//calcnode.txt");
@@ -121,7 +121,7 @@ public class CreatePoiList {
             String line1;
 
             while ((line1 = br4.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 num33 = Double.parseDouble(sp[1]);
                 PoiList[num22].x = (int) (num33 * 10000);
@@ -183,19 +183,19 @@ public class CreatePoiList {
         }
 
         FileReader file1 = null;
-        BufferedReader br3 = null;
         try {
             file1 = new FileReader("/mnt/public/share/DATA/COL//COL_PoiPoint_SG.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br4 = new BufferedReader(file1);//读取文件
         try {
             String line1;
 
             while ((line1 = br4.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 //SG.get(Integer.parseInt(sp[0])).add(Integer.parseInt(sp[1]));
                 PoiList[Integer.parseInt(sp[1])].Boundary = Integer.parseInt(sp[3]);

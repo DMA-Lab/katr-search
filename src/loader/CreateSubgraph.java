@@ -11,7 +11,7 @@ public class CreateSubgraph {
     public ArrayList<ArrayList<Integer>> CreatSG_NY(int num2) {
         ArrayList<ArrayList<Integer>> SG = new ArrayList<>();
         for (int i = 0; i < num2; i++) {
-            SG.add(new ArrayList<Integer>());
+            SG.add(new ArrayList<>());
         }
         FileReader file1 = null;
         try {
@@ -20,11 +20,12 @@ public class CreateSubgraph {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br3 = new BufferedReader(file1);//读取文件
         try {
             String line1;
             while ((line1 = br3.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 //SG.get(Integer.parseInt(sp[0])).add(Integer.parseInt(sp[1]));
                 if (Integer.parseInt(sp[0]) < num2)
@@ -41,7 +42,7 @@ public class CreateSubgraph {
     public ArrayList<ArrayList<Integer>> CreatSG_CA(int num2) {
         ArrayList<ArrayList<Integer>> SG = new ArrayList<>();
         for (int i = 0; i < num2; i++) {
-            SG.add(new ArrayList<Integer>());
+            SG.add(new ArrayList<>());
         }
         FileReader file1 = null;
         try {
@@ -50,12 +51,13 @@ public class CreateSubgraph {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br3 = new BufferedReader(file1);//读取文件
         try {
             String line1;
             int num = 0;
             while ((line1 = br3.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 //SG.get(Integer.parseInt(sp[0])).add(Integer.parseInt(sp[1]));
                 if (Integer.parseInt(sp[0]) < num2) {
@@ -75,7 +77,7 @@ public class CreateSubgraph {
     public ArrayList<ArrayList<Integer>> CreatSG_COL(int num2) {
         ArrayList<ArrayList<Integer>> SG = new ArrayList<>();
         for (int i = 0; i < num2; i++) {
-            SG.add(new ArrayList<Integer>());
+            SG.add(new ArrayList<>());
         }
         FileReader file1 = null;
         try {
@@ -84,12 +86,13 @@ public class CreateSubgraph {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br3 = new BufferedReader(file1);//读取文件
         try {
             String line1;
             int num = 0;
             while ((line1 = br3.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 //SG.get(Integer.parseInt(sp[0])).add(Integer.parseInt(sp[1]));
                 if (Integer.parseInt(sp[0]) < num2) {
@@ -109,7 +112,7 @@ public class CreateSubgraph {
     public ArrayList<ArrayList<Integer>> CreatSG_NY2(int num2) {
         ArrayList<ArrayList<Integer>> SG = new ArrayList<>();
         for (int i = 0; i < num2; i++) {
-            SG.add(new ArrayList<Integer>());
+            SG.add(new ArrayList<>());
         }
         FileReader file1 = null;
         try {
@@ -123,7 +126,7 @@ public class CreateSubgraph {
             String line1;
             int num = 0;
             while ((line1 = br3.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 //SG.get(Integer.parseInt(sp[0])).add(Integer.parseInt(sp[1]));
                 if (Integer.parseInt(sp[0]) < num2) {

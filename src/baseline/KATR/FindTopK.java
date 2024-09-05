@@ -20,7 +20,7 @@ public class FindTopK {
     public int FYNum = 0;
     public int NotFYNum = 0;
     public int HashMapNum = 0;
-    HashMap<Integer, Integer> FYPath = new HashMap<>();
+    final HashMap<Integer, Integer> FYPath = new HashMap<>();
     long startTime1; //开始获取时间
     long endTime1; //开始获取时间
     long startTime3; //开始获取时间
@@ -59,7 +59,7 @@ public class FindTopK {
         ArrayList<ArrayList<Integer>> order2 = new ArrayList<>();
         if (currentlocal == a.length - 1) // 当当前位置指到最后一个元素时，该元素后面已经没有其他元素可以跟他交换位置，即已产生一个组合数
         {
-            order.add(new ArrayList<Integer>());
+            order.add(new ArrayList<>());
             for (int number : a) {
                 order.getLast().add(number);
             }
@@ -95,7 +95,7 @@ public class FindTopK {
             //找到所有的路线
             ArrayList<ArrayList<Integer>> path2 = new ArrayList<>();
             for (int i = 0; i < path1.getFirst().size(); i++) {
-                path2.add(new ArrayList<Integer>());
+                path2.add(new ArrayList<>());
                 path2.get(i).add(path1.getFirst().get(i));
             }
             path.addAll(Find_Path(path1, path2, 0));
@@ -117,17 +117,17 @@ public class FindTopK {
         ArrayList<ArrayList<Integer>> order1 = new ArrayList<>();
         ArrayList<ArrayList<Integer>> all = allsort(a2, order1, 0);
         ArrayList<ArrayList<Integer>> all1 = new ArrayList<>();
-        ArrayList<ArrayList<ArrayList<Integer>>> path = new ArrayList<>();
-        ArrayList<ArrayList<Integer>> path2 = new ArrayList<>();
+        ArrayList<ArrayList<ArrayList<Integer>>> path;
+        ArrayList<ArrayList<Integer>> path2;
         ArrayList<ArrayList<Integer>> path3 = new ArrayList<>();
         boolean flag12 = true;
-        all1.add(new ArrayList<Integer>());
+        all1.add(new ArrayList<>());
         for (int i = 0; i < Poi_Type.length; i++) {
             all1.getFirst().add(i);
         }
         //将q_SG中的Poi加入path3
         for (int i = 0; i < Poi_Type.length; i++) {
-            path3.add(new ArrayList<Integer>());
+            path3.add(new ArrayList<>());
         }
         Add_PoiAsSG(path3, Poi_Type, SG, PoiList, all, q_SG);
         boolean flag4 = true;
@@ -144,7 +144,7 @@ public class FindTopK {
 
         if (!flag4) {
             //System.out.println("初始子图中不包括全部的Poi类型");
-            boolean flag6 = false;
+            boolean flag6;
             int num55 = 0;
             while (num44 > 0) {
                 for (ArrayList<Integer> integers : SG) {
@@ -197,7 +197,7 @@ public class FindTopK {
         //找到W_max
         int w_max = 0;//最大Poi评分之和
         int w1 = 0;
-        int w1_Num = 0;
+        int w1_Num;
         for (int value : Poi_Type) {
             w1_Num = 0;
             for (Poi poi : PoiList) {
@@ -219,15 +219,15 @@ public class FindTopK {
         SG_num[q_SG] = 1;//初始子图无需搜索
         //ArrayList<Integer> SGq = new ArrayList<>(); //安全范围包含的子图
         ArrayList<Integer> SG_n = new ArrayList<>();
-        int Bv = 0;
-        int Dis = 0;
+        int Bv;
+        int Dis;
         for (ArrayList<Integer> integers : BvList) {
             for (Integer integer : integers) {
                 Bv = integer;
                 if (SG_num[PoiList[Bv].SG] == 0) {
                     Dis = 0;
                     Dis += PointMinBP.get(q).get(1);
-                    Dis += BPList.get(Bv).get(q_SG).weight;
+                    Dis += BPList.get(Bv).get(q_SG).distance;
                     if (Du > Dis) {
                         SG_n.add(PoiList[Bv].SG);
                     }
@@ -256,15 +256,15 @@ public class FindTopK {
             //判断这个子图是否有全部的兴趣点
             hasAllPoi = SGPoi.getLast().Poi.stream().noneMatch(ArrayList::isEmpty);
 
-            int q_TargetSG_w = 0;
+            int q_TargetSG_w;
             if (hasAllPoi) {
                 int j = 0;
                 //如果有，查找q到这个子图的最短路径
                 NOPoi_Num.add(SGPoi.get(j).num);
                 q_TargetSG_w = Integer.MAX_VALUE;
                 for (Integer integer : NOPoi_Num) {
-                    if (BPList.get(q_BP).get(integer).weight < q_TargetSG_w) {
-                        q_TargetSG_w = BPList.get(q_BP).get(integer).weight;
+                    if (BPList.get(q_BP).get(integer).distance < q_TargetSG_w) {
+                        q_TargetSG_w = BPList.get(q_BP).get(integer).distance;
                     }
                 }
                 NOPoi_Num.clear();
@@ -286,7 +286,7 @@ public class FindTopK {
                     num_LJ3 = num45 * all.size();
                     ArrayList<ArrayList<Integer>> path8 = Finf_Path1(all1, SGPoi.get(j).Poi, Poi_Type, q);//得到Poi集合
                     ArrayList<ArrayList<ArrayList<Integer>>> path7 = Find_Path2(path8, Poi_Type, PoiList, all, q, 1, LB, a);
-                    int num33 = 0;
+                    int num33;
                     for (int l = 0; l < SGPoi.get(j).Poi.size(); l++) {
                         num33 = 0;
                         for (int o = 0; o < SGPoi.get(j).Poi.get(l).size(); o++) {
@@ -302,7 +302,7 @@ public class FindTopK {
                     int top_min;
 
                     if (Top_k.size() < k) {
-                        boolean flag99 = true;
+                        boolean flag99;
                         for (LowerBound lowerBound : Top_k4) {
                             flag99 = true;
                             for (LowerBound bound : Top_k) {
@@ -353,11 +353,11 @@ public class FindTopK {
     public ArrayList<LowerBound> Find_allPath(ArrayList<ArrayList<ArrayList<Integer>>> path, ArrayList<ArrayList<Path>> List, Poi[] PoiList, double a,
                                               int q_BP, int w_BP, ArrayList<ArrayList<PoiPath>> BPList, ArrayList<ArrayList<Integer>> PointList, int k) {
         ArrayList<LowerBound> LB = new ArrayList<>();
-        int w = 0;
-        double score_Min = 0;
+        int w;
+        double score_Min;
         double score1 = 0;
-        int q_BP1 = q_BP;
-        int w_BP1 = w_BP;
+        int q_BP1;
+        int w_BP1;
         int Poi_NUM;
         int q_index;
         int q_index1;
@@ -423,7 +423,7 @@ public class FindTopK {
                         }
                     } else {
                         if (q_BP1 != Integer.MAX_VALUE) {
-                            w = w + w_BP1 + BPList.get(q_BP1).get(PoiList[q_index1].SG).weight;
+                            w = w + w_BP1 + BPList.get(q_BP1).get(PoiList[q_index1].SG).distance;
                             for (int k1 = 0; k1 < List.get(BPList.get(q_BP1).get(PoiList[q_index1].SG).target).size(); k1++) {
                                 if (List.get(BPList.get(q_BP1).get(PoiList[q_index1].SG).target).get(k1).end == q_index1) {
                                     w = w + List.get(BPList.get(q_BP1).get(PoiList[q_index1].SG).target).get(k1).weight;
@@ -475,7 +475,7 @@ public class FindTopK {
 
     public ArrayList<LowerBound> Find_Top_k(ArrayList<LowerBound> a, int k) {
         ArrayList<LowerBound> top_k = new ArrayList<>();
-        int n = 0;
+        int n;
         for (LowerBound lowerBound : a) {
             if (top_k.size() < k && lowerBound.dis != 0) {
                 top_k.add(lowerBound);
@@ -522,19 +522,19 @@ public class FindTopK {
         ArrayList<ArrayList<ArrayList<Integer>>> find_Path = new ArrayList<>();
         ArrayList<Integer> x = new ArrayList<>();
         ArrayList<Integer> y = new ArrayList<>();
-        double x_min = 0;
-        double x_max = 0;
-        double num16 = 0;
+        double x_min;
+        double x_max;
+        double num16;
         ArrayList<x_ty> x_right = new ArrayList<>();
         ArrayList<x_ty> x_left = new ArrayList<>();
         ArrayList<x_ty> y_right = new ArrayList<>();
         ArrayList<x_ty> y_left = new ArrayList<>();
         ArrayList<ArrayList<Integer>> path3 = new ArrayList<>();
         for (int i = 0; i < Poi_Type.length; i++) {
-            path3.add(new ArrayList<Integer>());
+            path3.add(new ArrayList<>());
         }
         for (ArrayList<Integer> integers : path) {
-            find_Path.add(new ArrayList<ArrayList<Integer>>());
+            find_Path.add(new ArrayList<>());
             //找到x的两端
             x_right.clear();
             x_left.clear();
@@ -625,7 +625,7 @@ public class FindTopK {
             y_right.addFirst(new x_ty(q, 0));
             if ((x_left.size() <= 1 && y_left.size() <= 1) || (x_left.size() <= 1 && y_right.size() <= 1) ||
                     (x_right.size() <= 1 && y_right.size() <= 1) || (x_right.size() <= 1 && y_left.size() <= 1)) { //q是否在最左边或者最右边
-                find_Path.getLast().add(new ArrayList<Integer>());
+                find_Path.getLast().add(new ArrayList<>());
                 //find_Path.get(find_Path.size()-1).get(find_Path.get(find_Path.size()-1).size()-1).add(q);
                 if (x_left.size() <= 1) {
                     for (x_ty xTy : x_right) {
@@ -715,8 +715,8 @@ public class FindTopK {
     }
 
     public static class x_ty {
-        public int x;
-        public double num;
+        public final int x;
+        public final double num;
 
         public x_ty() {
             this.x = 0;
@@ -731,7 +731,7 @@ public class FindTopK {
 
     public static class SgPoi {
         public int num; //子图的编号
-        public ArrayList<ArrayList<Integer>> Poi;
+        public final ArrayList<ArrayList<Integer>> Poi;
 
         public SgPoi() {
             this.num = 0;

@@ -9,6 +9,7 @@ import entity.Graph;
 import entity.Poi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DAPrune {
@@ -54,13 +55,13 @@ public class DAPrune {
 
     public static Dijkstra.Path FindOffsetPath(Graph g, int startIndex, int endIndex, int[] Poi_Type, Poi[] PoiList, int w1) {
         Dijkstra.Path path1 = new Dijkstra.Path();
-        ArrayList<Integer> keyWord = new ArrayList<>();
-        ArrayList<Integer> Poi = new ArrayList<>();
+        ArrayList<Integer> keyword = new ArrayList<>();
+        ArrayList<Integer> poi = new ArrayList<>();
 
         //int[] kewWord = new int[Poi_Type.length];
 
-        for (int i = 0; i < Poi_Type.length; i++) { //Poi_Type.length
-            keyWord.add(Poi_Type[i]);
+        for (int j : Poi_Type) { //Poi_Type.length
+            keyword.add(j);
         }
         int[] set = new int[g.vertexCount]; // 是否已并入集合，该点是否已找到最短路径
         // s到i的最短路径长度
@@ -138,40 +139,17 @@ public class DAPrune {
         FindPath(startIndex, Poi_Type, PoiList);
 
 
-//        long endTime1 = System.currentTimeMillis(); //开始获取时间
-//        System.out.println("Time111="+(endTime1 - startTime1));
-//        double x = 0;
-//        double y = 0;
-//        double w2 = w1;
-//
-//        //计算到达各个Poi的距离
-//        int x1 = PoiList[startIndex].x;
-//        int x2 = PoiList[Poi.get(0)].x;
-//        x =  Math.pow((PoiList[startIndex].x - PoiList[Poi.get(0)].x),2);
-//        y =  Math.pow((PoiList[startIndex].y - PoiList[Poi.get(0)].y),2);
-//        double weight = 0;
-//        weight += StrictMath.sqrt((x+y));
-//        for (int i = 0; i < Poi.size()-1; i++) {
-//            x =  Math.pow((PoiList[Poi.get(i)].x - PoiList[Poi.get(i+1)].x),2);
-//            y =  Math.pow((PoiList[Poi.get(i)].y - PoiList[Poi.get(i+1)].y),2);
-//            weight += StrictMath.sqrt((x+y));
-//        }
-//        for (int i = 0; i < Poi.size(); i++) {
-//            path1.path.add(Poi.get(i));
-//        }
-        path1.path.addAll(Poi);
+        path1.path.addAll(poi);
         // path1.weight = weight+w2;
         path1.length = 0;
         return path1;
     }
 
 
-    public static Dijkstra.Path FindPath(int startIndex, int[] Poi_Type, Poi[] PoiList) {
+    public static void FindPath(int startIndex, int[] Poi_Type, Poi[] PoiList) {
         Dijkstra.Path path1 = new Dijkstra.Path();
         double[] pathWeight = new double[Poi_Type.length];
-        for (int i = 0; i < pathWeight.length; i++) {
-            pathWeight[i] = Integer.MAX_VALUE;
-        }
+        Arrays.fill(pathWeight, Integer.MAX_VALUE);
         int[] path = new int[Poi_Type.length];
 
         for (int i = 0; i < Dijkstra.ORCSK_Num(Poi_Type, PoiList); i++) {
@@ -187,6 +165,5 @@ public class DAPrune {
                 }
             }
         }
-        return path1;
     }
 }

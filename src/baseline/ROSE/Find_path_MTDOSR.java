@@ -66,10 +66,10 @@ public class Find_path_MTDOSR {
     }
 
     public static class Path {
-        public ArrayList<Integer> Poi_Type; // 兴趣点类型
-        public ArrayList<Integer> path;
-        public int OS; // 顶点所在子图
-        public int BS; // 顶点所在x轴子图
+        public final ArrayList<Integer> Poi_Type; // 兴趣点类型
+        public final ArrayList<Integer> path;
+        public final int OS; // 顶点所在子图
+        public final int BS; // 顶点所在x轴子图
 
         public Path() {
             this.BS = 0;

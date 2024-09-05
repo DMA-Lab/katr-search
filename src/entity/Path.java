@@ -10,7 +10,7 @@ public class Path {
     // 路径权重
     public int weight;
     // 路径上的顶点
-    public ArrayList<Integer> vertices;
+    public final ArrayList<Integer> vertices;
 
     public Path() {
         this.start = 0;

@@ -2,15 +2,15 @@ package entity;
 
 
 public class Graph {
-    public boolean[] visited;
-    public Point[] vertices;
-    public int vertexCount;
-    public int edgeCount;
+    public final boolean[] visited;
+    public final Vertex[] vertices;
+    public final int vertexCount;
+    public final int edgeCount;
 
     public Graph(int vertexCount, int edgeCount) {
         this.vertexCount = vertexCount;
         this.edgeCount = edgeCount;
-        vertices = new Point[vertexCount];
+        vertices = new Vertex[vertexCount];
         visited = new boolean[vertexCount];
     }
 
@@ -18,7 +18,7 @@ public class Graph {
     {
         for (int i = 0; i < vertexCount; i++) {
             visited[i] = false;
-            vertices[i] = new Point(i);   //录入顶点的数据域
+            vertices[i] = new Vertex(i);   //录入顶点的数据域
         }
 
         // edgeMatrix 就是从 txt 文件中读取的原始数据.

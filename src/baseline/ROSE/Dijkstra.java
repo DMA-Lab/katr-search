@@ -8,8 +8,8 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 public class Dijkstra {
-    Set<Path> candidatePaths = new HashSet<>();
-    List<Path> result = new ArrayList<>();
+    final Set<Path> candidatePaths = new HashSet<>();
+    final List<Path> result = new ArrayList<>();
 
     public List<Path> ShortestPath(Graph g, int startIndex, int endIndex) {
         // 结果列表
@@ -71,7 +71,7 @@ public class Dijkstra {
             visited[k] = true; // 把节点k并入
             dist1.remove(Integer.valueOf(k));
 
-            EdgeNode g2 = (EdgeNode) g.vertices[k].firstArc;
+            EdgeNode g2 = g.vertices[k].firstArc;
             // 修改dist[]、path[]
             while (g2 != null) {
                 int j = g2.adjVertex;
@@ -134,10 +134,10 @@ public class Dijkstra {
     }
 
     public class DijkstraProcess {
-        public Graph g;
-        public int startIndex;
-        public int endIndex;
-        public List<Integer> unavailableNodeIndexs;
+        public final Graph g;
+        public final int startIndex;
+        public final int endIndex;
+        public final List<Integer> unavailableNodeIndexs;
         public Path path;
         public double w1;
         public CountDownLatch cdl;
@@ -271,18 +271,7 @@ public class Dijkstra {
         }
 
         public List<Integer> getMinimumPath(Graph g, int sIndex, int tIndex, int[] path) {
-            List<Integer> result = new ArrayList<>();
-            Stack<Integer> stack = new Stack<>();
-            stack.push(tIndex);
-            int i = path[tIndex];
-            while (i != -1) {
-                stack.push(i);
-                i = path[i];
-            }
-            while (!stack.isEmpty()) {
-                result.add(g.vertices[stack.pop()].id);
-            }
-            return result;
+            return Dijkstra.getMinimumPath(g, 0, tIndex, path);
         }
     }
 

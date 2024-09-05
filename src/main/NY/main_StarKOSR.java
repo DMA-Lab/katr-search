@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 public class main_StarKOSR {
     static long time1;
-    static long time2;
     static long time3;
     static long time4;
     static long time5;
@@ -29,7 +28,7 @@ public class main_StarKOSR {
     static long timeA_db;
     static long timeA_db2;
     static long timeA_db3;
-    static int num5 = 1; //循环次数
+    static final int num5 = 1; //循环次数
 
     public static void main(String[] args) {
 
@@ -39,7 +38,6 @@ public class main_StarKOSR {
         int endIndex = 6000;
         int num6 = num5 - 1;
         if (num6 == 0) {
-            num6 = 1;
         }
         ArrayList<ArrayList<Integer>> Top_k_KOSR = KOSR(Poi_Type, k1, a);
 
@@ -56,15 +54,16 @@ public class main_StarKOSR {
             e.printStackTrace();
         }
         int num = 1;
+        assert file != null;
         BufferedReader br = new BufferedReader(file);
         String line;
         try {
-            line = br.readLine();
+            br.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            while ((line = br.readLine()) != null) {//按行读取
+            while (br.readLine() != null) {//按行读取
                 num++;
             }
             file.close();
@@ -85,12 +84,13 @@ public class main_StarKOSR {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br1 = new BufferedReader(file1);//读取文件
         try {
             String line1;
             int count = 0;
             while ((line1 = br1.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
@@ -154,7 +154,7 @@ public class main_StarKOSR {
         //计算全部点到最近的边界顶点的距离
 //        ArrayList<ArrayList<Integer>> PointMinBP = Creat_MinBP.CreatMinBP_NY();
         ArrayList<KeywordList> keyWordList = new ArrayList<>();
-        boolean flag = false;
+        boolean flag;
         for (int i = 0; i < PoiList.length; i++) {
             if (PoiList[i].Poi_Type != 0) {
                 flag = false;

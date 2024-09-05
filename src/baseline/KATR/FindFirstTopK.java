@@ -166,13 +166,7 @@ public class FindFirstTopK {
         //从这些路径中选出k条q到第一节点最短的路径
 
         //ArrayList<ArrayList<Integer>> path_k = Find_path_k(q,path, k, q_SG,PoiList, List,PointMinBP,BPList);
-        //endTime1 = System.currentTimeMillis();
-        // time11 = time11 + endTime1 - startTime1;
-        // startTime1 = System.currentTimeMillis();
-        //startTime1 = System.currentTimeMillis();
         ArrayList<LowerBound> allPath = Find_allPath(path, List, PoiList, a, q_BP, Min_w, BPList, PointMinBP, k);
-        // endTime1 = System.currentTimeMillis();
-        // time33 = time33 + endTime1 - startTime1;
         // ArrayList<Lower_bound> allPath = new ArrayList<>();
         //endTime1 = System.currentTimeMillis();
         //time1 = endTime1 - startTime1;
@@ -187,12 +181,12 @@ public class FindFirstTopK {
     public ArrayList<LowerBound> Find_allPath(ArrayList<ArrayList<ArrayList<Integer>>> path, ArrayList<ArrayList<Path>> List, Poi[] PoiList, double a,
                                               int q_BP, int w_BP, ArrayList<ArrayList<PoiPath>> BPList, ArrayList<ArrayList<Integer>> PointList, int k) {
         ArrayList<LowerBound> LB = new ArrayList<>();
-        int w = 0;
+        int w;
         int num = 0;
-        double score_Min = 0;
+        double score_Min;
         double score1 = 0;
-        int q_BP1 = q_BP;
-        int w_BP1 = w_BP;
+        int q_BP1;
+        int w_BP1;
         long startTime2; //开始获取时间
         long endTime2; //开始获取时间
         long time2 = 0;
@@ -250,7 +244,7 @@ public class FindFirstTopK {
                         }
                     } else {
                         if (q_BP1 != Integer.MAX_VALUE) {
-                            w = w + w_BP1 + BPList.get(q_BP1).get(PoiList[q_index1].SG).weight;
+                            w = w + w_BP1 + BPList.get(q_BP1).get(PoiList[q_index1].SG).distance;
                             for (int k1 = 0; k1 < List.get(BPList.get(q_BP1).get(PoiList[q_index1].SG).target).size(); k1++) {
                                 if (List.get(BPList.get(q_BP1).get(PoiList[q_index1].SG).target).get(k1).end == q_index1) {
                                     w = w + List.get(BPList.get(q_BP1).get(PoiList[q_index1].SG).target).get(k1).weight;
@@ -304,7 +298,7 @@ public class FindFirstTopK {
 
     public ArrayList<LowerBound> findTopK(ArrayList<LowerBound> a, int k) {
         ArrayList<LowerBound> top_k = new ArrayList<>();
-        int n = 0;
+        int n;
         for (LowerBound lowerBound : a) {
             if (top_k.size() < k && lowerBound.dis != 0) {
                 top_k.add(lowerBound);
@@ -347,9 +341,9 @@ public class FindFirstTopK {
     public ArrayList<ArrayList<ArrayList<Integer>>> Find_Path2(ArrayList<ArrayList<Integer>> path, int[] Poi_Type, Poi[] PoiList, ArrayList<ArrayList<Integer>> all,
                                                                int q, double LB, double a) {
         ArrayList<ArrayList<ArrayList<Integer>>> find_Path = new ArrayList<>();
-        double x_min = 0;
-        double x_max = 0;
-        double num16 = 0;
+        double x_min;
+        double x_max;
+        double num16;
         ArrayList<FindTopK.x_ty> x_right = new ArrayList<>();
         ArrayList<FindTopK.x_ty> x_left = new ArrayList<>();
         ArrayList<FindTopK.x_ty> y_right = new ArrayList<>();

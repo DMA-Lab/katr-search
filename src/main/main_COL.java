@@ -22,9 +22,9 @@ public class main_COL {
     static long timeA_db;
     static long timeA_db2;
     static long timeA_db3;
-    static int num5 = 1; //循环次数
+    static final int num5 = 1; //循环次数
 
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws IOException {
         int[] Poi_Type = {16, 12, 23, 9, 33, 58};//36,54,50,1,6,3,9多，16,12,23,9,33,58,11,21少,36,12,49,16,58,12,38
         int k1 = 3;
         double a = 0.9;//α
@@ -48,7 +48,7 @@ public class main_COL {
     }
 
 
-    public static ArrayList<Find_Topk_OSSCaling.Path> OSSCaling(int[] Poi_Type2, int k1, int endIndex) throws InterruptedException, IOException {
+    public static ArrayList<Find_Topk_OSSCaling.Path> OSSCaling(int[] Poi_Type2, int k1, int endIndex) throws IOException {
         FileReader file = null;
         try {
             file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
@@ -90,7 +90,7 @@ public class main_COL {
             String line1;
             int count = 0;
             while ((line1 = br1.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
@@ -156,19 +156,19 @@ public class main_COL {
         CreateList list1 = new CreateList();
         ArrayList<ArrayList<Path>> List = list1.CreatList_NY(ccc1);
         //System.out.println("1");
-        boolean flag = true;
+        boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
-        for (int i = 0; i < PoiList.length; i++) {
-            if (PoiList[i].Poi_Type != 0) {
+        for (Poi poi : PoiList) {
+            if (poi.Poi_Type != 0) {
                 flag = true;
-                for (int j = 0; j < Poi_Type_Num.size(); j++) {
-                    if (PoiList[i].Poi_Type == Poi_Type_Num.get(j)) {
+                for (Integer integer : Poi_Type_Num) {
+                    if (poi.Poi_Type == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    Poi_Type_Num.add(PoiList[i].Poi_Type);
+                    Poi_Type_Num.add(poi.Poi_Type);
                 }
             }
         }
@@ -176,7 +176,7 @@ public class main_COL {
         // //构建边界顶点索引BPList
         ArrayList<ArrayList<PoiPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<PoiPath>());
+            BPList.add(new ArrayList<>());
         }
         CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
@@ -248,7 +248,7 @@ public class main_COL {
     }
 
 
-    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws InterruptedException, IOException {
+    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws IOException {
         FileReader file = null;
         try {
             file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
@@ -290,7 +290,7 @@ public class main_COL {
             String line1;
             int count = 0;
             while ((line1 = br1.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
@@ -356,19 +356,19 @@ public class main_COL {
         CreateList list1 = new CreateList();
         ArrayList<ArrayList<Path>> List = list1.CreatList_NY(ccc1);
         //System.out.println("1");
-        boolean flag = true;
+        boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
-        for (int i = 0; i < PoiList.length; i++) {
-            if (PoiList[i].Poi_Type != 0) {
+        for (Poi poi : PoiList) {
+            if (poi.Poi_Type != 0) {
                 flag = true;
-                for (int j = 0; j < Poi_Type_Num.size(); j++) {
-                    if (PoiList[i].Poi_Type == Poi_Type_Num.get(j)) {
+                for (Integer integer : Poi_Type_Num) {
+                    if (poi.Poi_Type == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    Poi_Type_Num.add(PoiList[i].Poi_Type);
+                    Poi_Type_Num.add(poi.Poi_Type);
                 }
             }
         }
@@ -376,7 +376,7 @@ public class main_COL {
         // //构建边界顶点索引BPList
         ArrayList<ArrayList<PoiPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<PoiPath>());
+            BPList.add(new ArrayList<>());
         }
         CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
@@ -448,7 +448,7 @@ public class main_COL {
     }
 
 
-    public static ArrayList<LowerBound> A(int[] Poi_Type2, int k1, double a) throws InterruptedException, IOException {
+    public static ArrayList<LowerBound> A(int[] Poi_Type2, int k1, double a) throws IOException {
 
         FileReader file = null;
         try {
@@ -457,15 +457,16 @@ public class main_COL {
             e.printStackTrace();
         }
         int num = 1;
+        assert file != null;
         BufferedReader br = new BufferedReader(file);
         String line;
         try {
-            line = br.readLine();
+            br.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            while ((line = br.readLine()) != null) {//按行读取
+            while (br.readLine() != null) {//按行读取
                 num++;
             }
             file.close();
@@ -486,12 +487,13 @@ public class main_COL {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br1 = new BufferedReader(file1);//读取文件
         try {
             String line1;
             int count = 0;
             while ((line1 = br1.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
@@ -557,19 +559,19 @@ public class main_COL {
         CreateList list1 = new CreateList();
         ArrayList<ArrayList<Path>> List = list1.CreatList_COL(ccc1);
         //System.out.println("1");
-        boolean flag = true;
+        boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
-        for (int i = 0; i < PoiList.length; i++) {
-            if (PoiList[i].Poi_Type != 0) {
+        for (Poi value : PoiList) {
+            if (value.Poi_Type != 0) {
                 flag = true;
-                for (int j = 0; j < Poi_Type_Num.size(); j++) {
-                    if (PoiList[i].Poi_Type == Poi_Type_Num.get(j)) {
+                for (Integer integer : Poi_Type_Num) {
+                    if (value.Poi_Type == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    Poi_Type_Num.add(PoiList[i].Poi_Type);
+                    Poi_Type_Num.add(value.Poi_Type);
                 }
             }
         }
@@ -577,7 +579,7 @@ public class main_COL {
         // //构建边界顶点索引BPList
         ArrayList<ArrayList<PoiPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<PoiPath>());
+            BPList.add(new ArrayList<>());
         }
         CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
@@ -621,8 +623,6 @@ public class main_COL {
         for (int i = 0; i < SG.size(); i++) {
             for (int j = 0; j < SG.get(i).size(); j++) {
                 if (SG.get(i).get(j) == q) {
-                    q_SG = i;
-                    flag1 = true;
                     break;
                 }
             }
@@ -632,7 +632,7 @@ public class main_COL {
         }
         ArrayList<ArrayList<Integer>> Poi_Num2 = new ArrayList<>();
         ArrayList<Integer> path3 = new ArrayList<>();
-        boolean flag4 = true;
+        boolean flag4;
         for (Poi poi : PoiList) {
             if (poi.Poi_Type != 0) {
                 flag4 = true;
@@ -665,8 +665,10 @@ public class main_COL {
                 }
             }
         }
-        long startTime1 = System.currentTimeMillis(); //开始获取时间
-        long endTime1 = System.currentTimeMillis(); //开始获取时间
+        System.currentTimeMillis();
+        long startTime1; //开始获取时间
+        System.currentTimeMillis();
+        long endTime1; //开始获取时间
         Find_TopK_A topk = new Find_TopK_A();
         Find_Topk_A_db topk_db = new Find_Topk_A_db();
         Find_Topk_A_db2 topk_db2 = new Find_Topk_A_db2();
@@ -705,7 +707,7 @@ public class main_COL {
         for (int i = 0; i < num5; i++) {
 
             startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k_db3 = topk_db3.Top_k_db3(g, q, q_SG, k, Poi_Type, SG, List, PoiList, a, BPList, PointMinBP); //不进行优化
+            topk_db3.Top_k_db3(g, q, q_SG, k, Poi_Type, SG, List, PoiList, a, BPList, PointMinBP);
             endTime1 = System.currentTimeMillis(); //开始获取时间
             time5 = endTime1 - startTime1;
 //
@@ -715,7 +717,7 @@ public class main_COL {
 //            time1 = endTime1 - startTime1;
 
             startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k_db2 = topk_db2.Top_k_db2(g, q, q_SG, k, Poi_Type, SG, List, PoiList, a, BPList, PointMinBP); //进行全部优化的算法
+            topk_db2.Top_k_db2(g, q, q_SG, k, Poi_Type, SG, List, PoiList, a, BPList, PointMinBP);
             endTime1 = System.currentTimeMillis(); //开始获取时间
             time4 = endTime1 - startTime1;
 

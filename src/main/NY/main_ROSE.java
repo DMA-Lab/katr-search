@@ -19,33 +19,19 @@ import java.util.ArrayList;
 
 public class main_ROSE {
 
-    static long time1;
     static long time2;
-    static long time3;
-    static long time4;
-    static long time5;
-    static long time_OSSCaling;
+    static final int num5 = 1; //循环次数
 
-    static long timeA;
-    static long timeA_db;
-    static long timeA_db2;
-    static long timeA_db3;
-    static int num5 = 1; //循环次数
-
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws IOException {
 
         int[] Poi_Type = {43, 25, 14, 28, 19, 26};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
         int k1 = 6;
         double a = 0.5;//α
         int endIndex = 6000;
-        int num6 = num5 - 1;
-        if (num6 == 0) {
-            num6 = 1;
-        }
         ArrayList<Find_path_MTDOSR.Path> Top_k_MTDOSR = MTDOSR(Poi_Type, k1);
     }
 
-    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws InterruptedException, IOException {
+    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws IOException {
         FileReader file = null;
         try {
             file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
@@ -53,15 +39,16 @@ public class main_ROSE {
             e.printStackTrace();
         }
         int num = 1;
+        assert file != null;
         BufferedReader br = new BufferedReader(file);
         String line;
         try {
-            line = br.readLine();
+            br.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            while ((line = br.readLine()) != null) {//按行读取
+            while (br.readLine() != null) {//按行读取
                 num++;
             }
             file.close();
@@ -82,12 +69,13 @@ public class main_ROSE {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert file1 != null;
         BufferedReader br1 = new BufferedReader(file1);//读取文件
         try {
             String line1;
             int count = 0;
             while ((line1 = br1.readLine()) != null) {//按行读取
-                String[] sp = null;
+                String[] sp;
                 sp = line1.split(" ");//按空格进行分割
                 System.arraycopy(sp, 1, c[count], 1, 3);
                 count++;
@@ -153,7 +141,7 @@ public class main_ROSE {
         CreateList list1 = new CreateList();
         ArrayList<ArrayList<Path>> List = list1.CreatList_NY(ccc1);
         //System.out.println("1");
-        boolean flag = true;
+        boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
         for (Poi poi : PoiList) {
             if (poi.Poi_Type != 0) {
@@ -173,7 +161,7 @@ public class main_ROSE {
         // //构建边界顶点索引BPList
         ArrayList<ArrayList<PoiPath>> BPList = new ArrayList<>();
         for (int i = 0; i < ccc1; i++) {
-            BPList.add(new ArrayList<PoiPath>());
+            BPList.add(new ArrayList<>());
         }
         CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
