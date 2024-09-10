@@ -131,7 +131,7 @@ public class FindFirstTopK {
                 for (ArrayList<Integer> integers : SG) {
                     flag6 = false;
                     for (Integer integer : integers) {
-                        if (PoiList[integer].Poi_Type == Poi_Type[NoType.get(num55)]) {
+                        if (PoiList[integer].poiType == Poi_Type[NoType.get(num55)]) {
                             path3.get(NoType.get(num55)).add(integer);
                             num55++;
                             num44--;
@@ -204,7 +204,7 @@ public class FindFirstTopK {
             for (ArrayList<Integer> arrayList : arrayLists) {
                 Poi_NUM = 0;
                 for (int j = 1; j < arrayList.size(); j++) {
-                    Poi_NUM += PoiList[arrayList.get(j)].Poi_Num;
+                    Poi_NUM += PoiList[arrayList.get(j)].poiNum;
                 }
                 //计算这种组合形式的欧式距离
 
@@ -235,7 +235,7 @@ public class FindFirstTopK {
                     q_index1 = arrayList.get(j + 1);
                     q_BP1 = PointList.get(q_index).get(0);
                     w_BP1 = PointList.get(q_index).get(1);
-                    if (PoiList[q_index].SG == PoiList[q_index1].SG) {
+                    if (PoiList[q_index].subgraphId == PoiList[q_index1].subgraphId) {
                         for (int k1 = 0; k1 < List.get(q_index).size(); k1++) {
                             if (List.get(q_index).get(k1).end == q_index1) {
                                 w = w + List.get(q_index).get(k1).weight;
@@ -244,10 +244,10 @@ public class FindFirstTopK {
                         }
                     } else {
                         if (q_BP1 != Integer.MAX_VALUE) {
-                            w = w + w_BP1 + BPList.get(q_BP1).get(PoiList[q_index1].SG).distance;
-                            for (int k1 = 0; k1 < List.get(BPList.get(q_BP1).get(PoiList[q_index1].SG).target).size(); k1++) {
-                                if (List.get(BPList.get(q_BP1).get(PoiList[q_index1].SG).target).get(k1).end == q_index1) {
-                                    w = w + List.get(BPList.get(q_BP1).get(PoiList[q_index1].SG).target).get(k1).weight;
+                            w = w + w_BP1 + BPList.get(q_BP1).get(PoiList[q_index1].subgraphId).distance;
+                            for (int k1 = 0; k1 < List.get(BPList.get(q_BP1).get(PoiList[q_index1].subgraphId).target).size(); k1++) {
+                                if (List.get(BPList.get(q_BP1).get(PoiList[q_index1].subgraphId).target).get(k1).end == q_index1) {
+                                    w = w + List.get(BPList.get(q_BP1).get(PoiList[q_index1].subgraphId).target).get(k1).weight;
                                     break;
                                 }
                             }
@@ -266,7 +266,7 @@ public class FindFirstTopK {
                     LB.getLast().dis = w;
                     for (int kk = 0; kk < LB.getLast().path.size(); kk++) {
                         //LB.get(num).w_poi += PoiList[LB.get(num).path.get(k)].Poi_Num;
-                        LB.getLast().totalInterest += PoiList[arrayList.get(kk)].Poi_Num;
+                        LB.getLast().totalInterest += PoiList[arrayList.get(kk)].poiNum;
                     }
                     LB.getLast().score = (-a) * LB.getLast().dis + (1 - a) * LB.getLast().totalInterest;
                 } else {
@@ -316,9 +316,9 @@ public class FindFirstTopK {
         return top_k;
     }
 
-    public double Find_LB(ArrayList<LowerBound> Top_k) {
+    public double Find_LB(ArrayList<LowerBound> topK) {
         double LB_score = Double.MAX_VALUE;
-        for (LowerBound lowerBound : Top_k) {
+        for (LowerBound lowerBound : topK) {
             if (LB_score > lowerBound.score) {
                 LB_score = lowerBound.score;
             }
@@ -326,12 +326,12 @@ public class FindFirstTopK {
         return LB_score;
     }
 
-    public int Find_LB_Num(ArrayList<LowerBound> Top_k) {
+    public int Find_LB_Num(ArrayList<LowerBound> topK) {
         int LB = 0;
         double LB_score = Double.MAX_VALUE;
-        for (int i = 0; i < Top_k.size(); i++) {
-            if (LB_score > Top_k.get(i).score) {
-                LB_score = Top_k.get(i).score;
+        for (int i = 0; i < topK.size(); i++) {
+            if (LB_score > topK.get(i).score) {
+                LB_score = topK.get(i).score;
                 LB = i;
             }
         }
@@ -478,7 +478,7 @@ public class FindFirstTopK {
                 }
                 int Poi_Num = 0;
                 for (Integer integer : integers) { //计算这一组兴趣点的兴趣值之和
-                    Poi_Num += PoiList[integer].Poi_Num;
+                    Poi_Num += PoiList[integer].poiNum;
                 }
                 double score_x = (-a) * x1 + (1 - a) * Poi_Num;
                 if (score_x < LB) { //剪枝
@@ -516,9 +516,9 @@ public class FindFirstTopK {
     public void Add_PoiAsSG(ArrayList<ArrayList<Integer>> path3, int[] Poi_Type, ArrayList<ArrayList<Integer>> SG,
                             Poi[] PoiList, int q_SG) {
         for (int i = 0; i < SG.get(q_SG).size(); i++) {
-            if (PoiList[SG.get(q_SG).get(i)].Poi_Type != 0) {
+            if (PoiList[SG.get(q_SG).get(i)].poiType != 0) {
                 for (int j = 0; j < Poi_Type.length; j++) {
-                    if (PoiList[SG.get(q_SG).get(i)].Poi_Type == Poi_Type[j]) {
+                    if (PoiList[SG.get(q_SG).get(i)].poiType == Poi_Type[j]) {
                         path3.get(j).add(SG.get(q_SG).get(i));
                     }
                 }

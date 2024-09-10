@@ -1,6 +1,6 @@
 package test;
 
-import preprocessing.GraphPreprocessing;
+import loader.DataSuite;
 import entity.Graph;
 
 import java.io.BufferedReader;
@@ -17,16 +17,16 @@ public class MappingDistance {
         double a = 0.5;//α
         int num = 10; //循环次数
 
-        GraphPreprocessing GraphPreprocessing = new GraphPreprocessing();
-        MappingDistance.CreatData(Poi_Type, k1, a, GraphPreprocessing);
+        DataSuite dataSuite = new DataSuite();
+        MappingDistance.CreatData(Poi_Type, k1, a, dataSuite);
     }
 
 
-    public static void CreatData(int[] Poi_Type2, int k1, double a, GraphPreprocessing GraphPreprocessing) {
+    public static void CreatData(int[] Poi_Type2, int k1, double a, DataSuite dataSuite) {
 
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class MappingDistance {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -95,11 +95,10 @@ public class MappingDistance {
 
         }
         int ccc1 = ccc + 1;
-        GraphPreprocessing.graph = new Graph(ccc1, num1);
-        GraphPreprocessing.graph.init(ccc1, num1, data);
+        dataSuite.graph = new Graph(ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/AHP/nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

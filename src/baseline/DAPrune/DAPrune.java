@@ -155,11 +155,11 @@ public class DAPrune {
         for (int i = 0; i < Dijkstra.ORCSK_Num(Poi_Type, PoiList); i++) {
             for (int j = 0; j < Dijkstra.ORCSK_PoiNum(Poi_Type, PoiList); j++) {
                 if (j < PoiList.length) {
-                    if (PoiList[j].Poi_Type == Poi_Type[i]) {
+                    if (PoiList[j].poiType == Poi_Type[i]) {
                         path[i] = j;
                     }
                 } else {
-                    if (PoiList[(j / 10)].Poi_Type == Poi_Type[i]) {
+                    if (PoiList[(j / 10)].poiType == Poi_Type[i]) {
                         path[i] = j;
                     }
                 }

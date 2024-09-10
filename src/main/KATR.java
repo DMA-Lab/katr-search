@@ -1,7 +1,7 @@
 package main;
 
-import preprocessing.GraphPreprocessing;
-import preprocessing.IntoData;
+import loader.DataSuite;
+import loader.IntoData;
 import baseline.KATR.FindFirstTopK;
 import baseline.KATR.FindTopK;
 import baseline.KATR.FindTopK_SToE;
@@ -27,12 +27,12 @@ public class KATR {
         double alpha = 0.5;
         int num = 1; //循环次数
 
-        GraphPreprocessing GraphPreprocessing = new GraphPreprocessing();
-        IntoData.CreatData(Poi_Type, k, GraphPreprocessing);
+        DataSuite dataSuite = new DataSuite();
+        IntoData.CreatData(Poi_Type, dataSuite);
 
-        ArrayList<LowerBound> Top_k_KATR_SToE = KATR_SToE(Poi_Type, k, alpha, GraphPreprocessing, num);
-        ArrayList<LowerBound> Top_k_KATR = KATR(Poi_Type, k, alpha, GraphPreprocessing, num);
-        ArrayList<LowerBound> Top_k_KATRAllHeatTo1 = KATR_AllHeatTo1(Poi_Type, k, alpha, GraphPreprocessing, num);
+        ArrayList<LowerBound> Top_k_KATR_SToE = KATR_SToE(Poi_Type, k, alpha, dataSuite, num);
+        ArrayList<LowerBound> Top_k_KATR = KATR(Poi_Type, k, alpha, dataSuite, num);
+        ArrayList<LowerBound> Top_k_KATRAllHeatTo1 = KATR_AllHeatTo1(Poi_Type, k, alpha, dataSuite, num);
 
         timeKATR = timeKATR1.getFirst();
         timeSToE = timeSToE1.getFirst();
@@ -44,43 +44,39 @@ public class KATR {
         System.out.println("KATRSToE查询所消耗的时间为:" + timeSToE + "毫秒");
     }
 
-    public static ArrayList<LowerBound> KATR(int[] Poi_Type2, int k, double a, GraphPreprocessing GraphPreprocessing, int num) {
+    public static ArrayList<LowerBound> KATR(int[] Poi_Type2, int k, double a, DataSuite dataSuite, int num) {
         int vQ = 56988; // 查询点
         int q_SG = 0;
-        boolean flag1 = true;
         //int[] Poi_Type = {11,12,16} ;//所求的Poi的类型
-        for (int i = 0; i < GraphPreprocessing.SG.size(); i++) {
-            for (int j = 0; j < GraphPreprocessing.SG.get(i).size(); j++) {
-                if (GraphPreprocessing.SG.get(i).get(j) == vQ) {
+        for (int i = 0; i < dataSuite.subgraphs.size(); i++) {
+            for (int j = 0; j < dataSuite.subgraphs.get(i).size(); j++) {
+                if (dataSuite.subgraphs.get(i).get(j) == vQ) {
                     break;
                 }
-            }
-            if (flag1) {
-                break;
             }
         }
         ArrayList<ArrayList<Integer>> Poi_Num2 = new ArrayList<>();
         ArrayList<Integer> path3 = new ArrayList<>();
         boolean flag4;
-        for (int i = 0; i < GraphPreprocessing.PoiList.length; i++) {
-            if (GraphPreprocessing.PoiList[i].Poi_Type != 0) {
+        for (int i = 0; i < dataSuite.poiList.length; i++) {
+            if (dataSuite.poiList[i].poiType != 0) {
                 flag4 = true;
                 for (ArrayList<Integer> integers : Poi_Num2) {
-                    if (integers.get(0) == GraphPreprocessing.PoiList[i].Poi_Type) {
+                    if (integers.get(0) == dataSuite.poiList[i].poiType) {
                         flag4 = false;
-                        if (GraphPreprocessing.PoiList[i].Poi_Num < integers.get(1)) {
+                        if (dataSuite.poiList[i].poiNum < integers.get(1)) {
                             path3.clear();
                             path3.add(integers.get(0));
-                            path3.add(GraphPreprocessing.PoiList[i].Poi_Num);
+                            path3.add(dataSuite.poiList[i].poiNum);
                             path3.add(integers.get(2));
                             integers.clear();
                             integers.addAll(path3);
                         }
-                        if (GraphPreprocessing.PoiList[i].Poi_Num > integers.get(2)) {
+                        if (dataSuite.poiList[i].poiNum > integers.get(2)) {
                             path3.clear();
                             path3.add(integers.get(0));
                             path3.add(integers.get(1));
-                            path3.add(GraphPreprocessing.PoiList[i].Poi_Num);
+                            path3.add(dataSuite.poiList[i].poiNum);
                             integers.clear();
                             integers.addAll(path3);
                         }
@@ -88,9 +84,9 @@ public class KATR {
                 }
                 if (flag4) {
                     Poi_Num2.add(new ArrayList<>());
-                    Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Type);
-                    Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Num);
-                    Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Num);
+                    Poi_Num2.getLast().add(dataSuite.poiList[i].poiType);
+                    Poi_Num2.getLast().add(dataSuite.poiList[i].poiNum);
+                    Poi_Num2.getLast().add(dataSuite.poiList[i].poiNum);
                 }
             }
         }
@@ -100,8 +96,8 @@ public class KATR {
 
         for (int i = 0; i < num; i++) {
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            topK = topk.KATRFindTopk(GraphPreprocessing.graph, vQ, q_SG, k, Poi_Type2, GraphPreprocessing.SG, GraphPreprocessing.List, GraphPreprocessing.PoiList, a,
-                    GraphPreprocessing.BPList, GraphPreprocessing.PointMinBP, GraphPreprocessing.BvList); //进行全部优化的算法
+            topK = topk.KATRFindTopk(dataSuite.graph, vQ, q_SG, k, Poi_Type2, dataSuite.subgraphs, dataSuite.paths, dataSuite.poiList, a,
+                    dataSuite.BPList, dataSuite.PointMinBP, dataSuite.BvList); //进行全部优化的算法
             long endTime1 = System.currentTimeMillis(); //开始获取时间
             timeKATR1.add((endTime1 - startTime1));
             topK.clear();
@@ -114,15 +110,15 @@ public class KATR {
         return topK;
     }
 
-    public static ArrayList<LowerBound> KATR_AllHeatTo1(int[] Poi_Type2, int k, double a, GraphPreprocessing GraphPreprocessing, int num) {
+    public static ArrayList<LowerBound> KATR_AllHeatTo1(int[] Poi_Type2, int k, double a, DataSuite dataSuite, int num) {
         int q = 56988; //查询点
         int q_SG = 0;
         boolean flag1 = true;
         //int[] Poi_Type = {11,12,16} ;//所求的Poi的类型
         int[] Poi_Type = Poi_Type2;
-        for (int i = 0; i < GraphPreprocessing.SG.size(); i++) {
-            for (int j = 0; j < GraphPreprocessing.SG.get(i).size(); j++) {
-                if (GraphPreprocessing.SG.get(i).get(j) == q) {
+        for (int i = 0; i < dataSuite.subgraphs.size(); i++) {
+            for (int j = 0; j < dataSuite.subgraphs.get(i).size(); j++) {
+                if (dataSuite.subgraphs.get(i).get(j) == q) {
                     break;
                 }
             }
@@ -133,25 +129,25 @@ public class KATR {
         ArrayList<ArrayList<Integer>> Poi_Num2 = new ArrayList<>();
         ArrayList<Integer> path3 = new ArrayList<>();
         boolean flag4;
-        for (int i = 0; i < GraphPreprocessing.PoiList.length; i++) {
-            if (GraphPreprocessing.PoiList[i].Poi_Type != 0) {
+        for (int i = 0; i < dataSuite.poiList.length; i++) {
+            if (dataSuite.poiList[i].poiType != 0) {
                 flag4 = true;
                 for (ArrayList<Integer> integers : Poi_Num2) {
-                    if (integers.get(0) == GraphPreprocessing.PoiList[i].Poi_Type) {
+                    if (integers.get(0) == dataSuite.poiList[i].poiType) {
                         flag4 = false;
-                        if (GraphPreprocessing.PoiList[i].Poi_Num < integers.get(1)) {
+                        if (dataSuite.poiList[i].poiNum < integers.get(1)) {
                             path3.clear();
                             path3.add(integers.get(0));
-                            path3.add(GraphPreprocessing.PoiList[i].Poi_Num);
+                            path3.add(dataSuite.poiList[i].poiNum);
                             path3.add(integers.get(2));
                             integers.clear();
                             integers.addAll(path3);
                         }
-                        if (GraphPreprocessing.PoiList[i].Poi_Num > integers.get(2)) {
+                        if (dataSuite.poiList[i].poiNum > integers.get(2)) {
                             path3.clear();
                             path3.add(integers.get(0));
                             path3.add(integers.get(1));
-                            path3.add(GraphPreprocessing.PoiList[i].Poi_Num);
+                            path3.add(dataSuite.poiList[i].poiNum);
                             integers.clear();
                             integers.addAll(path3);
                         }
@@ -159,43 +155,43 @@ public class KATR {
                 }
                 if (flag4) {
                     Poi_Num2.add(new ArrayList<>());
-                    Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Type);
-                    Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Num);
-                    Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Num);
+                    Poi_Num2.getLast().add(dataSuite.poiList[i].poiType);
+                    Poi_Num2.getLast().add(dataSuite.poiList[i].poiNum);
+                    Poi_Num2.getLast().add(dataSuite.poiList[i].poiNum);
                 }
             }
         }
 
-        for (int i = 0; i < GraphPreprocessing.PoiList.length; i++) {
-            if (GraphPreprocessing.PoiList[i].Poi_Type != 0) {
-                GraphPreprocessing.PoiList[i].Poi_Num = 1;
+        for (int i = 0; i < dataSuite.poiList.length; i++) {
+            if (dataSuite.poiList[i].poiType != 0) {
+                dataSuite.poiList[i].poiNum = 1;
             }
         }
 
-        ArrayList<LowerBound> Top_k = new ArrayList<>();
+        ArrayList<LowerBound> topK = new ArrayList<>();
         FindFirstTopK topk = new FindFirstTopK();
         //ArrayList<Lower_bound> Top_k = new ArrayList<>();
         for (int i = 0; i < num; i++) {
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k = topk.KATRFindTopk(GraphPreprocessing.graph, q, q_SG, k, Poi_Type, GraphPreprocessing.SG, GraphPreprocessing.List, GraphPreprocessing.PoiList, a,
-                    GraphPreprocessing.BPList, GraphPreprocessing.PointMinBP, GraphPreprocessing.BvList); //进行全部优化的算法
+            topK = topk.KATRFindTopk(dataSuite.graph, q, q_SG, k, Poi_Type, dataSuite.subgraphs, dataSuite.paths, dataSuite.poiList, a,
+                    dataSuite.BPList, dataSuite.PointMinBP, dataSuite.BvList); //进行全部优化的算法
             long endTime1 = System.currentTimeMillis(); //开始获取时间
             timeAllHeatTo11.add(endTime1 - startTime1);
-            Top_k.clear();
+            topK.clear();
         }
-        return Top_k;
+        return topK;
     }
 
-    public static ArrayList<LowerBound> KATR_SToE(int[] Poi_Type2, int k, double a, GraphPreprocessing GraphPreprocessing, int num) {
+    public static ArrayList<LowerBound> KATR_SToE(int[] Poi_Type2, int k, double a, DataSuite dataSuite, int num) {
         int q = 56988; //查询点
         //double a1 = a ; //α
         int q_SG = 0;
         boolean flag1 = true;
         //int[] Poi_Type = {11,12,16} ;//所求的Poi的类型
         int[] Poi_Type = Poi_Type2;
-        for (int i = 0; i < GraphPreprocessing.SG.size(); i++) {
-            for (int j = 0; j < GraphPreprocessing.SG.get(i).size(); j++) {
-                if (GraphPreprocessing.SG.get(i).get(j) == q) {
+        for (int i = 0; i < dataSuite.subgraphs.size(); i++) {
+            for (int j = 0; j < dataSuite.subgraphs.get(i).size(); j++) {
+                if (dataSuite.subgraphs.get(i).get(j) == q) {
                     break;
                 }
             }
@@ -206,25 +202,25 @@ public class KATR {
         ArrayList<ArrayList<Integer>> Poi_Num2 = new ArrayList<>();
         ArrayList<Integer> path3 = new ArrayList<>();
         boolean flag4;
-        for (int i = 0; i < GraphPreprocessing.PoiList.length; i++) {
-            if (GraphPreprocessing.PoiList[i].Poi_Type != 0) {
+        for (int i = 0; i < dataSuite.poiList.length; i++) {
+            if (dataSuite.poiList[i].poiType != 0) {
                 flag4 = true;
                 for (ArrayList<Integer> integers : Poi_Num2) {
-                    if (integers.get(0) == GraphPreprocessing.PoiList[i].Poi_Type) {
+                    if (integers.get(0) == dataSuite.poiList[i].poiType) {
                         flag4 = false;
-                        if (GraphPreprocessing.PoiList[i].Poi_Num < integers.get(1)) {
+                        if (dataSuite.poiList[i].poiNum < integers.get(1)) {
                             path3.clear();
                             path3.add(integers.get(0));
-                            path3.add(GraphPreprocessing.PoiList[i].Poi_Num);
+                            path3.add(dataSuite.poiList[i].poiNum);
                             path3.add(integers.get(2));
                             integers.clear();
                             integers.addAll(path3);
                         }
-                        if (GraphPreprocessing.PoiList[i].Poi_Num > integers.get(2)) {
+                        if (dataSuite.poiList[i].poiNum > integers.get(2)) {
                             path3.clear();
                             path3.add(integers.get(0));
                             path3.add(integers.get(1));
-                            path3.add(GraphPreprocessing.PoiList[i].Poi_Num);
+                            path3.add(dataSuite.poiList[i].poiNum);
                             integers.clear();
                             integers.addAll(path3);
                         }
@@ -232,20 +228,20 @@ public class KATR {
                 }
                 if (flag4) {
                     Poi_Num2.add(new ArrayList<>());
-                    Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Type);
-                    Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Num);
-                    Poi_Num2.getLast().add(GraphPreprocessing.PoiList[i].Poi_Num);
+                    Poi_Num2.getLast().add(dataSuite.poiList[i].poiType);
+                    Poi_Num2.getLast().add(dataSuite.poiList[i].poiNum);
+                    Poi_Num2.getLast().add(dataSuite.poiList[i].poiNum);
                 }
             }
         }
 
         int endIndex = 0;
         boolean flag;
-        for (int i = 0; i < GraphPreprocessing.PoiList.length; i++) {
-            if (GraphPreprocessing.PoiList[i].Poi_Type != 0) {
+        for (int i = 0; i < dataSuite.poiList.length; i++) {
+            if (dataSuite.poiList[i].poiType != 0) {
                 flag = false;
                 for (int value : Poi_Type) {
-                    if (GraphPreprocessing.PoiList[i].Poi_Type == value) {
+                    if (dataSuite.poiList[i].poiType == value) {
                         flag = true;
                         break;
                     }
@@ -257,16 +253,16 @@ public class KATR {
         }
         System.out.println("endIndex=" + endIndex);
 
-        ArrayList<LowerBound> Top_k = new ArrayList<>();
+        ArrayList<LowerBound> topK = new ArrayList<>();
         FindTopK_SToE topk = new FindTopK_SToE();
         for (int i = 0; i < num; i++) {
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k = topk.KATRFindTopK(GraphPreprocessing.graph, q, endIndex, q_SG, k, Poi_Type, GraphPreprocessing.SG, GraphPreprocessing.List, GraphPreprocessing.PoiList, a,
-                    GraphPreprocessing.BPList, GraphPreprocessing.PointMinBP, GraphPreprocessing.BvList); //进行全部优化的算法
+            topK = topk.KATRFindTopK(dataSuite.graph, q, endIndex, q_SG, k, Poi_Type, dataSuite.subgraphs, dataSuite.paths, dataSuite.poiList, a,
+                    dataSuite.BPList, dataSuite.PointMinBP, dataSuite.BvList); //进行全部优化的算法
             long endTime1 = System.currentTimeMillis(); //开始获取时间
             timeSToE1.add((endTime1 - startTime1));
-            Top_k.clear();
+            topK.clear();
         }
-        return Top_k;
+        return topK;
     }
 }

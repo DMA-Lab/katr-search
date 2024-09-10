@@ -6,7 +6,7 @@ import entity.Poi;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Find_path_MTDOSR {
+public class FindPathMTDOSR {
     public ArrayList<Path> FindPath(Graph g, int q, int[] Poi_Type, Poi[] PoiList) {
         int nn1 = 0;//当只需要找一条路径的时候使用这个数来代替get(0)
         ArrayList<Path> path1 = new ArrayList<>();
@@ -24,7 +24,7 @@ public class Find_path_MTDOSR {
         //查找全部类型的Poi各自有那些顶顶点
         for (int i = 0; i < PoiList.length; i++) {
             for (int j = 0; j < Poi_List.size(); j++) {
-                if (PoiList[i].Poi_Type == Poi_Type[j]) {
+                if (PoiList[i].poiType == Poi_Type[j]) {
                     Poi_List.get(j).add(i);
                 }
             }

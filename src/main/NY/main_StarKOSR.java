@@ -30,26 +30,23 @@ public class main_StarKOSR {
     static long timeA_db3;
     static final int num5 = 1; //循环次数
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         int[] Poi_Type = {43, 25, 5, 18, 19, 26, 48, 47};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
         int k1 = 10;
         double a = 0.5;//α
         int endIndex = 6000;
-        int num6 = num5 - 1;
-        if (num6 == 0) {
-        }
         ArrayList<ArrayList<Integer>> Top_k_KOSR = KOSR(Poi_Type, k1, a);
 
         System.out.println("KOSR算法消耗时间为：" + time1 + "ms");
     }
 
 
-    public static ArrayList<ArrayList<Integer>> KOSR(int[] Poi_Type2, int k, double a) {
+    public static ArrayList<ArrayList<Integer>> KOSR(int[] Poi_Type2, int k, double a) throws IOException {
 
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -79,7 +76,7 @@ public class main_StarKOSR {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -118,11 +115,10 @@ public class main_StarKOSR {
 
         }
         int ccc1 = ccc + 1;
-        Graph g = new Graph(ccc1, num1);
-        g.init(ccc1, num1, data);
+        Graph g = new Graph(ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/AHP/nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -144,29 +140,28 @@ public class main_StarKOSR {
         //将各个点放入对应的子图中
         int num2 = 200; // 存储多少个子图的骨架图中的节点
         CreateSubgraph SG1 = new CreateSubgraph();
-        //BufferedReader br3 = new BufferedReader(file1);//读取文件
-        ArrayList<ArrayList<Integer>> SG = SG1.CreatSG_NY(num2); //存储前num2个子图的骨架图中的节点
+        ArrayList<ArrayList<Integer>> SG = SG1.load_NY(num2); //存储前num2个子图的骨架图中的节点
 
         //______________________________________________________________________________________________
         //构建Poi索引PoiList，存储Poi的类型和数值，并给每个顶点赋予坐标
         CreatePoiList PoiList1 = new CreatePoiList();
-        Poi[] PoiList = PoiList1.CreatPoiList_NY(ccc1, SG);
+        Poi[] PoiList = PoiList1.loadPoiNY(ccc1, SG);
         //计算全部点到最近的边界顶点的距离
 //        ArrayList<ArrayList<Integer>> PointMinBP = Creat_MinBP.CreatMinBP_NY();
         ArrayList<KeywordList> keyWordList = new ArrayList<>();
         boolean flag;
         for (int i = 0; i < PoiList.length; i++) {
-            if (PoiList[i].Poi_Type != 0) {
+            if (PoiList[i].poiType != 0) {
                 flag = false;
                 for (KeywordList keywordList : keyWordList) {
-                    if (keywordList.poiType == PoiList[i].Poi_Type) {
+                    if (keywordList.poiType == PoiList[i].poiType) {
                         keywordList.nodes.add(i);
                         flag = true;
                         break;
                     }
                 }
                 if (!flag) {
-                    keyWordList.add(new KeywordList(PoiList[i].Poi_Type));
+                    keyWordList.add(new KeywordList(PoiList[i].poiType));
                     keyWordList.getLast().nodes.add(i);
 
                 }

@@ -7,7 +7,7 @@ import entity.Poi;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Find_Topk_OSSCaling {
+public class FindTopK_OSSCaling {
     public static ArrayList<ArrayList<Integer>> Finf_Path1(ArrayList<ArrayList<Integer>> all,
                                                            ArrayList<ArrayList<Integer>> path3, int[] Poi_Type, int q) {
         ArrayList<ArrayList<Integer>> path = new ArrayList<>();
@@ -79,7 +79,7 @@ public class Find_Topk_OSSCaling {
         //查找全部类型的Poi各自有那些顶顶点
         for (int i = 0; i < PoiList.length; i++) {
             for (int j = 0; j < Poi_List.size(); j++) {
-                if (PoiList[i].Poi_Type == Poi_Type[j]) {
+                if (PoiList[i].poiType == Poi_Type[j]) {
                     Poi_List.get(j).add(i);
                 }
             }

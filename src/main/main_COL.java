@@ -48,10 +48,10 @@ public class main_COL {
     }
 
 
-    public static ArrayList<Find_Topk_OSSCaling.Path> OSSCaling(int[] Poi_Type2, int k1, int endIndex) throws IOException {
+    public static ArrayList<FindTopK_OSSCaling.Path> OSSCaling(int[] Poi_Type2, int k1, int endIndex) throws IOException {
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -80,7 +80,7 @@ public class main_COL {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -118,11 +118,10 @@ public class main_COL {
 
         }
         int ccc1 = ccc + 1;
-        Graph g = new Graph(ccc1, num1);
-        g.init(ccc1, num1, data);
+        Graph g = new Graph(ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/AHP/nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -145,12 +144,12 @@ public class main_COL {
         int num2 = 200; // 存储多少个子图的骨架图中的节点
         CreateSubgraph SG1 = new CreateSubgraph();
         //BufferedReader br3 = new BufferedReader(file1);//读取文件
-        ArrayList<ArrayList<Integer>> SG = SG1.CreatSG_NY(num2); //存储前num2个子图的骨架图中的节点
+        ArrayList<ArrayList<Integer>> SG = SG1.load_NY(num2); //存储前num2个子图的骨架图中的节点
 
         //______________________________________________________________________________________________
         //构建Poi索引PoiList，存储Poi的类型和数值，并给每个顶点赋予坐标
         CreatePoiList PoiList1 = new CreatePoiList();
-        Poi[] PoiList = PoiList1.CreatPoiList_NY(ccc1, SG);
+        Poi[] PoiList = PoiList1.loadPoiNY(ccc1, SG);
         //______________________________________________________________________________________________
         // //构建距离索引list
         CreateList list1 = new CreateList();
@@ -159,16 +158,16 @@ public class main_COL {
         boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
         for (Poi poi : PoiList) {
-            if (poi.Poi_Type != 0) {
+            if (poi.poiType != 0) {
                 flag = true;
                 for (Integer integer : Poi_Type_Num) {
-                    if (poi.Poi_Type == integer) {
+                    if (poi.poiType == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    Poi_Type_Num.add(poi.Poi_Type);
+                    Poi_Type_Num.add(poi.poiType);
                 }
             }
         }
@@ -196,11 +195,11 @@ public class main_COL {
         boolean flag1 = true;
         //int[] Poi_Type = {11,12,16} ;//所求的Poi的类型
         int[] Poi_Type = Poi_Type2;//36,54,50,1,6,3,9多，49,48,33,38,23,58,11少
-        ArrayList<Find_Topk_OSSCaling.Path> Top_k = new ArrayList<>();
+        ArrayList<FindTopK_OSSCaling.Path> topK = new ArrayList<>();
         for (int ii = 0; ii < num5; ii++) {
-            Find_Topk_OSSCaling topk = new Find_Topk_OSSCaling();
+            FindTopK_OSSCaling topk = new FindTopK_OSSCaling();
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k = topk.Find_Path_OSSCaling(g, q, Poi_Type, ccc1, PoiList, List, BPList, PointMinBP, k, endIndex);
+            topK = topk.Find_Path_OSSCaling(g, q, Poi_Type, ccc1, PoiList, List, BPList, PointMinBP, k, endIndex);
             long endTime1 = System.currentTimeMillis(); //开始获取时间
 //         if (ii != 0 || num5 == 1){
 //             time_OSSCaling += endTime1 - startTime1;
@@ -243,15 +242,15 @@ public class main_COL {
 //        }
 
 
-        return Top_k;
+        return topK;
 
     }
 
 
-    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws IOException {
+    public static ArrayList<FindPathMTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws IOException {
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -280,7 +279,7 @@ public class main_COL {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -318,11 +317,10 @@ public class main_COL {
 
         }
         int ccc1 = ccc + 1;
-        Graph g = new Graph(ccc1, num1);
-        g.init(ccc1, num1, data);
+        Graph g = new Graph(ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/AHP/nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -345,12 +343,12 @@ public class main_COL {
         int num2 = 200; // 存储多少个子图的骨架图中的节点
         CreateSubgraph SG1 = new CreateSubgraph();
         //BufferedReader br3 = new BufferedReader(file1);//读取文件
-        ArrayList<ArrayList<Integer>> SG = SG1.CreatSG_NY(num2); //存储前num2个子图的骨架图中的节点
+        ArrayList<ArrayList<Integer>> SG = SG1.load_NY(num2); //存储前num2个子图的骨架图中的节点
 
         //______________________________________________________________________________________________
         //构建Poi索引PoiList，存储Poi的类型和数值，并给每个顶点赋予坐标
         CreatePoiList PoiList1 = new CreatePoiList();
-        Poi[] PoiList = PoiList1.CreatPoiList_NY(ccc1, SG);
+        Poi[] PoiList = PoiList1.loadPoiNY(ccc1, SG);
         //______________________________________________________________________________________________
         // //构建距离索引list
         CreateList list1 = new CreateList();
@@ -359,16 +357,16 @@ public class main_COL {
         boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
         for (Poi poi : PoiList) {
-            if (poi.Poi_Type != 0) {
+            if (poi.poiType != 0) {
                 flag = true;
                 for (Integer integer : Poi_Type_Num) {
-                    if (poi.Poi_Type == integer) {
+                    if (poi.poiType == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    Poi_Type_Num.add(poi.Poi_Type);
+                    Poi_Type_Num.add(poi.poiType);
                 }
             }
         }
@@ -395,12 +393,12 @@ public class main_COL {
         boolean flag1 = true;
         //int[] Poi_Type = {11,12,16} ;//所求的Poi的类型
         int[] Poi_Type = Poi_Type2;//36,54,50,1,6,3,9多，49,48,33,38,23,58,11少
-        ArrayList<Find_path_MTDOSR.Path> Top_k = new ArrayList<>();
+        ArrayList<FindPathMTDOSR.Path> topK = new ArrayList<>();
         for (int ii = 0; ii < num5; ii++) {
-            Find_path_MTDOSR topk = new Find_path_MTDOSR();
-            Find_Topk_NoOpt topk_No = new Find_Topk_NoOpt();
+            FindPathMTDOSR topk = new FindPathMTDOSR();
+            FindTopk_NoOpt topk_No = new FindTopk_NoOpt();
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k = topk.FindPath(g, q, Poi_Type, PoiList);
+            topK = topk.FindPath(g, q, Poi_Type, PoiList);
             long endTime1 = System.currentTimeMillis(); //开始获取时间
 //         if (ii != 0 || num5 == 1){
 //             time2 += endTime1 - startTime1;
@@ -443,7 +441,7 @@ public class main_COL {
 //        }
 
 
-        return Top_k;
+        return topK;
 
     }
 
@@ -452,7 +450,7 @@ public class main_COL {
 
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//Poi_shuju//COL//USA-road-d.COL.txt");
+            file = new FileReader("D:/IDEA/Poi_shuju/COL/USA-road-d.COL.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -482,7 +480,7 @@ public class main_COL {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//Poi_shuju//COL//USA-road-d.COL.txt");
+            file1 = new FileReader("D:/IDEA/Poi_shuju/COL/USA-road-d.COL.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -521,11 +519,10 @@ public class main_COL {
 
         }
         int ccc1 = ccc + 1;
-        Graph g = new Graph(ccc1, num1);
-        g.init(ccc1, num1, data);
+        Graph g = new Graph(ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//Poi_shuju//COL//COL_4000.txt");
+            file1 = new FileReader("D:/IDEA/Poi_shuju/COL/COL_4000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -553,7 +550,7 @@ public class main_COL {
         //______________________________________________________________________________________________
         //构建Poi索引PoiList，存储Poi的类型和数值，并给每个顶点赋予坐标
         CreatePoiList PoiList1 = new CreatePoiList();
-        Poi[] PoiList = PoiList1.CreatPoiList_COL(ccc1, SG);
+        Poi[] PoiList = PoiList1.loadPoiCOL(ccc1);
         //______________________________________________________________________________________________
         // //构建距离索引list
         CreateList list1 = new CreateList();
@@ -562,16 +559,16 @@ public class main_COL {
         boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
         for (Poi value : PoiList) {
-            if (value.Poi_Type != 0) {
+            if (value.poiType != 0) {
                 flag = true;
                 for (Integer integer : Poi_Type_Num) {
-                    if (value.Poi_Type == integer) {
+                    if (value.poiType == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    Poi_Type_Num.add(value.Poi_Type);
+                    Poi_Type_Num.add(value.poiType);
                 }
             }
         }
@@ -634,24 +631,24 @@ public class main_COL {
         ArrayList<Integer> path3 = new ArrayList<>();
         boolean flag4;
         for (Poi poi : PoiList) {
-            if (poi.Poi_Type != 0) {
+            if (poi.poiType != 0) {
                 flag4 = true;
                 for (ArrayList<Integer> integers : Poi_Num2) {
-                    if (integers.get(0) == poi.Poi_Type) {
+                    if (integers.get(0) == poi.poiType) {
                         flag4 = false;
-                        if (poi.Poi_Num < integers.get(1)) {
+                        if (poi.poiNum < integers.get(1)) {
                             path3.clear();
                             path3.add(integers.get(0));
-                            path3.add(poi.Poi_Num);
+                            path3.add(poi.poiNum);
                             path3.add(integers.get(2));
                             integers.clear();
                             integers.addAll(path3);
                         }
-                        if (poi.Poi_Num > integers.get(2)) {
+                        if (poi.poiNum > integers.get(2)) {
                             path3.clear();
                             path3.add(integers.get(0));
                             path3.add(integers.get(1));
-                            path3.add(poi.Poi_Num);
+                            path3.add(poi.poiNum);
                             integers.clear();
                             integers.addAll(path3);
                         }
@@ -659,9 +656,9 @@ public class main_COL {
                 }
                 if (flag4) {
                     Poi_Num2.add(new ArrayList<>());
-                    Poi_Num2.getLast().add(poi.Poi_Type);
-                    Poi_Num2.getLast().add(poi.Poi_Num);
-                    Poi_Num2.getLast().add(poi.Poi_Num);
+                    Poi_Num2.getLast().add(poi.poiType);
+                    Poi_Num2.getLast().add(poi.poiNum);
+                    Poi_Num2.getLast().add(poi.poiNum);
                 }
             }
         }
@@ -669,12 +666,12 @@ public class main_COL {
         long startTime1; //开始获取时间
         System.currentTimeMillis();
         long endTime1; //开始获取时间
-        Find_TopK_A topk = new Find_TopK_A();
-        Find_Topk_A_db topk_db = new Find_Topk_A_db();
-        Find_Topk_A_db2 topk_db2 = new Find_Topk_A_db2();
-        Find_TopK_A_db3 topk_db3 = new Find_TopK_A_db3();
-        Find_Topk_NoOpt topk_No = new Find_Topk_NoOpt();
-        ArrayList<LowerBound> Top_k = new ArrayList<>();
+        FindTopK_A topk = new FindTopK_A();
+        FindTopK_A_db topk_db = new FindTopK_A_db();
+        FindTopK_A_db2 topk_db2 = new FindTopK_A_db2();
+        FindTopK_A_db3 topk_db3 = new FindTopK_A_db3();
+        FindTopk_NoOpt topk_No = new FindTopk_NoOpt();
+        ArrayList<LowerBound> topK = new ArrayList<>();
         ArrayList<LowerBound> Top_k_db = new ArrayList<>();
         ArrayList<LowerBound> Top_k_db2 = new ArrayList<>();
         ArrayList<LowerBound> Top_k_db3 = new ArrayList<>();
@@ -741,6 +738,6 @@ public class main_COL {
             timeA_db3 += time5;
 
         }
-        return Top_k;
+        return topK;
     }
 }

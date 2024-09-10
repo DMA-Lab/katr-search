@@ -29,7 +29,7 @@ public class TextWriter {
         FileWriter writeFile = null;
         try {
             //2.数据想写入的路径及文件
-            File file = new File("D://IDEA//USA-road-t.NY.gr//AHP//NY_yidongjiedian.txt");
+            File file = new File("D:/IDEA/USA-road-t.NY.gr/AHP/NY_yidongjiedian.txt");
             //3.如果该文件不存在，就创建
             if (!file.exists()) {
                 file.createNewFile();
@@ -77,6 +77,6 @@ public class TextWriter {
     }
 
     public static void WriteTxt1(ArrayList<ArrayList<Integer>> data, int num) throws IOException {
-        TextWriter.writeMatrix("D://IDEA//USA-road-t.NY.gr//AHP//NY_20_bianjiejiedian.txt", data, num);
+        TextWriter.writeMatrix("D:/IDEA/USA-road-t.NY.gr/AHP/NY_20_bianjiejiedian.txt", data, num);
     }
 }

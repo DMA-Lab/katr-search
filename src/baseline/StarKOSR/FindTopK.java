@@ -178,7 +178,7 @@ public class FindTopK {
                 }
                 g2 = g2.next;
             }
-            if (PoiList[k].Poi_Type == keyWordName) {
+            if (PoiList[k].poiType == keyWordName) {
                 kosr_points.getLast().poi.add(k);
                 kosr_points.getLast().poiWeight.add(dist[k]);
             }

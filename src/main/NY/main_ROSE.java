@@ -3,8 +3,8 @@
 
 package main.NY;
 
-import baseline.ROSE.Find_Topk_NoOpt;
-import baseline.ROSE.Find_path_MTDOSR;
+import baseline.ROSE.FindTopk_NoOpt;
+import baseline.ROSE.FindPathMTDOSR;
 import entity.PoiPath;
 import entity.Graph;
 import entity.Poi;
@@ -28,13 +28,13 @@ public class main_ROSE {
         int k1 = 6;
         double a = 0.5;//α
         int endIndex = 6000;
-        ArrayList<Find_path_MTDOSR.Path> Top_k_MTDOSR = MTDOSR(Poi_Type, k1);
+        ArrayList<FindPathMTDOSR.Path> Top_k_MTDOSR = MTDOSR(Poi_Type, k1);
     }
 
-    public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws IOException {
+    public static ArrayList<FindPathMTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws IOException {
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -64,7 +64,7 @@ public class main_ROSE {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -103,11 +103,10 @@ public class main_ROSE {
 
         }
         int ccc1 = ccc + 1;
-        Graph g = new Graph(ccc1, num1);
-        g.init(ccc1, num1, data);
+        Graph g = new Graph(ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/AHP/nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -130,12 +129,12 @@ public class main_ROSE {
         int num2 = 200; // 存储多少个子图的骨架图中的节点
         CreateSubgraph SG1 = new CreateSubgraph();
         //BufferedReader br3 = new BufferedReader(file1);//读取文件
-        ArrayList<ArrayList<Integer>> SG = SG1.CreatSG_NY(num2); //存储前num2个子图的骨架图中的节点
+        ArrayList<ArrayList<Integer>> SG = SG1.load_NY(num2); //存储前num2个子图的骨架图中的节点
 
         //______________________________________________________________________________________________
         //构建Poi索引PoiList，存储Poi的类型和数值，并给每个顶点赋予坐标
         CreatePoiList PoiList1 = new CreatePoiList();
-        Poi[] PoiList = PoiList1.CreatPoiList_NY(ccc1, SG);
+        Poi[] PoiList = PoiList1.loadPoiNY(ccc1, SG);
         //______________________________________________________________________________________________
         // //构建距离索引list
         CreateList list1 = new CreateList();
@@ -144,16 +143,16 @@ public class main_ROSE {
         boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
         for (Poi poi : PoiList) {
-            if (poi.Poi_Type != 0) {
+            if (poi.poiType != 0) {
                 flag = true;
                 for (Integer integer : Poi_Type_Num) {
-                    if (poi.Poi_Type == integer) {
+                    if (poi.poiType == integer) {
                         flag = false;
                         break;
                     }
                 }
                 if (flag) {
-                    Poi_Type_Num.add(poi.Poi_Type);
+                    Poi_Type_Num.add(poi.poiType);
                 }
             }
         }
@@ -180,12 +179,12 @@ public class main_ROSE {
         boolean flag1 = true;
         //int[] Poi_Type = {11,12,16} ;//所求的Poi的类型
         int[] Poi_Type = Poi_Type2;//36,54,50,1,6,3,9多，49,48,33,38,23,58,11少
-        ArrayList<Find_path_MTDOSR.Path> Top_k = new ArrayList<>();
+        ArrayList<FindPathMTDOSR.Path> topK = new ArrayList<>();
         for (int ii = 0; ii < num5; ii++) {
-            Find_path_MTDOSR topk = new Find_path_MTDOSR();
-            Find_Topk_NoOpt topk_No = new Find_Topk_NoOpt();
+            FindPathMTDOSR topk = new FindPathMTDOSR();
+            FindTopk_NoOpt topk_No = new FindTopk_NoOpt();
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            Top_k = topk.FindPath(g, q, Poi_Type, PoiList);
+            topK = topk.FindPath(g, q, Poi_Type, PoiList);
             long endTime1 = System.currentTimeMillis(); //开始获取时间
 //         if (ii != 0 || num5 == 1){
 //             time2 += endTime1 - startTime1;
@@ -228,7 +227,7 @@ public class main_ROSE {
 //        }
 
 
-        return Top_k;
+        return topK;
 
     }
 }

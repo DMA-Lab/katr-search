@@ -49,6 +49,6 @@ public class CreateList {
     }
 
     public ArrayList<ArrayList<Path>> CreatList_COL(int num) {
-        return CreatList("/mnt/public/share/DATA/COL//COL_List.txt", num);
+        return CreatList("/mnt/public/share/DATA/COL/COL_List.txt", num);
     }
 }
