@@ -41,14 +41,14 @@ public class CreateList {
     }
 
     public ArrayList<ArrayList<Path>> CreatList_NY(int num) {
-        return CreatList("/mnt/public/share/DATA/NY_List_100.txt", num);
+        return CreatList("/mnt/lab/everyone/share/DATA/NY_List_100.txt", num);
     }
 
     public ArrayList<ArrayList<Path>> CreatList_CA(int num) {
-        return CreatList("/mnt/public/share/DATA/calcedge/calcedge_List_100.txt", num);
+        return CreatList("/mnt/lab/everyone/share/DATA/calcedge/calcedge_List_100.txt", num);
     }
 
     public ArrayList<ArrayList<Path>> CreatList_COL(int num) {
-        return CreatList("/mnt/public/share/DATA/COL/COL_List.txt", num);
+        return CreatList("/mnt/lab/everyone/share/DATA/COL/COL_List.txt", num);
     }
 }

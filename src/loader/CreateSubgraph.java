@@ -26,14 +26,14 @@ public class CreateSubgraph {
     }
 
     public ArrayList<ArrayList<Integer>> load_NY(int limit) throws IOException {
-        return load("/mnt/public/share/DATA/NY/NY_PoiPoint_SG.txt", limit);
+        return load("/mnt/lab/everyone/share/DATA/NY/NY_POIPoint_SG.txt", limit);
     }
 
     public ArrayList<ArrayList<Integer>> CreatSG_CA(int limit) throws IOException {
-        return load("/mnt/public/share/DATA/calcedge/SG/calcedge_PoiPoint_SG_Poi1000.txt", limit);
+        return load("/mnt/lab/everyone/share/DATA/calcedge/SG/calcedge_PoiPoint_SG_Poi1000.txt", limit);
     }
 
     public ArrayList<ArrayList<Integer>> CreatSG_COL(int limit) throws IOException {
-        return load("/mnt/public/share/DATA/COL/COL_4000.txt", limit);
+        return load("/mnt/lab/everyone/share/DATA/COL/COL_4000.txt", limit);
     }
 }

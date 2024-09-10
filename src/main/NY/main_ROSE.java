@@ -24,105 +24,16 @@ public class main_ROSE {
 
     public static void main(String[] args) throws IOException {
 
-        int[] Poi_Type = {43, 25, 14, 28, 19, 26};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
-        int k1 = 6;
+        int[] Poi_Type = {43, 25};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
+        int k = 20;
         double a = 0.5;//α
         int endIndex = 6000;
-        ArrayList<FindPathMTDOSR.Path> Top_k_MTDOSR = MTDOSR(Poi_Type, k1);
+        ArrayList<FindPathMTDOSR.Path> Top_k_MTDOSR = MTDOSR(Poi_Type, k);
     }
 
-    public static ArrayList<FindPathMTDOSR.Path> MTDOSR(int[] Poi_Type2, int k1) throws IOException {
-        FileReader file = null;
-        try {
-            file = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        int num = 1;
-        assert file != null;
-        BufferedReader br = new BufferedReader(file);
-        String line;
-        try {
-            br.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            while (br.readLine() != null) {//按行读取
-                num++;
-            }
-            file.close();
-            br.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //将流中的拘束存储到data[][]中
-        int[][] data = new int[num + 1][4];
-        FileReader file1 = null;
-
-        //String []sp = null;
-        String[][] c = new String[num][4];
-        try {
-            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/USA-road-t.NY.txt");
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        assert file1 != null;
-        BufferedReader br1 = new BufferedReader(file1);//读取文件
-        try {
-            String line1;
-            int count = 0;
-            while ((line1 = br1.readLine()) != null) {//按行读取
-                String[] sp;
-                sp = line1.split(" ");//按空格进行分割
-                System.arraycopy(sp, 1, c[count], 1, 3);
-                count++;
-            }
-            for (int i = 0; i < num; i++) {
-                for (int j = 1; j < 4; j++) {
-                    data[i][j] = Integer.parseInt(c[i][j]);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        data[num][0] = 0;
-        data[num][1] = 0;
-        data[num][2] = 1;
-        data[num][3] = 100;
-        int num1 = num + 1;
-        //获取数据中共有多少点
-        int ccc = 0;
-        for (int i = 0; i < num; i++) {
-            if (data[i][1] >= ccc) {
-                ccc = data[i][1];
-
-            }
-
-        }
-        int ccc1 = ccc + 1;
-        Graph g = new Graph(ccc1, num1, data);
-        //划分子图
-        try {
-            file1 = new FileReader("D:/IDEA/USA-road-t.NY.gr/AHP/nyJiaquan.txt.part_2000.txt");
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        BufferedReader br2 = new BufferedReader(file1);//读取文件
-        String[] Subgraph = new String[num];
-        try {
-            String line2;
-            int count = 0;
-            while ((line2 = br2.readLine()) != null) {//按行读取
-                Subgraph[count] = line2;
-                count++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static ArrayList<FindPathMTDOSR.Path> MTDOSR(int[] poiType, int k) throws IOException {
+        Graph g = IntoData.loadGraph("/mnt/lab/everyone/share/数据集/9th DIMACS Implementation Challenge - Shortest Paths/USA-road-d.NY.gr");
+        int vertexCount = g.vertexCount;
 
         //______________________________________________________________________________________________
         //将各个点放入对应的子图中
@@ -134,12 +45,12 @@ public class main_ROSE {
         //______________________________________________________________________________________________
         //构建Poi索引PoiList，存储Poi的类型和数值，并给每个顶点赋予坐标
         CreatePoiList PoiList1 = new CreatePoiList();
-        Poi[] PoiList = PoiList1.loadPoiNY(ccc1, SG);
+        Poi[] PoiList = PoiList1.loadPoiNY(vertexCount, SG);
         //______________________________________________________________________________________________
         // //构建距离索引list
         CreateList list1 = new CreateList();
-        ArrayList<ArrayList<Path>> List = list1.CreatList_NY(ccc1);
-        //System.out.println("1");
+        ArrayList<ArrayList<Path>> List = list1.CreatList_NY(vertexCount);
+
         boolean flag;
         ArrayList<Integer> Poi_Type_Num = new ArrayList<>();
         for (Poi poi : PoiList) {
@@ -159,32 +70,31 @@ public class main_ROSE {
         //______________________________________________________________________________________________
         // //构建边界顶点索引BPList
         ArrayList<ArrayList<PoiPath>> BPList = new ArrayList<>();
-        for (int i = 0; i < ccc1; i++) {
+        for (int i = 0; i < vertexCount; i++) {
             BPList.add(new ArrayList<>());
         }
         CreateBpList BPList1 = new CreateBpList();
         //System.out.println("111");
-        BPList1.CreatBPList_NY(BPList, ccc1);
+        BPList1.CreatBPList_NY(BPList, vertexCount);
         //______________________________________________________________________________________________
 
         //计算全部点到最近的边界顶点的距离
         ArrayList<ArrayList<Integer>> PointMinBP = CreateMinBpTable.CreatMinBP_NY();
 
-
         //查找top_k
-        int k = k1; //计算多少条路径
+        //计算多少条路径
         int q = 56988; //查询点
         double a = 0.2; //α
         int q_SG = 0;
         boolean flag1 = true;
         //int[] Poi_Type = {11,12,16} ;//所求的Poi的类型
-        int[] Poi_Type = Poi_Type2;//36,54,50,1,6,3,9多，49,48,33,38,23,58,11少
+        //36,54,50,1,6,3,9多，49,48,33,38,23,58,11少
         ArrayList<FindPathMTDOSR.Path> topK = new ArrayList<>();
         for (int ii = 0; ii < num5; ii++) {
             FindPathMTDOSR topk = new FindPathMTDOSR();
             FindTopk_NoOpt topk_No = new FindTopk_NoOpt();
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            topK = topk.FindPath(g, q, Poi_Type, PoiList);
+            topK = topk.FindPath(g, q, poiType, PoiList);
             long endTime1 = System.currentTimeMillis(); //开始获取时间
 //         if (ii != 0 || num5 == 1){
 //             time2 += endTime1 - startTime1;
@@ -225,9 +135,6 @@ public class main_ROSE {
 //        for (int i = 0; i < Poi_Type1.size(); i++) {
 //            System.out.println(Poi_Type1.get(i)+"所在子图的数量为："+Poi_SGNum.get(i).size());
 //        }
-
-
         return topK;
-
     }
 }

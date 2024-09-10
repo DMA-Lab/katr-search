@@ -2,9 +2,9 @@ package main;
 
 import loader.DataSuite;
 import loader.IntoData;
-import baseline.KATR.FindFirstTopK;
-import baseline.KATR.FindTopK;
-import baseline.KATR.FindTopK_SToE;
+import katr.FindFirstTopK;
+import katr.FindTopK;
+import katr.FindTopK_SToE;
 import entity.LowerBound;
 
 import java.io.IOException;
@@ -25,14 +25,14 @@ public class KATR {
         // 想取的结果数
         int k = 20;
         double alpha = 0.5;
-        int num = 1; //循环次数
+        int times = 1; //循环次数
 
         DataSuite dataSuite = new DataSuite();
         IntoData.CreatData(Poi_Type, dataSuite);
 
-        ArrayList<LowerBound> Top_k_KATR_SToE = KATR_SToE(Poi_Type, k, alpha, dataSuite, num);
-        ArrayList<LowerBound> Top_k_KATR = KATR(Poi_Type, k, alpha, dataSuite, num);
-        ArrayList<LowerBound> Top_k_KATRAllHeatTo1 = KATR_AllHeatTo1(Poi_Type, k, alpha, dataSuite, num);
+        ArrayList<LowerBound> Top_k_KATR_SToE = KATR_SToE(Poi_Type, k, alpha, dataSuite, times);
+        ArrayList<LowerBound> Top_k_KATR = KATR(Poi_Type, k, alpha, dataSuite, times);
+        ArrayList<LowerBound> Top_k_KATRAllHeatTo1 = KATR_AllHeatTo1(Poi_Type, k, alpha, dataSuite, times);
 
         timeKATR = timeKATR1.getFirst();
         timeSToE = timeSToE1.getFirst();
@@ -44,7 +44,7 @@ public class KATR {
         System.out.println("KATRSToE查询所消耗的时间为:" + timeSToE + "毫秒");
     }
 
-    public static ArrayList<LowerBound> KATR(int[] Poi_Type2, int k, double a, DataSuite dataSuite, int num) {
+    public static ArrayList<LowerBound> KATR(int[] Poi_Type2, int k, double alpha, DataSuite dataSuite, int times) {
         int vQ = 56988; // 查询点
         int q_SG = 0;
         //int[] Poi_Type = {11,12,16} ;//所求的Poi的类型
@@ -94,19 +94,19 @@ public class KATR {
         ArrayList<LowerBound> topK = new ArrayList<>();
         FindTopK topk = new FindTopK();
 
-        for (int i = 0; i < num; i++) {
+        for (int i = 0; i < times; i++) {
             long startTime1 = System.currentTimeMillis(); //开始获取时间
-            topK = topk.KATRFindTopk(dataSuite.graph, vQ, q_SG, k, Poi_Type2, dataSuite.subgraphs, dataSuite.paths, dataSuite.poiList, a,
+            topK = topk.KATRFindTopk(dataSuite.graph, vQ, q_SG, k, Poi_Type2, dataSuite.subgraphs, dataSuite.paths, dataSuite.poiList, alpha,
                     dataSuite.BPList, dataSuite.PointMinBP, dataSuite.BvList); //进行全部优化的算法
             long endTime1 = System.currentTimeMillis(); //开始获取时间
             timeKATR1.add((endTime1 - startTime1));
+
+            // 输出所有路径的得分、距离、兴趣值
+            for (LowerBound lowerBound : topK) {
+                System.out.println("score: " + lowerBound.score + ", dis: " + lowerBound.dis + ", totalInterest: " + lowerBound.totalInterest);
+            }
             topK.clear();
         }
-
-//        topK = topk.KATRFindTopk(GraphData.g,vQ,q_SG,k,Poi_Type,GraphData.SG,GraphData.List,GraphData.PoiList,a,
-//                                  GraphData.BPList,GraphData.PointMinBP,GraphData.BvList); //进行全部优化的算法
-////        System.out.println("KATR算法完成");
-
         return topK;
     }
 

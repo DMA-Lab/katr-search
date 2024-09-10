@@ -24,14 +24,14 @@ public class CreateMinBpTable {
     }
 
     public static ArrayList<ArrayList<Integer>> CreatMinBP_NY() throws IOException {
-        return CreateMinBpTable.load("/mnt/public/share/DATA/NY/Point_MinBP.txt");
+        return CreateMinBpTable.load("/mnt/lab/everyone/share/DATA/NY/Point_MinBP.txt");
     }
 
     public static ArrayList<ArrayList<Integer>> CreatMinBP_COL() throws IOException {
-        return CreateMinBpTable.load("/mnt/public/share/DATA/COL/calcedge_Point_MinBP.txt");
+        return CreateMinBpTable.load("/mnt/lab/everyone/share/DATA/COL/calcedge_Point_MinBP.txt");
     }
 
     public static ArrayList<ArrayList<Integer>> CreateMinBP_CA() throws IOException {
-        return CreateMinBpTable.load("/mnt/public/share/DATA/calcedge/Point_MinBP.txt");
+        return CreateMinBpTable.load("/mnt/lab/everyone/share/DATA/calcedge/Point_MinBP.txt");
     }
 }

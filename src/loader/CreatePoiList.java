@@ -62,7 +62,7 @@ public class CreatePoiList {
     }
 
     public Poi[] loadPoiNY(int count, ArrayList<ArrayList<Integer>> SG) throws IOException {
-        Poi[] poiList = loadGraph("/mnt/public/share/DATA/NY/NY_PoiPoint_SG.txt", count);
+        Poi[] poiList = loadGraph("/mnt/lab/everyone/share/DATA/NY/NY_POIPoint_SG.txt", count);
 
         for (int i = 0; i < SG.size(); i++) {
             for (int j = 0; j < SG.get(i).size(); j++) {
@@ -70,7 +70,7 @@ public class CreatePoiList {
             }
         }
 
-        VertexPos[] vertexPosList = loadVertexPos("/mnt/public/share/DATA/NY/USA-road-node.NY.txt", count);
+        VertexPos[] vertexPosList = loadVertexPos("/mnt/lab/everyone/share/DATA/NY/USA-road-node.NY.txt", count);
         for (int i = 0; i < count; i++) {
             poiList[i].x = vertexPosList[i].x;
             poiList[i].y = vertexPosList[i].y;
@@ -79,14 +79,14 @@ public class CreatePoiList {
     }
 
     public Poi[] loadPoiCA(int count, ArrayList<ArrayList<Integer>> SG) throws IOException {
-        Poi[] poiList = loadGraph("/mnt/public/share/DATA/calcedge/calcedge_PoiPoint_SG_15_100.txt", count);
+        Poi[] poiList = loadGraph("/mnt/lab/everyone/share/DATA/calcedge/calcedge_PoiPoint_SG_15_100.txt", count);
         for (int i = 0; i < SG.size(); i++) {
             for (int j = 0; j < SG.get(i).size(); j++) {
                 poiList[SG.get(i).get(j)].subgraphId = i;
             }
         }
 
-        VertexPos[] vertexPosList = loadVertexPos("/mnt/public/share/DATA/calcedge/calcnode.txt", count);
+        VertexPos[] vertexPosList = loadVertexPos("/mnt/lab/everyone/share/DATA/calcedge/calcnode.txt", count);
         for (int i = 0; i < count; i++) {
             poiList[i].x = vertexPosList[i].x;
             poiList[i].y = vertexPosList[i].y;
@@ -95,6 +95,6 @@ public class CreatePoiList {
     }
 
     public Poi[] loadPoiCOL(int count) throws IOException {
-        return loadGraph("/mnt/public/share/DATA/COL/COL_PoiPoint_SG.txt", count);
+        return loadGraph("/mnt/lab/everyone/share/DATA/COL/COL_PoiPoint_SG.txt", count);
     }
 }

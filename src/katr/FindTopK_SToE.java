@@ -1,4 +1,4 @@
-package baseline.KATR;
+package katr;
 
 import entity.*;
 
