@@ -37,7 +37,7 @@ public class main_OSSCaling {
         }
 
         ArrayList<Find_Topk_OSSCaling.Path> Top_k_OSSCaling = OSSCaling(POI_Type,k1,endIndex);
-
+        
 
         System.out.println("————————————————————————————————————————————————————————————————————————————");
         System.out.println("MTDOSR算法计算所消耗的时间为:"+(time2/num6)+"毫秒");
@@ -53,7 +53,7 @@ public class main_OSSCaling {
     public static ArrayList<Find_Topk_OSSCaling.Path> OSSCaling(int[] POI_Type2, int k1, int endIndex) throws InterruptedException {
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -82,7 +82,7 @@ public class main_OSSCaling {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -126,7 +126,7 @@ public class main_OSSCaling {
         g.createMyGraph(g, ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/USA-road-t.NY.gr/AHP/nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

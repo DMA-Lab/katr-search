@@ -20,7 +20,7 @@ public class Creatpoilist {
         FileReader file1 = null;
         BufferedReader br3 = null;
         try {
-            file1 = new FileReader("src//DATA//NY//NY_POIPoint_SG.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/NY/NY_POIPoint_SG.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class Creatpoilist {
         double num33 = 0;
         int num22 = 0;
         try {
-            file1 = new FileReader("src//DATA//NY//USA-road-node.NY.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-node.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

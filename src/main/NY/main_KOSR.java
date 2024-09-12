@@ -34,17 +34,30 @@ public class main_KOSR {
         if (num6 == 0){
             num6 = 1;
         }
-        ArrayList<ArrayList<Integer>> Top_k_KOSR = KOSR(POI_Type,k1,a);
+        ArrayList<Lower_bound> Top_k_KOSR = KOSR(POI_Type,k1,a);
 
+        // 求得分、距离、兴趣值的平均值
+        double score = 0;
+        double dis = 0;
+        double w_poi = 0;
+        for (Lower_bound lower_bound : Top_k_KOSR) {
+            score += lower_bound.score;
+            dis += lower_bound.dis;
+            w_poi += lower_bound.w_poi;
+        }
+        int length = Top_k_KOSR.size();
+        System.out.printf("score=%.2f, dis=%.2f, w_poi=%.2f\n", score / length, dis / length, w_poi / length);
         System.out.println("KOSR算法消耗时间为："+time1+"ms");
+
+
     }
 
 
-    public static ArrayList<ArrayList<Integer>> KOSR(int[] POI_Type2, int k1, double a) throws InterruptedException {
+    public static ArrayList<Lower_bound> KOSR(int[] POI_Type2, int k1, double a) throws InterruptedException {
 
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -73,7 +86,7 @@ public class main_KOSR {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -117,7 +130,7 @@ public class main_KOSR {
         g.createMyGraph(g, ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/USA-road-t.NY.gr/AHP/nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -276,10 +289,25 @@ public class main_KOSR {
 
         }
 
-
-
-
-        return topK;
+        /* Patch */
+        ArrayList<Lower_bound>  result = new ArrayList<>();
+        for (ArrayList<Integer> path: topK) {
+            Lower_bound lower_bound = new Lower_bound();
+            lower_bound.path = path;
+            lower_bound.dis = g.getPathDistance(path) / 1000;
+            lower_bound.w_poi = 0;
+            for (int vertexId : path) {
+                for (int poiType : POI_Type2) {
+                    if (POIList[vertexId].POI_Type == poiType) {
+                        lower_bound.w_poi += POIList[vertexId].POI_Num;
+                        break;
+                    }
+                }
+            }
+            lower_bound.score = (1-a) * lower_bound.w_poi - a * lower_bound.dis;
+            result.add(lower_bound);
+        }
+        return result;
 
     }
 }

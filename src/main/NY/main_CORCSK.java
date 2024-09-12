@@ -32,14 +32,14 @@ public class main_CORCSK {
 
 
         Dijkstia.MyPath Top_k_ORCSK = ORCSK(POI_Type,k1,startend,endIndex);
-
+        System.out.println("end");
     }
 
     public static Dijkstia.MyPath ORCSK(int[] POI_Type2, int k1, int startIndex, int endIndex) throws InterruptedException {
 
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -68,7 +68,7 @@ public class main_CORCSK {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -112,7 +112,7 @@ public class main_CORCSK {
         g.createMyGraph(g, ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/USA-road-t.NY.gr/AHP/nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

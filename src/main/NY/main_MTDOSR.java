@@ -31,7 +31,7 @@ public class main_MTDOSR {
 
     public static void main(String[] args) throws InterruptedException{
 
-        int[] POI_Type = {43,25,14,28,19,26};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
+        int[] POI_Type = {43,25};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
         int k1 = 6;
         double a = 0.5;//α
         int endIndex = 6000;
@@ -41,15 +41,14 @@ public class main_MTDOSR {
         }
         ArrayList<Find_path_MTDOSR.Path> Top_k_MTDOSR = MTDOSR(POI_Type,k1);
 
-
-
-
+        // 解析 ROSE-GM 算法的结果
+        ArrayList<Find_path_MTDOSR.Path> Top_k_MTDOSR1 = new ArrayList<>();
     }
 
     public static ArrayList<Find_path_MTDOSR.Path> MTDOSR(int[] POI_Type2,int k1) throws InterruptedException {
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -78,7 +77,7 @@ public class main_MTDOSR {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -88,6 +87,9 @@ public class main_MTDOSR {
             String line1;
             int count = 0;
             while ((line1 = br1.readLine()) != null) {//按行读取
+                if (!line1.startsWith("a")) {
+                    continue;
+                }
                 String[] sp = null;
                 sp = line1.split(" ");//按空格进行分割
                 for (int i = 1; i < 4; i++) {
@@ -120,25 +122,6 @@ public class main_MTDOSR {
         int ccc1 = ccc + 1;
         MyGraph g = new MyGraph(ccc1, num1);
         g.createMyGraph(g, ccc1, num1, data);
-        //划分子图
-        try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        BufferedReader br2 = new BufferedReader(file1);//读取文件
-        String[] Subgraph = new String[num];
-        try {
-            String line2;
-            int count = 0;
-            while ((line2 = br2.readLine()) != null) {//按行读取
-                Subgraph[count] = line2;
-                count++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         //______________________________________________________________________________________________
         //将各个点放入对应的子图中

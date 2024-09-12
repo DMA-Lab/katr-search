@@ -19,7 +19,7 @@ public class Creatlist {
         FileReader file1 = null;
         BufferedReader br3 = null;
         try {
-            file1 = new FileReader("src//DATA//NY_List_100.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/NY_List_100.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

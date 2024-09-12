@@ -39,7 +39,7 @@ public class Creat_MinBP {
         ArrayList<ArrayList<Integer>> data = new ArrayList<>();
         FileReader file1 = null;
         try {
-            file1 = new FileReader("src//DATA//NY//Point_MinBP.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/NY/Point_MinBP.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

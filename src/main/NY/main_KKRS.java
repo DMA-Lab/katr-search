@@ -24,8 +24,8 @@ public class main_KKRS {
     static long timeA_db3;
     static int num5 = 1; //循环次数
     public static void main(String[] args) throws InterruptedException {
-        int[] POI_Type = {43,25,5,18,19,26};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
-        int k1 = 10;
+        int[] POI_Type = {43,25,14};//43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
+        int k1 = 8;
         double a = 0.5;//α
         int endIndex = 6000;
         int num6 = num5 - 1;
@@ -34,6 +34,19 @@ public class main_KKRS {
         }
 
         ArrayList<Lower_bound> Top_k_A = A(POI_Type,k1,a);
+        System.out.println("A算法的结果为：");
+        // 求得分、距离、POI权重的平均值
+        double scoreSum = 0;
+        int disSum = 0;
+        int poiSum = 0;
+        for (Lower_bound lowerBound : Top_k_A) {
+            scoreSum += lowerBound.score;
+            disSum += lowerBound.dis;
+            poiSum += lowerBound.w_poi;
+//            System.out.printf("score:%.2f,dis:%d,poi:%d\n", lowerBound.score, lowerBound.dis, lowerBound.w_poi);
+        }
+
+        System.out.printf("score:%.2f,dis:%d,poi:%d\n", scoreSum / Top_k_A.size(), disSum / Top_k_A.size(), poiSum / Top_k_A.size());
 
         System.out.println("————————————————————————————————————————————————————————————————————————————");
         System.out.println("MTDOSR算法计算所消耗的时间为:"+(time2/num6)+"毫秒");
@@ -48,7 +61,7 @@ public class main_KKRS {
 
         FileReader file = null;
         try {
-            file = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-t.NY.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -77,7 +90,7 @@ public class main_KKRS {
         //String []sp = null;
         String[][] c = new String[num][4];
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//USA-road-t.NY.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/NY/USA-road-t.NY.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -121,7 +134,7 @@ public class main_KKRS {
         g.createMyGraph(g, ccc1, num1, data);
         //划分子图
         try {
-            file1 = new FileReader("D://IDEA//USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/USA-road-t.NY.gr//AHP//nyJiaquan.txt.part_2000.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -335,8 +348,10 @@ public class main_KKRS {
 
         }
 
-
-
+        for (Lower_bound lb: Top_k) {
+            lb.dis /= 1000;
+            lb.score = lb.w_poi * (1-a) - lb.dis * a;
+        }
 
         return Top_k;
 

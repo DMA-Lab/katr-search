@@ -167,9 +167,9 @@ public class Find_path_MTDOSR {
             this.OS = 0;
             this.POI_Type = new ArrayList<>();
             this.path = new ArrayList<>();
-
         }
     }
+
     public boolean isnum(int n,ArrayList<Integer> path){
         boolean flag = false;
         for (int j:path) {

@@ -15,7 +15,7 @@ import java.util.ArrayList;
         }
         FileReader file1 = null;
         try {
-            file1 = new FileReader("src//DATA//NY//NY_POIPoint_SG.txt");
+            file1 = new FileReader("/mnt/lab/everyone/share/DATA/NY/NY_POIPoint_SG.txt");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

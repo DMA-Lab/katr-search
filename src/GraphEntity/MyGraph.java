@@ -1,5 +1,7 @@
 package GraphEntity;
 
+import java.util.ArrayList;
+
 //图邻接表的表示法
 public class MyGraph {
     public static Point[] point;
@@ -13,6 +15,30 @@ public class MyGraph {
         point=new Point[numPoint];  //初始化点集数组
         visted=new int[numPoint];
     }
+
+    public int getWeight(int v1, int v2) {
+        EdegeNode p = (EdegeNode) point[v1].firstArc;
+        while (p != null) {
+            if (p.adjvex == v2) {
+                return p.value;
+            }
+            p = p.nextEdge;
+        }
+        return 0;
+    }
+
+    public int getPathDistance(ArrayList<Integer> path) {
+        int distance = 0;
+        for (int i = 0; i < path.size() - 1; i++) {
+            int w = getWeight(path.get(i), path.get(i + 1));
+            if (w == 0) {
+//                return Integer.MAX_VALUE;
+            }
+            distance += w;
+        }
+        return distance;
+    }
+
     public void createMyGraph(MyGraph MyGraph,int numPoint,int numEdeges,int EdegesPoint[][])  //创建图
     {
         long time3= System.currentTimeMillis();//获取当前系统时间(毫秒)
