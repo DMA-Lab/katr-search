@@ -21,9 +21,9 @@ public class KATR {
 
     public static void main(String[] args) throws IOException {
         // 43,25,14,28,19,26,48,47时间，43,25,5,18,19,26,48,47剪枝效率
-        int[] Poi_Type = {43, 25};
+        int[] Poi_Type = {43, 25, 14};
         // 想取的结果数
-        int k = 20;
+        int k = 2;
         double alpha = 0.5;
         int times = 1; //循环次数
 
@@ -101,12 +101,25 @@ public class KATR {
             long endTime1 = System.currentTimeMillis(); //开始获取时间
             timeKATR1.add((endTime1 - startTime1));
 
-            // 输出所有路径的得分、距离、兴趣值
+            // 输出所有路径的得分、距离、兴趣值的平均值
+            double scoreSum = 0;
+            double disSum = 0;
+            double totalInterestSum = 0;
+            int count = topK.size();
             for (LowerBound lowerBound : topK) {
-                System.out.println("score: " + lowerBound.score + ", dis: " + lowerBound.dis + ", totalInterest: " + lowerBound.totalInterest);
+                lowerBound.dis /= 1000;
+                lowerBound.score = (1-alpha) * lowerBound.totalInterest - alpha * lowerBound.dis;
+
+                scoreSum += lowerBound.score;
+                disSum += lowerBound.dis;
+                totalInterestSum += lowerBound.totalInterest;
             }
-            topK.clear();
+//            topK.clear();
+            System.out.printf("score:%.2f,dis=%d,poi=%d\n", scoreSum / count, (int)(disSum / count), (int)(totalInterestSum / count));
+            break;
         }
+
+
         return topK;
     }
 
