@@ -16,18 +16,18 @@ using namespace std;
 
 
 using Vertex = unsigned int;
-using Edge = unsigned int;
+using EdgeWeight = unsigned int;
 
-constexpr Edge InfEdge = ~0;
+constexpr EdgeWeight InfEdge = ~0;
 constexpr Vertex InvalidVertex = 0;
 
 
-class EdgeIterator: public iterator_traits<pair<Vertex, Edge>> {
-    optional<unordered_map<Vertex, Edge>::const_iterator> it;
+class EdgeIterator: public iterator_traits<pair<Vertex, EdgeWeight>> {
+    optional<unordered_map<Vertex, EdgeWeight>::const_iterator> it;
 
 public:
     explicit EdgeIterator() = default;
-    explicit EdgeIterator(unordered_map<Vertex, Edge>::const_iterator it): it(it) {}
+    explicit EdgeIterator(unordered_map<Vertex, EdgeWeight>::const_iterator it): it(it) {}
 
     static EdgeIterator invalid() {
         return EdgeIterator();
@@ -46,17 +46,17 @@ public:
         return *this;
     }
 
-    std::pair<Vertex, Edge> operator*() const {
+    std::pair<Vertex, EdgeWeight> operator*() const {
         return **it;
     }
 };
 
 
 class EdgeSet {
-    optional<const unordered_map<Vertex, Edge>*> map;
+    optional<const unordered_map<Vertex, EdgeWeight>*> map;
 
 public:
-    EdgeSet(const unordered_map<Vertex, Edge>  *map) {
+    EdgeSet(const unordered_map<Vertex, EdgeWeight>  *map) {
         this->map = map;
     }
 
@@ -82,12 +82,12 @@ public:
 };
 
 struct GraphByAdjacencyList {
-    unsigned int  num_vertex = 0;
+    unsigned int  vertex_count = 0;
 
     // 顶点集
     unordered_set<Vertex>  vertices;
     // 将两个顶点打包为一个pair，建立一对顶点到边的映射
-    unordered_map<Vertex, unordered_map<Vertex, Edge>> edges;
+    unordered_map<Vertex, unordered_map<Vertex, EdgeWeight>> edges;
 
     GraphByAdjacencyList() = default;
 
@@ -98,13 +98,13 @@ struct GraphByAdjacencyList {
     bool insert_vertex(Vertex v);
 
     // 添加有向边
-    void add_directional_edge(Vertex v1, Vertex v2, Edge weight);
+    void add_directional_edge(Vertex v1, Vertex v2, EdgeWeight weight);
 
     // 连接两个顶点
-    void connect(Vertex v1, Vertex v2, Edge weight);
+    void connect(Vertex v1, Vertex v2, EdgeWeight weight);
 
     // 获得两点之间的边权
-    Edge get_weight(Vertex v1, Vertex v2) const;
+    EdgeWeight get_weight(Vertex v1, Vertex v2) const;
 
     // 获得相邻边迭代器
     EdgeSet get_adjacent_vertices(Vertex src) const;
@@ -148,46 +148,5 @@ public:
             return 0;
         }
         return data[getIndex(row, col)];
-    }
-};
-
-struct GraphByArray
-{
-    unsigned int  num_vertex = 0;
-
-    // 顶点集
-    unordered_set<Vertex>  vertices;
-    // 邻接矩阵
-    SymmetricMatrix<Edge>  *matrix = nullptr;
-
-    explicit GraphByArray(size_t size);
-
-    // 支持从邻接表构造一个基于邻接矩阵的图.
-    // 因为 file 的 open 函数返回的是一个基于邻接表的图. 如果要改动图的加载代码，改动过大。
-    // 为了方便，这里提供了一个构造函数用于转换。
-    explicit GraphByArray(const GraphByAdjacencyList &other);
-
-    ~GraphByArray();
-
-    // 判断两个顶点是否相邻
-    bool is_connected(Vertex v1, Vertex v2) const;
-
-    // 判断顶点的插入是否成功
-    bool insert_vertex(Vertex v);
-
-    // 添加有向边
-    void add_directional_edge(Vertex v1, Vertex v2, Edge weight);
-
-    // 连接两个顶点
-    void connect(Vertex v1, Vertex v2, Edge edge);
-
-    // 获得两点之间的边权
-    Edge get_weight(Vertex v1, Vertex v2) const;
-
-    // 获得相邻边迭代器
-    vector<pair<Vertex, Edge>>  get_adjacent_vertices(Vertex src) const;
-
-    Edge operator[](const pair<Vertex, Vertex>& pos) const {
-        return this->matrix->get(pos.first, pos.second);
     }
 };
