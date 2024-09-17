@@ -8,23 +8,16 @@
 #include <sstream>
 #include <iostream>
 #include "graph.h"
+#include "poi.h"
 
-using namespace std;
 
-
-std::pair<Graph, bool> open() {
-    //USA-road-t.NY大图
-    //my-graph小图
-    //my-subgraph可划分子图
-    auto path = "dataset/USA-road-t.NY.gr";
-
+Graph load_graph(const std::string &path) {
     Graph g;
     ifstream file;
 
     file.open(path, std::ios::binary);
     if (!file) {
-        cerr << std::format("can't open file {}: {}\n", path, std::strerror(errno));
-        return {g, false};
+        throw std::runtime_error(std::format("can't open file {}: {}\n", path, std::strerror(errno)));
     }
 
     for (string line; getline(file, line);) {
@@ -37,7 +30,7 @@ std::pair<Graph, bool> open() {
         switch (operation) {
         case'a': {
             Vertex start, end;
-            Edge edgeweight;
+            EdgeWeight edgeweight;
             ss >> start >> end >> edgeweight; //读入这一行数据
             g.add_directional_edge(start, end, edgeweight);
             break;
@@ -59,8 +52,34 @@ std::pair<Graph, bool> open() {
         default: {
             cerr << "unknown operation: " << operation << endl;
             break;
-        }
+            }
         }
     }
-    return {g, true};
+    return g;
+}
+
+
+PoiSet load_poi(std::string path) {
+    PoiSet pois;
+    ifstream file;
+
+    file.open(path, std::ios::binary);
+    if (!file) {
+        throw std::runtime_error(std::format("can't open file {}: {}\n", path, std::strerror(errno)));
+    }
+
+    // poi 文件的格式如下：
+    // 0 56987 41 1 5
+    // 0 56988 10 1 33
+    // 0 61184 41 1 25
+    // 第 0 列是所属的子图，忽略。第1列是对应顶点编号，第2列是POI类型，第3列是boundary（忽略），第4列是POI兴趣度（权重）
+    for (string line; getline(file, line);) {
+        stringstream ss(line);
+
+        unsigned int _unused, v, type, interest;
+        ss >> _unused >> v >> type >> _unused >> interest;
+        pois.add(Poi{v, type, interest});
+    }
+
+    return pois;
 }
