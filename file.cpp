@@ -76,7 +76,10 @@ PoiSet load_poi(std::string path) {
     for (string line; getline(file, line);) {
         stringstream ss(line);
 
-        unsigned int _unused, v, type, interest;
+        unsigned int _unused;
+        Vertex v;
+        PoiType type;
+        Interest interest;
         ss >> _unused >> v >> type >> _unused >> interest;
         pois.add(Poi{v, type, interest});
     }

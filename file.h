@@ -6,7 +6,7 @@
 
 
 /// 加载图
-Graph load_graph(std::string path);
+Graph load_graph(const std::string &path);
 
 /// 加载 POI
-std::vector<Poi> load_poi(std::string path);
+PoiSet load_poi(std::string path);

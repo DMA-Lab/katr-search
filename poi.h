@@ -8,17 +8,21 @@
 /// POI 点类型
 using PoiType = unsigned int;
 
+/// 用户兴趣值
+using Interest = unsigned short;
+
+
 /// 无效的 POI 类型
-PoiType INVALID_POI_TYPE = 0;
+inline PoiType INVALID_POI_TYPE = 0;
 
 
 struct Poi {
     /// POI 对应顶点
-    unsigned int v;
+    Vertex v;
     /// POI 类型
     PoiType type;
     /// POI 兴趣度（权重）
-    unsigned int interest;
+    Interest interest;
 };
 
 
@@ -40,5 +44,13 @@ struct PoiSet {
 
     const Poi& operator[](const Vertex &v) const {
         return this->pois_map.at(v);
+    }
+
+    std::unordered_map<Vertex, Interest> get_interests() const {
+        std::unordered_map<Vertex, Interest> interests;
+        for (const auto &[v, poi] : this->pois_map) {
+            interests[v] = poi.interest;
+        }
+        return interests;
     }
 };

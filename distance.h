@@ -7,10 +7,10 @@
 
 
 class DistanceMatrix {
-private:
     std::vector<EdgeWeight> distances;
     std::unordered_map<Vertex, size_t> vertex_to_index;
     size_t last_index = 0;
+    bool self_circle = false;
 
     inline size_t get_index(Vertex vertex) const {
         return vertex_to_index.at(vertex);
@@ -30,19 +30,35 @@ private:
     }
 
 public:
-    DistanceMatrix(int n) : distances(n * (n - 1) / 2, 0) {}
+    DistanceMatrix(int n, bool self_circle = false) : distances(n * (n - 1) / 2, 0), self_circle(self_circle) {}
 
     void set(Vertex i, Vertex j, EdgeWeight distance) {
-        size_t pos = calc_pos(get_index_mut(i), get_index_mut(j));
-        distances[pos] = distance;
+        if (i == j) {
+            if (self_circle) {
+                auto index = get_index_mut(i);
+                distances[calc_pos(index, index)] = distance;
+            } else {
+                throw std::invalid_argument("Self circle is not allowed.");
+            }
+        } else {
+            size_t pos = calc_pos(get_index_mut(i), get_index_mut(j));
+            distances[pos] = distance;
+        }
     }
 
     EdgeWeight get(Vertex i, Vertex j) const {
+        if (i == j && !self_circle) {
+            return 0;
+        }
         size_t pos = calc_pos(get_index(i), get_index(j));
         return distances[pos];
     }
 
     inline EdgeWeight operator()(Vertex i, Vertex j) const {
         return get(i, j);
+    }
+
+    inline size_t size() const {
+        return distances.size();
     }
 };
