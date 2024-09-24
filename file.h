@@ -6,7 +6,7 @@
 
 
 /// 加载图
-Graph load_graph(const std::string &path);
+Graph load_graph(const std::string &path, unsigned int limit = UINT_MAX);
 
 /// 加载 POI
 PoiSet load_poi(std::string path);

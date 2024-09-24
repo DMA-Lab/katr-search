@@ -41,6 +41,10 @@ void Graph::connect(const Vertex v1, const Vertex v2, EdgeWeight weight) {
     add_directional_edge(v2, v1, weight);
 }
 
+bool GraphByAdjacencyList::contains(Vertex v) const {
+    return this->vertices.contains(v);
+}
+
 // 判断是否相连
 bool Graph::is_connected(const Vertex v1, const Vertex v2) const {
     auto tier1_end = edges.end();

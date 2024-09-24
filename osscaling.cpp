@@ -100,7 +100,7 @@ class OSScaling {
     /// 完整的图
     const Graph &graph;
     /// POI 集合
-    const PoiSet &pois;
+    PoiSet pois;
 
     /// 每个顶点及其标签
     /// 
@@ -109,7 +109,14 @@ class OSScaling {
     std::unordered_map<Vertex, std::vector<Label>> labels;
 
 public:
-    OSScaling(const Graph &graph, const PoiSet &pois) : graph(graph), pois(pois) {}
+    OSScaling(const Graph &graph, const PoiSet &pois) : graph(graph), pois() {
+        // 如今 graph 可能是一张大图的一部分，因此我们需要过滤 poi set, 仅保留图中存在的 POI.
+        for (const auto& [v, poi] : pois.pois_map) {
+            if (graph.contains(v)) {
+                this->pois.add(poi);
+            }
+        }
+    }
 
     std::optional<Path> run(Vertex source, Vertex target, EdgeWeight budget_limit, std::vector<PoiType> &poi_types_wanted);
 };
@@ -205,7 +212,7 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Edg
 
 
 int main() {
-    auto g = load_graph("/home/sunnysab/YTU-lab/data/NY/USA-road-t.NY.txt");
+    auto g = load_graph("/mnt/lab/everyone/share/数据集/9th DIMACS Implementation Challenge - Shortest Paths/USA-road-t.NY.gr", 300);
     const PoiSet pois = load_poi("/home/sunnysab/YTU-lab/data/NY/NY_POIPoint_SG.txt");
 
     OSScaling osscaling(g, pois);
