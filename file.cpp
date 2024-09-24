@@ -7,13 +7,13 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <limits.h>
+#include <climits>
 
 #include "graph.h"
 #include "poi.h"
 
 
-Graph load_graph(const std::string &path, unsigned int limit) {
+Graph load_graph(const std::string &path, unsigned int limit /* = UINT_MAX */) {
     Graph g;
     ifstream file;
 
@@ -23,17 +23,26 @@ Graph load_graph(const std::string &path, unsigned int limit) {
     }
 
     for (string line; std::getline(file, line);) {
-        stringstream ss(line); //ss的用法与cin/cout一样
+        stringstream ss(line);
 
-        char operation; //用来保存数据集的第一个操作符
+        char operation;
         ss >> operation;
 
         switch (operation) {
         case'a': {
             Vertex start, end;
             EdgeWeight weight;
-            ss >> start >> end >> weight; //读入这一行数据
-            if (g.contains(start) && g.contains(end)) {
+            ss >> start >> end >> weight;
+            /* 由于 limit 的存在，我们可能只能加载部分图，尽可能地希望恰好加载 limit 个顶点.
+             * 约束：可以缺少一个，但不能多出一个. */
+            if (limit == UINT_MAX
+                || g.vertex_count + static_cast<int>(!g.contains(start)) + static_cast<int>(!g.contains(end)) <= limit) {
+                for (auto v: {start, end}) {
+                    if (!g.contains(v)) {
+                        g.insert_vertex(v);
+                    }
+                }
+
                 g.add_directional_edge(start, end, weight);
             }
             break;
@@ -42,12 +51,7 @@ Graph load_graph(const std::string &path, unsigned int limit) {
             unsigned int edge_count, vertex_count;
             string sp;
             ss >> sp >> vertex_count >> edge_count;
-            cout << "该图中顶点数为：" << vertex_count << "," << "边数为：" << edge_count << endl;
-
-            unsigned int count_to_load = min(vertex_count, limit);
-            for (int v = 1; v <= count_to_load; ++v) {
-                g.insert_vertex(v);
-            }
+            cout << "In complete graph, |V| = " << vertex_count << ", " << "|E| = " << edge_count << endl;
             break;
         }
         case 'c': {

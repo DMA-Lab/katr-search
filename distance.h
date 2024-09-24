@@ -12,7 +12,14 @@ class DistanceMatrix {
     size_t last_index = 0;
     bool self_circle = false;
 
-    inline size_t get_index(Vertex vertex) const {
+    size_t get_index(Vertex vertex) const {
+        return vertex_to_index.at(vertex);
+    }
+
+    optional<size_t> get_index_opt(Vertex vertex) const {
+        if (vertex_to_index.find(vertex) == vertex_to_index.end()) {
+            return nullopt;
+        }
         return vertex_to_index.at(vertex);
     }
 
@@ -24,13 +31,13 @@ class DistanceMatrix {
     }
 
     // 计算两点距离在距离矩阵中的位置
-    inline size_t calc_pos(size_t i, size_t j) const {
+    size_t calc_pos(size_t i, size_t j) const {
         if (i > j) std::swap(i, j);
         return i * (i - 1) / 2 + j;
     }
 
 public:
-    DistanceMatrix(int n, bool self_circle = false) : distances(n * (n - 1) / 2, 0), self_circle(self_circle) {}
+    DistanceMatrix(size_t n, const bool self_circle = false) : distances(n * (n - 1) / 2, 0), self_circle(self_circle) {}
 
     void set(Vertex i, Vertex j, EdgeWeight distance) {
         if (i == j) {
@@ -54,11 +61,20 @@ public:
         return distances[pos];
     }
 
-    inline EdgeWeight operator()(Vertex i, Vertex j) const {
+    EdgeWeight get_or_inf(Vertex i, Vertex j) const {
+        optional<size_t> pos_i, pos_j;
+        if ((pos_i = get_index_opt(i)) == nullopt || (pos_j = get_index_opt(j)) == nullopt) {
+            return InfEdge;
+        }
+        const auto pos = calc_pos(*pos_i, *pos_j);
+        return distances[pos];
+    }
+
+    EdgeWeight operator()(Vertex i, Vertex j) const {
         return get(i, j);
     }
 
-    inline size_t size() const {
+    size_t size() const {
         return distances.size();
     }
 };
