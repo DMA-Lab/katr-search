@@ -17,14 +17,14 @@ class DistanceMatrix {
     }
 
     optional<size_t> get_index_opt(Vertex vertex) const {
-        if (vertex_to_index.find(vertex) == vertex_to_index.end()) {
+        if (!vertex_to_index.contains(vertex)) {
             return nullopt;
         }
         return vertex_to_index.at(vertex);
     }
 
     size_t get_index_mut(Vertex vertex) {
-        if (vertex_to_index.find(vertex) == vertex_to_index.end()) {
+        if (!vertex_to_index.contains(vertex)) {
             vertex_to_index[vertex] = last_index++;
         }
         return vertex_to_index[vertex];
@@ -37,7 +37,7 @@ class DistanceMatrix {
     }
 
 public:
-    DistanceMatrix(size_t n, const bool self_circle = false) : distances(n * (n - 1) / 2, 0), self_circle(self_circle) {}
+    DistanceMatrix(size_t n, const bool self_circle = false) : distances(n * (n - 1) / 2, InfWeight), self_circle(self_circle) {}
 
     void set(Vertex i, Vertex j, EdgeWeight distance) {
         if (i == j) {
@@ -64,7 +64,7 @@ public:
     EdgeWeight get_or_inf(Vertex i, Vertex j) const {
         optional<size_t> pos_i, pos_j;
         if ((pos_i = get_index_opt(i)) == nullopt || (pos_j = get_index_opt(j)) == nullopt) {
-            return InfEdge;
+            return InfWeight;
         }
         const auto pos = calc_pos(*pos_i, *pos_j);
         return distances[pos];

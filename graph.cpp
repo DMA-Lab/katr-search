@@ -68,13 +68,13 @@ EdgeWeight Graph::get_weight(const Vertex v1, const Vertex v2) const {
     const auto tier1_end = edges.end();
     const auto tier1_it = edges.find(v1);
     if (tier1_it == tier1_end) {
-        return InfEdge;
+        return InfWeight;
     }
 
     const auto tier2_end = tier1_it->second.end();
     const auto tier2_it = tier1_it->second.find(v2);
     if (tier2_it == tier2_end) {
-        return InfEdge;
+        return InfWeight;
     }
 
     return tier2_it->second;

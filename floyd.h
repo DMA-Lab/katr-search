@@ -18,7 +18,7 @@ DistanceMatrix floyd_warshall(const Graph &graph) {
     EdgeWeight w;
     for (Vertex i: graph.vertices) {
         for (Vertex j: graph.vertices) {
-            if (i != j && (w = graph.get_weight(i, j)) != InfEdge) {
+            if (i != j && (w = graph.get_weight(i, j)) != InfWeight) {
                 distances.set(i, j, w);
             } 
         }
@@ -68,8 +68,8 @@ DistanceMatrix floyd_warshall_on_vertex(const Graph &graph, const std::unordered
                     continue;
                 }
 
-                if (EdgeWeight front = distances.get_or_inf(i, k), back = distances.get_or_inf(k, j);
-                    front != InfEdge && back != InfEdge) {
+                if (EdgeWeight front = distances(i, k), back = distances(k, j);
+                    front != InfWeight && back != InfWeight) {
                     const auto new_distance = front + back - interest_or_zero(k);
                     if (new_distance < distances(i, j)) {
                         distances.set(i, j, new_distance);

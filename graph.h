@@ -18,7 +18,7 @@ using namespace std;
 using Vertex = unsigned int;
 using EdgeWeight = unsigned int;
 
-constexpr EdgeWeight InfEdge = ~0;
+constexpr EdgeWeight InfWeight = ~0;
 constexpr Vertex InvalidVertex = 0;
 
 
