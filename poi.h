@@ -46,11 +46,22 @@ struct PoiSet {
         return this->pois_map.at(v);
     }
 
+    bool contains(const Vertex &v) const {
+        return this->pois_map.contains(v);
+    }
+
     std::unordered_map<Vertex, Interest> get_interests() const {
         std::unordered_map<Vertex, Interest> interests;
         for (const auto &[v, poi] : this->pois_map) {
             interests[v] = poi.interest;
         }
         return interests;
+    }
+
+    Interest interest_or_zero(const Vertex v) const {
+        if (this->pois_map.contains(v)) {
+            return this->pois_map.at(v).interest;
+        }
+        return 0;
     }
 };

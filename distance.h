@@ -34,7 +34,7 @@ class DistanceMatrix {
     }
 
     // 计算两点距离在距离矩阵中的位置
-    size_t calc_pos(size_t i, size_t j) const {
+    static size_t calc_pos(size_t i, size_t j) {
         if (i > j) std::swap(i, j);
         return j * (j - 1) / 2 + i;
     }
@@ -81,3 +81,21 @@ public:
         return distances.size();
     }
 };
+
+template <typename W>
+void print_distance_matrix(const Graph &g, const DistanceMatrix<W> &matrix) {
+    // print header line
+    std::cout << "    ";
+    for (const Vertex i: g.vertices) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl << "--------------------------------" << std::endl;
+
+    for (const Vertex i: g.vertices) {
+        std::cout << i << " | ";
+        for (const Vertex j: g.vertices) {
+            std::cout << matrix.get(i, j) << " ";
+        }
+        std::cout << std::endl;
+    }
+}

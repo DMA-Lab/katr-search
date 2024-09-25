@@ -77,6 +77,9 @@ struct Path {
     ///
     /// budget 表示从当前路径最后一个顶点到 v 的权重, objective 表示加入点 v 带来的收益（即，v 的兴趣值）.
     [[nodiscard]] Path extend(const Vertex v, const BudgetScore budget, const ObjectiveScore objective) const {
+        if (ranges::any_of(this->vertices, [v](const Vertex u) { return u == v; })) {
+            return *this;
+        }
         Path new_path = *this;
         new_path.vertices.push_back(v);
         new_path.label = new_path.label.extend(v, budget, objective);
@@ -97,6 +100,14 @@ struct Path {
     [[nodiscard]] bool was_covered(const std::vector<PoiType> &poi_types_wanted) const {
         return ranges::includes(label.lambdas, poi_types_wanted);
     }
+
+    [[nodiscard]] std::string to_string() const {
+        std::string s = "Path [";
+        for (auto v : vertices) {
+            s += std::to_string(v) + " ";
+        }
+        return s + "]";
+    }
 };
 
 
@@ -106,10 +117,10 @@ DistanceMatrix<BudgetScore> calc_budget_score_matrix(const Graph &graph) {
     DistanceMatrix distances(graph.vertex_count, false, InfWeight);
 
     /* 初始化距离矩阵 */
-    EdgeWeight w;
-    for (Vertex i: graph.vertices) {
-        for (Vertex j: graph.vertices) {
-            if (i != j && (w = graph.get_weight(i, j)) != InfWeight) {
+    for (const Vertex i: graph.vertices) {
+        for (auto [j, w]: graph.get_adjacent_vertices(i)) {
+            if (w != InfWeight) {
+                cout << "set(" << i << ", " << j << ", " << w << ")" << endl;
                 distances.set(i, j, w);
             }
         }
@@ -189,7 +200,7 @@ class OSScaling {
     std::unordered_map<Vertex, std::vector<Label>> labels;
 
 public:
-    OSScaling(const Graph &graph, const PoiSet &pois) : graph(graph), pois() {
+    OSScaling(const Graph &graph, const PoiSet &pois) : graph(graph) {
         // 如今 graph 可能是一张大图的一部分，因此我们需要过滤 poi set, 仅保留图中存在的 POI.
         for (const auto& [v, poi] : pois.pois_map) {
             if (graph.contains(v)) {
@@ -198,7 +209,7 @@ public:
         }
     }
 
-    std::optional<Path> run(Vertex source, Vertex target, EdgeWeight budget_limit, std::vector<PoiType> &poi_types_wanted);
+    std::optional<Path> run(Vertex source, Vertex target, BudgetScore limit, std::vector<PoiType> &poi_types_wanted);
 };
 
 
@@ -215,14 +226,19 @@ std::priority_queue<T> remove_from_pq(std::priority_queue<T> pq, T &item) {
     return new_pq;
 }
 
+std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, BudgetScore limit, std::vector<PoiType> &poi_types_wanted) {
+    assert(graph.contains(source) && graph.contains(target));
 
-std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, EdgeWeight budget_limit, std::vector<PoiType> &poi_types_wanted) {
     /* 初始化最小代价矩阵和最小收益矩阵，计算出任意两点 v_i, v_j 之间的小代价 BS(σ_{i,j}) 及最小收益 OS(\tao_{i, j}) */
     auto interests = pois.get_interests();
 
     auto bs = calc_budget_score_matrix(graph);
     auto os = calc_objective_score_matrix(graph, interests);
+    print_distance_matrix(graph, bs);
+    print_distance_matrix(graph, os);
 
+    cout << "bs: " << bs.get(source, target) << endl;
+    cout << "os: " << os.get(source, target) << endl;
     /* 初始化 */
     // 变量 U，记录收益的上界（第四页右下角）
     ObjectiveScore upper_bound = ObjectiveScoreMax;
@@ -239,27 +255,33 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Edg
         // line6, 从优先队列中取出路径
         auto path = queue.top();
         queue.pop();
+        cout << path.to_string() << endl;
 
         // 当前顶点
         auto v_i = path.vertices.back();
         // If the objective score of L_i^k plus the best objective score OS(τ_{i,t}) from v_i
         // to the target node v_t is larger than the current upper bound U , 
         // then the label definitely cannot contribute to the final result (line 7).
-        // 问题是，怎样才能得到 OS(τ_{i,t})？
         if (path.label.objective + os(v_i, target) > upper_bound) {
             continue;
         }
 
         for (const auto [v_j, weight] : graph.get_adjacent_vertices(v_i)) {
-            auto path_j = path.extend(v_j, weight, pois[v_j].interest);
+            auto path_j = path.extend(v_j, weight, pois.interest_or_zero(v_j));
             auto &label_j = path_j.label;
-            
+
             // line10, 判断 label_j 是否被 v_j 上的其他标签支配
-            bool dominated = ranges::all_of(labels.at(v_j), [&](const Label &label) {
-                return label.dominates(label_j);
-            });
-            if (!dominated 
-                && label_j.budget + bs(v_j,target) < budget_limit 
+            if (labels.contains(v_j)) {
+                if (ranges::any_of(labels.at(v_j), [&](const Label &label) {
+                    return label.dominates(label_j);
+                })) {
+                    continue;
+                }
+            } else {
+                labels.insert({v_j, {}});
+            }
+
+            if (label_j.budget + bs(v_j,target) < limit
                 && label_j.objective + os(v_j,target) < upper_bound) {
                 if (!path.was_covered(poi_types_wanted)) {
                     // line12, push L_j^l
@@ -270,7 +292,7 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Edg
                     }
                 }
                 else {
-                    if (label_j.budget + bs(v_j, target) < budget_limit) {
+                    if (label_j.budget + bs(v_j, target) < limit) {
                         upper_bound = label_j.objective + os(v_j, target);
                         last_path = path_j;
                     } else {
@@ -280,7 +302,7 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Edg
             }
 
             labels[v_j].push_back(label_j);
-            queue.push(path.extend(v_j, weight, pois[v_j].interest));
+            queue.push(path.extend(v_j, weight, pois.interest_or_zero(v_j)));
         }
     }
 
@@ -292,13 +314,12 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Edg
 
 
 int main() {
-    auto g = load_graph("/mnt/lab/everyone/share/数据集/9th DIMACS Implementation Challenge - Shortest Paths/USA-road-t.NY.gr", 300);
-    const PoiSet pois = load_poi("/home/sunnysab/YTU-lab/data/NY/NY_POIPoint_SG.txt");
+    auto g = load_graph("/home/sunnysab/graph.txt");
+    const PoiSet pois = load_poi("/home/sunnysab/poi.txt");
 
     OSScaling osscaling(g, pois);
     vector<PoiType> poi_wants = {1, 2, 3};
-    auto path = osscaling.run(0, 1, 100, poi_wants);
-    if (path) {
+    if (auto path = osscaling.run(1, 4, 10000, poi_wants); path.has_value()) {
         std::cout << "Path found: ";
         for (auto v : path->vertices) {
             std::cout << v << " ";
