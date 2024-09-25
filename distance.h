@@ -36,7 +36,7 @@ class DistanceMatrix {
     // 计算两点距离在距离矩阵中的位置
     size_t calc_pos(size_t i, size_t j) const {
         if (i > j) std::swap(i, j);
-        return i * (i - 1) / 2 + j;
+        return j * (j - 1) / 2 + i;
     }
 
 public:
