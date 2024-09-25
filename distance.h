@@ -6,8 +6,11 @@
 #include "graph.h"
 
 
+template <typename Weight>
 class DistanceMatrix {
-    std::vector<EdgeWeight> distances;
+    Weight inf = ~0;
+
+    std::vector<Weight> distances;
     std::unordered_map<Vertex, size_t> vertex_to_index;
     size_t last_index = 0;
     bool self_circle = false;
@@ -37,15 +40,15 @@ class DistanceMatrix {
     }
 
 public:
-    DistanceMatrix(size_t n, const bool self_circle = false) : distances(n * (n - 1) / 2, InfWeight), self_circle(self_circle) {}
+    DistanceMatrix(size_t n, const bool self_circle = false, const Weight inf = ~0) : distances(n * (n - 1) / 2, inf), self_circle(self_circle), inf(inf) {}
 
-    void set(Vertex i, Vertex j, EdgeWeight distance) {
+    void set(Vertex i, Vertex j, Weight distance) {
         if (i == j) {
             if (self_circle) {
                 auto index = get_index_mut(i);
                 distances[calc_pos(index, index)] = distance;
             } else {
-                throw std::invalid_argument("Self circle is not allowed.");
+                throw std::invalid_argument("self circle is not allowed.");
             }
         } else {
             size_t pos = calc_pos(get_index_mut(i), get_index_mut(j));
@@ -53,7 +56,7 @@ public:
         }
     }
 
-    EdgeWeight get(Vertex i, Vertex j) const {
+    Weight get(Vertex i, Vertex j) const {
         if (i == j && !self_circle) {
             return 0;
         }
@@ -61,16 +64,16 @@ public:
         return distances[pos];
     }
 
-    EdgeWeight get_or_inf(Vertex i, Vertex j) const {
+    Weight get_or_inf(Vertex i, Vertex j) const {
         optional<size_t> pos_i, pos_j;
         if ((pos_i = get_index_opt(i)) == nullopt || (pos_j = get_index_opt(j)) == nullopt) {
-            return InfWeight;
+            return this->inf;
         }
         const auto pos = calc_pos(*pos_i, *pos_j);
         return distances[pos];
     }
 
-    EdgeWeight operator()(Vertex i, Vertex j) const {
+    Weight operator()(Vertex i, Vertex j) const {
         return get(i, j);
     }
 

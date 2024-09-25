@@ -5,8 +5,12 @@
 
 #include <queue>
 #include <algorithm>
+#include <cassert>
+#include <iostream>
+#include <vector>
+#include <climits>
+#include "distance.h"
 #include "graph.h"
-#include "floyd.h"
 #include "poi.h"
 #include "file.h"
 
@@ -96,6 +100,82 @@ struct Path {
 };
 
 
+/// 计算代价得分矩阵
+/// 按照论文要求，使用 Floyd-Warshall 算法计算任意两点之间的最短路径
+DistanceMatrix<BudgetScore> calc_budget_score_matrix(const Graph &graph) {
+    DistanceMatrix distances(graph.vertex_count, false, InfWeight);
+
+    /* 初始化距离矩阵 */
+    EdgeWeight w;
+    for (Vertex i: graph.vertices) {
+        for (Vertex j: graph.vertices) {
+            if (i != j && (w = graph.get_weight(i, j)) != InfWeight) {
+                distances.set(i, j, w);
+            }
+        }
+    }
+
+    /* 计算所有点对的最短距离矩阵 */
+    for (Vertex k: graph.vertices) {
+        for (Vertex i: graph.vertices) {
+            for (Vertex j: graph.vertices) {
+                if (auto left = distances(i, k), right = distances(k, j);
+                    left != InfWeight && right != InfWeight && left + right < distances(i, j)) {
+                    auto new_distance = left + right;
+                    distances.set(i, j, new_distance);
+                }
+            }
+        }
+    }
+    return distances;
+}
+
+/// 计算收益得分矩阵
+/// 使用 Floyd-Warshall 算法计算任意两点之间的最小收益得分
+DistanceMatrix<Interest> calc_objective_score_matrix(const Graph &graph,
+    const std::unordered_map<Vertex, Interest>& interests) {
+    // 两点间路径上兴趣值之和的最小值
+    DistanceMatrix distances(graph.vertex_count, true, ObjectiveScoreMax);
+
+    /* 初始化距离矩阵
+       由于我们需要将权重放在顶点上，因此需要设置顶点自身到自身的距离为其兴趣值.
+       此处，我们定义路径的距离为路径上所有顶点的兴趣值之和.
+    */
+    for (Vertex v: graph.vertices) {
+        const bool is_poi = interests.contains(v);
+        distances.set(v, v, is_poi ? interests.at(v) : 0);
+    }
+    auto interest_or_zero = [interests](const Vertex v) {
+        if (const auto it = interests.find(v); it != interests.end()) {
+            return it->second;
+        }
+        return static_cast<Interest>(0);
+    };
+
+    /* 计算所有点对的最短距离矩阵. */
+    for (Vertex k: graph.vertices) {
+        for (Vertex i: graph.vertices) {
+            // 只有一个顶点的路径没有任何意义
+            if (k == i) continue;
+            for (Vertex j: graph.vertices) {
+                if (i == j || k == j) {
+                    continue;
+                }
+
+                if (EdgeWeight front = distances(i, k), back = distances(k, j);
+                    front != InfWeight && back != InfWeight) {
+                    if (const auto new_distance = front + back - interest_or_zero(k); new_distance < distances(i, j)) {
+                        distances.set(i, j, new_distance);
+                    }
+                }
+            }
+        }
+    }
+
+    return distances;
+}
+
+
 class OSScaling {
     /// 完整的图
     const Graph &graph;
@@ -140,8 +220,8 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Edg
     /* 初始化最小代价矩阵和最小收益矩阵，计算出任意两点 v_i, v_j 之间的小代价 BS(σ_{i,j}) 及最小收益 OS(\tao_{i, j}) */
     auto interests = pois.get_interests();
 
-    auto bs = floyd_warshall(graph);
-    auto os = floyd_warshall_on_vertex(graph, interests);
+    auto bs = calc_budget_score_matrix(graph);
+    auto os = calc_objective_score_matrix(graph, interests);
 
     /* 初始化 */
     // 变量 U，记录收益的上界（第四页右下角）
