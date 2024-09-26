@@ -7,10 +7,7 @@ add_executable(poi-generator poi-generator.cpp
         file.cpp
         graph.cpp)
 
-add_executable(katr_cpp main.cpp
-        file.cpp
-        graph.cpp
-        graph.h)
+add_executable(katr_cpp katr.cpp)
 
 add_executable(osscaling osscaling.cpp
         file.cpp
