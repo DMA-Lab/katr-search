@@ -1,6 +1,8 @@
 /// 本文件实现了一个距离矩阵的存储.
 /// 由于距离矩阵是对称的，因此只需要存储一半的距离即可.
 
+#pragma once
+
 #include <vector>
 #include <unordered_map>
 #include "graph.h"
@@ -8,12 +10,10 @@
 
 template <typename Weight>
 class DistanceMatrix {
-    Weight inf = ~0;
-
+    std::unordered_map<Vertex, Weight> diagonal;
     std::vector<Weight> distances;
     std::unordered_map<Vertex, size_t> vertex_to_index;
     size_t last_index = 0;
-    bool self_circle = false;
 
     size_t get_index(Vertex vertex) const {
         return vertex_to_index.at(vertex);
@@ -40,13 +40,20 @@ class DistanceMatrix {
     }
 
 public:
+    const Weight inf = ~0;
+    const bool self_circle = false;
+
+    using T = Weight;
+
     DistanceMatrix(size_t n, const bool self_circle = false, const Weight inf = ~0) : distances(n * (n - 1) / 2, inf), self_circle(self_circle), inf(inf) {}
 
     void set(Vertex i, Vertex j, Weight distance) {
         if (i == j) {
             if (self_circle) {
-                auto index = get_index_mut(i);
-                distances[calc_pos(index, index)] = distance;
+                // 给顶点 i 在矩阵上申请一个位置，占位
+                const auto _ = get_index_mut(i);
+                // 对角线元素放到对角线的 map 中
+                diagonal[i] = distance;
             } else {
                 throw std::invalid_argument("self circle is not allowed.");
             }
@@ -57,14 +64,21 @@ public:
     }
 
     Weight get(Vertex i, Vertex j) const {
-        if (i == j && !self_circle) {
-            return 0;
+        if (i == j) {
+            if (!self_circle) return 0;
+            return diagonal.at(i); /* 可能产生异常 */
         }
         size_t pos = calc_pos(get_index(i), get_index(j));
         return distances[pos];
     }
 
     Weight get_or_inf(Vertex i, Vertex j) const {
+        if (i == j) {
+            if (!self_circle) return 0;
+            if (const auto it = diagonal.cfind(i); it != diagonal.cend()) return it->second;
+            return inf;
+        }
+
         optional<size_t> pos_i, pos_j;
         if ((pos_i = get_index_opt(i)) == nullopt || (pos_j = get_index_opt(j)) == nullopt) {
             return this->inf;

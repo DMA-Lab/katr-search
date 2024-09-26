@@ -50,9 +50,12 @@ struct PoiSet {
         return this->pois_map.contains(v);
     }
 
-    std::unordered_map<Vertex, Interest> get_interests() const {
+    std::unordered_map<Vertex, Interest> get_interests(const std::vector<PoiType> &filter = {}) const {
         std::unordered_map<Vertex, Interest> interests;
         for (const auto &[v, poi] : this->pois_map) {
+            if (!filter.empty() && ranges::find(filter, poi.type) == filter.end()) {
+                continue;
+            }
             interests[v] = poi.interest;
         }
         return interests;

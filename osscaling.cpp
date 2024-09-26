@@ -120,7 +120,6 @@ DistanceMatrix<BudgetScore> calc_budget_score_matrix(const Graph &graph) {
     for (const Vertex i: graph.vertices) {
         for (auto [j, w]: graph.get_adjacent_vertices(i)) {
             if (w != InfWeight) {
-                cout << "set(" << i << ", " << j << ", " << w << ")" << endl;
                 distances.set(i, j, w);
             }
         }
@@ -132,7 +131,7 @@ DistanceMatrix<BudgetScore> calc_budget_score_matrix(const Graph &graph) {
             for (Vertex j: graph.vertices) {
                 if (auto left = distances(i, k), right = distances(k, j);
                     left != InfWeight && right != InfWeight && left + right < distances(i, j)) {
-                    auto new_distance = left + right;
+                    const auto new_distance = left + right;
                     distances.set(i, j, new_distance);
                 }
             }
@@ -152,10 +151,18 @@ DistanceMatrix<Interest> calc_objective_score_matrix(const Graph &graph,
        由于我们需要将权重放在顶点上，因此需要设置顶点自身到自身的距离为其兴趣值.
        此处，我们定义路径的距离为路径上所有顶点的兴趣值之和.
     */
-    for (Vertex v: graph.vertices) {
+    for (const Vertex v: graph.vertices) {
         const bool is_poi = interests.contains(v);
-        distances.set(v, v, is_poi ? interests.at(v) : 0);
+        const auto interest_at_v = is_poi ? interests.at(v) : 0;
+        distances.set(v, v, interest_at_v);
+        // 计算相邻顶点的“距离”。如 1-2 顶点，各自兴趣值为 3，则 1-2 之间的距离应该为 6.
+        for (const auto [adj, _]: graph.get_adjacent_vertices(v)) {
+            const bool is_adj_poi = interests.contains(adj);
+            const auto interest_at_adj = is_adj_poi ? interests.at(adj) : 0;
+            distances.set(v, adj, interest_at_adj + interest_at_v);
+        }
     }
+
     auto interest_or_zero = [interests](const Vertex v) {
         if (const auto it = interests.find(v); it != interests.end()) {
             return it->second;
@@ -164,17 +171,15 @@ DistanceMatrix<Interest> calc_objective_score_matrix(const Graph &graph,
     };
 
     /* 计算所有点对的最短距离矩阵. */
-    for (Vertex k: graph.vertices) {
-        for (Vertex i: graph.vertices) {
+    for (const Vertex k: graph.vertices) {
+        for (const Vertex i: graph.vertices) {
             // 只有一个顶点的路径没有任何意义
             if (k == i) continue;
-            for (Vertex j: graph.vertices) {
-                if (i == j || k == j) {
-                    continue;
-                }
+            for (const Vertex j: graph.vertices) {
+                if (i == j || k == j) continue;
 
-                if (EdgeWeight front = distances(i, k), back = distances(k, j);
-                    front != InfWeight && back != InfWeight) {
+                if (Interest front = distances(i, k), back = distances(k, j);
+                    front != distances.inf && back != distances.inf) {
                     if (const auto new_distance = front + back - interest_or_zero(k); new_distance < distances(i, j)) {
                         distances.set(i, j, new_distance);
                     }
@@ -230,11 +235,11 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
     assert(graph.contains(source) && graph.contains(target));
 
     /* 初始化最小代价矩阵和最小收益矩阵，计算出任意两点 v_i, v_j 之间的小代价 BS(σ_{i,j}) 及最小收益 OS(\tao_{i, j}) */
-    auto interests = pois.get_interests();
+    auto interests = pois.get_interests(poi_types_wanted);
 
     auto bs = calc_budget_score_matrix(graph);
     auto os = calc_objective_score_matrix(graph, interests);
-    print_distance_matrix(graph, bs);
+
     print_distance_matrix(graph, os);
 
     cout << "bs: " << bs.get(source, target) << endl;
