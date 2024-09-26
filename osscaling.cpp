@@ -43,14 +43,28 @@ struct Label {
         return budget >= other.budget && objective >= other.objective;
     }
 
-    /// 扩展标签
-    [[nodiscard]] Label extend(const Vertex &v, const BudgetScore &budget, const ObjectiveScore &objective) const {
+    /// 扩展普通顶点
+    ///
+    /// 注意，此函数包含副作用，会修改当前标签的 budget 和 objective.
+    Label extend(const BudgetScore &budget) {
         // 此处是一个 copy 行为，因为标签是不可变的
         // 但是，为什么 *this 默认是 impl Copy 的？
-        Label new_label = *this;
-        new_label.budget += budget;
-        new_label.objective += objective;
-        return new_label;
+        this->budget += budget;
+        return *this;
+    }
+
+    /// 扩展兴趣点
+    ///
+    /// 注意，此函数包含副作用，会修改当前标签的 budget 和 objective.
+    Label extend(const BudgetScore &budget, const ObjectiveScore &objective, const PoiType type) {
+        // 此处是一个 copy 行为，因为标签是不可变的
+        // 但是，为什么 *this 默认是 impl Copy 的？
+        this->budget += budget;
+        this->objective += objective;
+        if (type != INVALID_POI_TYPE && ranges::find(this->lambdas, type) == this->lambdas.end()) {
+            this->lambdas.push_back(type);
+        }
+        return *this;
     }
 
     bool operator < (const Label &other) const {
@@ -76,13 +90,19 @@ struct Path {
     /// 在路径上扩展一个顶点，并更新 label
     ///
     /// budget 表示从当前路径最后一个顶点到 v 的权重, objective 表示加入点 v 带来的收益（即，v 的兴趣值）.
-    [[nodiscard]] Path extend(const Vertex v, const BudgetScore budget, const ObjectiveScore objective) const {
+    [[nodiscard]] Path extend(const Vertex v, const BudgetScore budget, const optional<Poi> &poi_of_v) const {
         if (ranges::any_of(this->vertices, [v](const Vertex u) { return u == v; })) {
             return *this;
         }
         Path new_path = *this;
         new_path.vertices.push_back(v);
-        new_path.label = new_path.label.extend(v, budget, objective);
+
+        if (poi_of_v.has_value()) {
+            new_path.label.extend(budget, poi_of_v->interest, poi_of_v->type);
+        } else {
+            new_path.label.extend(budget);
+        }
+
         return new_path;
     }
 
@@ -240,10 +260,6 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
     auto bs = calc_budget_score_matrix(graph);
     auto os = calc_objective_score_matrix(graph, interests);
 
-    print_distance_matrix(graph, os);
-
-    cout << "bs: " << bs.get(source, target) << endl;
-    cout << "os: " << os.get(source, target) << endl;
     /* 初始化 */
     // 变量 U，记录收益的上界（第四页右下角）
     ObjectiveScore upper_bound = ObjectiveScoreMax;
@@ -254,7 +270,11 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
     std::priority_queue<Path> queue;
 
     // line4, 将源点 s 加入到优先队列
-    queue.emplace(source);
+    auto source_poi_type = INVALID_POI_TYPE;
+    if (const auto it = pois.pois_map.find(source); it != pois.pois_map.end()) {
+        source_poi_type = it->second.type;
+    }
+    queue.emplace(source, source_poi_type);
 
     while (!queue.empty()) {
         // line6, 从优先队列中取出路径
@@ -272,7 +292,7 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
         }
 
         for (const auto [v_j, weight] : graph.get_adjacent_vertices(v_i)) {
-            auto path_j = path.extend(v_j, weight, pois.interest_or_zero(v_j));
+            auto path_j = path.extend(v_j, weight, pois.get(v_j));
             auto &label_j = path_j.label;
 
             // line10, 判断 label_j 是否被 v_j 上的其他标签支配
@@ -288,7 +308,7 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
 
             if (label_j.budget + bs(v_j,target) < limit
                 && label_j.objective + os(v_j,target) < upper_bound) {
-                if (!path.was_covered(poi_types_wanted)) {
+                if (!path_j.was_covered(poi_types_wanted)) {
                     // line12, push L_j^l
                     queue.push(path_j);
                     // line13-15, 从 Q 中删除所有 v_j 上的、被L_j^l支配的标签
@@ -307,7 +327,7 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
             }
 
             labels[v_j].push_back(label_j);
-            queue.push(path.extend(v_j, weight, pois.interest_or_zero(v_j)));
+            queue.push(path.extend(v_j, weight, pois.get(v_j)));
         }
     }
 

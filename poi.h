@@ -67,4 +67,11 @@ struct PoiSet {
         }
         return 0;
     }
+
+    optional<Poi> get(const Vertex v) const {
+        if (const auto it = this->pois_map.find(v); it != this->pois_map.cend()) {
+            return it->second;
+        }
+        return std::nullopt;
+    }
 };
