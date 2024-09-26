@@ -39,24 +39,24 @@ struct Label {
     ///
     /// 定义6：Let L_i^k and L_i^l be two labels corresponding to two different paths from the source node v_s to node v_i. 
     /// We say L_i^k dominates L_i^l iff L_i^k.λ ⊇ L_i^l.λ, L_i^k.OˆS ≤  L_i^l.OˆS, and L_i^k.BS ≤ L_i^l.BS.
-    [[nodiscard]] bool dominates(const Label &other) const {
-        return budget >= other.budget && objective >= other.objective;
+    [[nodiscard]] bool dominate(const Label &other) const {
+        return ranges::includes(this->lambdas, other.lambdas)
+            && budget <= other.budget && objective <= other.objective;
     }
 
     /// 扩展普通顶点
     ///
     /// 注意，此函数包含副作用，会修改当前标签的 budget 和 objective.
-    Label extend(const BudgetScore &budget) {
+    void extend(const BudgetScore budget) {
         // 此处是一个 copy 行为，因为标签是不可变的
         // 但是，为什么 *this 默认是 impl Copy 的？
         this->budget += budget;
-        return *this;
     }
 
     /// 扩展兴趣点
     ///
     /// 注意，此函数包含副作用，会修改当前标签的 budget 和 objective.
-    Label extend(const BudgetScore &budget, const ObjectiveScore &objective, const PoiType type) {
+    void extend(const BudgetScore budget, const ObjectiveScore objective, const PoiType type) {
         // 此处是一个 copy 行为，因为标签是不可变的
         // 但是，为什么 *this 默认是 impl Copy 的？
         this->budget += budget;
@@ -64,7 +64,6 @@ struct Label {
         if (type != INVALID_POI_TYPE && ranges::find(this->lambdas, type) == this->lambdas.end()) {
             this->lambdas.push_back(type);
         }
-        return *this;
     }
 
     bool operator < (const Label &other) const {
@@ -91,6 +90,7 @@ struct Path {
     ///
     /// budget 表示从当前路径最后一个顶点到 v 的权重, objective 表示加入点 v 带来的收益（即，v 的兴趣值）.
     [[nodiscard]] Path extend(const Vertex v, const BudgetScore budget, const optional<Poi> &poi_of_v) const {
+        // 阻止路径成环
         if (ranges::any_of(this->vertices, [v](const Vertex u) { return u == v; })) {
             return *this;
         }
@@ -117,12 +117,24 @@ struct Path {
     }
 
     /// 判断当前路径是否覆盖了所有想要的 POI 类型
-    [[nodiscard]] bool was_covered(const std::vector<PoiType> &poi_types_wanted) const {
-        return ranges::includes(label.lambdas, poi_types_wanted);
+    [[nodiscard]] bool cover(const std::vector<PoiType> &poi_types_wanted) const {
+        // bug: includes 对元素顺序有要求，应该使用 all_of
+        // return ranges::includes(label.lambdas, poi_types_wanted);
+        return std::ranges::all_of(poi_types_wanted, [&](const PoiType type) {
+            return contains_poi_type(type);
+        });
+    }
+
+    [[nodiscard]] bool contains_poi_type(const PoiType type) const {
+        return ranges::find(label.lambdas, type) != label.lambdas.end();
+    }
+
+    [[nodiscard]] bool contains(const Vertex v) const {
+        return vertices.end() != ranges::find(vertices, v);
     }
 
     [[nodiscard]] std::string to_string() const {
-        std::string s = "Path [";
+        std::string s = "Path [ ";
         for (auto v : vertices) {
             s += std::to_string(v) + " ";
         }
@@ -234,7 +246,11 @@ public:
         }
     }
 
+    /// 执行 osscaling 算法，计算一个从 source 到 target 的（部分）路径
     std::optional<Path> run(Vertex source, Vertex target, BudgetScore limit, std::vector<PoiType> &poi_types_wanted);
+
+    /// 对 run 函数产生的路径进行补全，并计算各项得分
+    Path complete(Path &last_path);
 };
 
 
@@ -297,7 +313,7 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
             // line10, 判断 label_j 是否被 v_j 上的其他标签支配
             if (labels.contains(v_j)) {
                 if (ranges::any_of(labels.at(v_j), [&](const Label &label) {
-                    return label.dominates(label_j);
+                    return label.dominate(label_j);
                 })) {
                     continue;
                 }
@@ -307,12 +323,18 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
 
             if (label_j.budget + bs(v_j,target) < limit
                 && label_j.objective + os(v_j,target) < upper_bound) {
-                if (!path_j.was_covered(poi_types_wanted)) {
+                if (!path_j.cover(poi_types_wanted)) {
+                    /* 这个条件是我自己补的, 如果已经到达目标点, 那么就不需要再加回队列了 */
+                    if (v_j == target) continue;
+
                     // line12, push L_j^l
                     queue.push(path_j);
                     // line13-15, 从 Q 中删除所有 v_j 上的、被L_j^l支配的标签
-                    for (auto label : labels.at(v_j)) {
-                        queue = remove_from_pq(queue, path_j);
+                    for (auto &label : labels.at(v_j)) {
+                        if (label_j.dominate(label)) {
+                            // 耗时
+                            queue = remove_from_pq(queue, path_j);
+                        }
                     }
                 }
                 else {
@@ -326,11 +348,11 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
             }
 
             labels[v_j].push_back(label_j);
-            queue.push(path.extend(v_j, weight, pois.get(v_j)));
+            queue.push(path_j);
         }
     }
 
-    if (upper_bound == INT_MAX) {
+    if (upper_bound == ObjectiveScoreMax) {
         return std::nullopt;
     }
     return last_path;
@@ -338,17 +360,14 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
 
 
 int main() {
-    auto g = load_graph("/home/sunnysab/graph.txt");
-    const PoiSet pois = load_poi("/home/sunnysab/poi.txt");
+    auto g = load_graph("USA-road-t.NY-stripped-1000.gr");
+    const PoiSet pois = load_poi("USA-road-t.NY-stripped-1000.poi");
 
     OSScaling osscaling(g, pois);
-    vector<PoiType> poi_wants = {1, 2, 3};
-    if (auto path = osscaling.run(1, 4, 10000, poi_wants); path.has_value()) {
+    vector<PoiType> poi_wants = {1, 2, 5};
+    if (auto path = osscaling.run(810, 1020, UINT_MAX, poi_wants); path.has_value()) {
         std::cout << "Path found: ";
-        for (auto v : path->vertices) {
-            std::cout << v << " ";
-        }
-        std::cout << std::endl;
+        std::cout << path->to_string() << std::endl;
     } else {
         std::cout << "No path found." << std::endl;
     }
