@@ -97,3 +97,17 @@ PoiSet load_poi(std::string path) {
 
     return pois;
 }
+
+
+void save_poi(const PoiSet& poi_set, const std::string& path) {
+    std::ofstream file(path, std::ios::out);
+    if (!file) {
+        throw std::runtime_error(std::format("can't open file {}: {}\n", path, std::strerror(errno)));
+    }
+
+    for (const auto& [v, poi] : poi_set.pois_map) {
+        // 使用默认子图编号 0 和 boundary 1 来保持与 load_poi 函数的一致性
+        file << std::format("0 {} {} 1 {}\n", poi.v, poi.type, poi.interest);
+    }
+    file.close();
+}

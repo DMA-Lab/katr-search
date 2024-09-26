@@ -3,6 +3,10 @@ project(katr_cpp)
 
 set(CMAKE_CXX_STANDARD 20)
 
+add_executable(poi-generator poi-generator.cpp
+        file.cpp
+        graph.cpp)
+
 add_executable(katr_cpp main.cpp
         file.cpp
         graph.cpp

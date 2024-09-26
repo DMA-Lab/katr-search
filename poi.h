@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "graph.h"
 
 /// POI 点类型
 using PoiType = unsigned int;
@@ -29,6 +30,10 @@ struct Poi {
 /// POI 集合
 struct PoiSet {
     std::unordered_map<Vertex, Poi> pois_map;
+
+    size_t size() const {
+        return this->pois_map.size();
+    }
 
     void add(const Poi &poi) {
         this->pois_map[poi.v] = poi;
