@@ -280,7 +280,6 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
         // line6, 从优先队列中取出路径
         auto path = queue.top();
         queue.pop();
-        cout << path.to_string() << endl;
 
         // 当前顶点
         auto v_i = path.vertices.back();
