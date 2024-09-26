@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 
     const std::string input_graph_file = argv[1];
     assert(input_graph_file.ends_with(".gr"));
-    const std::string output_mos_file = input_graph_file.substr(0, input_graph_file.size() - 2) + "mos";
+    const std::string output_mos_file = input_graph_file.substr(0, input_graph_file.size() - 2) + "poi";
     std::cout << "MOS file will be written to " << output_mos_file << std::endl;
 
     const auto poi_count = std::stoi(argv[2]);
