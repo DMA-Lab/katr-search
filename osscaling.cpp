@@ -249,9 +249,6 @@ public:
 
     /// 执行 osscaling 算法，计算一个从 source 到 target 的（部分）路径
     std::optional<Path> run(Vertex source, Vertex target, BudgetScore limit, std::vector<PoiType> &poi_types_wanted);
-
-    /// 对 run 函数产生的路径进行补全，并计算各项得分
-    Path complete(const Path& last_path, Vertex target) const;
 };
 
 
@@ -359,71 +356,6 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
     return last_path;
 }
 
-Path OSScaling::complete(const Path& last_path, const Vertex target) const {
-
-    cout << "Completing path: " << last_path.to_string() << endl;
-
-    priority_queue<std::tuple<EdgeWeight, Vertex>> queue;
-
-    auto last = last_path.vertices.back();
-    queue.emplace(0, last);
-
-    std::unordered_map<Vertex, BudgetScore> distance;
-    std::unordered_map<Vertex, Vertex> previous;
-    // Dijkstra 过程，从 last vertex 到 target vertex
-    while (!queue.empty()) {
-        auto [d, v] = queue.top();
-        queue.pop();
-
-        if (const auto it = distance.find(v); it != distance.end() && d > it->second) {
-            break;
-        }
-        if (v == target) {
-            break;
-        }
-        for (auto [adj_v, w]: graph.get_adjacent_vertices(v)) {
-            const auto new_distance = d + w;
-            if (const auto it = distance.find(adj_v);
-                (it != distance.cend() && new_distance < it->second) || (new_distance != InfWeight && it == distance.cend())) {
-                distance[adj_v] = new_distance;
-                previous[adj_v] = v;
-                queue.emplace(new_distance, adj_v);
-            }
-        }
-    }
-
-    auto v = target;
-    auto result = Path(last_path);
-    auto remaining_path = vector {target};
-    while (v != last) {
-        auto u = previous[v];
-        remaining_path.push_back(u);
-        v = u;
-    }
-
-    for (unsigned int &it : std::ranges::reverse_view(remaining_path)) {
-        result.vertices.push_back(it);
-    }
-    return result;
-}
-
-void estimate(const Graph &g, const PoiSet &pois, const vector<PoiType> &poi_type_wanted, const Path &path) {
-    double alpha = 0.5;
-
-    unsigned int distance = 0;
-    unsigned int interest = 0;
-    for (unsigned int i = 0; i < path.vertices.size() - 1; i++) {
-        distance += g.get_weight(path.vertices[i], path.vertices[i + 1]);
-        if (auto poi = pois.get(path.vertices[i]);
-            poi.has_value() && ranges::find(poi_type_wanted, poi->type) != poi_type_wanted.end()) {
-            interest += poi->interest;
-        }
-    }
-    distance /= 1000;
-    cout << "Estimated distance: " << distance << endl;
-    cout << "Estimated interest: " << interest << endl;
-    cout << "Estimated score: " << - alpha * distance + (1 - alpha) * interest << endl;
-}
 
 int main() {
     auto g = load_graph("USA-road-t.NY-stripped-1000.gr");
@@ -432,11 +364,8 @@ int main() {
     OSScaling osscaling(g, pois);
     vector<PoiType> poi_wants = {1, 2, 5};
     if (auto path = osscaling.run(810, 1020, UINT_MAX, poi_wants); path.has_value()) {
-        auto full_path = osscaling.complete(*path, 1020);
         std::cout << "Path found: ";
-        std::cout << full_path.to_string() << std::endl;
-
-        estimate(g, pois, poi_wants, full_path);
+        std::cout << path->to_string() << std::endl;
     } else {
         std::cout << "No path found." << std::endl;
     }
