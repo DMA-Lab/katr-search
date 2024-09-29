@@ -407,6 +407,23 @@ Path OSScaling::complete(const Path& last_path, const Vertex target) const {
     return result;
 }
 
+void estimate(const Graph &g, const PoiSet &pois, const vector<PoiType> &poi_type_wanted, const Path &path) {
+    double alpha = 0.5;
+
+    unsigned int distance = 0;
+    unsigned int interest = 0;
+    for (unsigned int i = 0; i < path.vertices.size() - 1; i++) {
+        distance += g.get_weight(path.vertices[i], path.vertices[i + 1]);
+        if (auto poi = pois.get(path.vertices[i]);
+            poi.has_value() && ranges::find(poi_type_wanted, poi->type) != poi_type_wanted.end()) {
+            interest += poi->interest;
+        }
+    }
+    distance /= 1000;
+    cout << "Estimated distance: " << distance << endl;
+    cout << "Estimated interest: " << interest << endl;
+    cout << "Estimated score: " << - alpha * distance + (1 - alpha) * interest << endl;
+}
 
 int main() {
     auto g = load_graph("USA-road-t.NY-stripped-1000.gr");
@@ -418,6 +435,8 @@ int main() {
         auto full_path = osscaling.complete(*path, 1020);
         std::cout << "Path found: ";
         std::cout << full_path.to_string() << std::endl;
+
+        estimate(g, pois, poi_wants, full_path);
     } else {
         std::cout << "No path found." << std::endl;
     }
