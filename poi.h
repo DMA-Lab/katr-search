@@ -79,4 +79,15 @@ struct PoiSet {
         }
         return std::nullopt;
     }
+
+    std::vector<Vertex> vertex_of_type(const PoiType type) const {
+        std::vector<Vertex> result;
+
+        for (const auto &[v, poi] : this->pois_map) {
+            if (poi.type == type) {
+                result.push_back(v);
+            }
+        }
+        return result;
+    }
 };

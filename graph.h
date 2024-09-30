@@ -94,7 +94,6 @@ struct GraphByAdjacencyList {
     // 包含顶点
     bool contains(Vertex v) const;
 
-
     // 判断两个顶点是否相邻
     bool is_connected(Vertex v1, Vertex v2) const;
 

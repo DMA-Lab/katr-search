@@ -113,3 +113,24 @@ void print_distance_matrix(const Graph &g, const DistanceMatrix<W> &matrix) {
         std::cout << std::endl;
     }
 }
+
+
+template <typename W>
+struct DistanceVector
+{
+    std::unordered_map<Vertex, W> distances;
+    W inf;
+    Vertex source;
+
+    explicit DistanceVector(const Vertex source): source(source) {
+        inf = ~0;
+    }
+
+    W operator[](const Vertex target) const {
+        return distances.contains(target) ? distances.at(target) : inf;
+    }
+
+    W& operator[](const Vertex target) {
+        return distances[target];
+    }
+};
