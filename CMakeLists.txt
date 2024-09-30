@@ -11,5 +11,8 @@ add_executable(katr_cpp katr.cpp)
 
 add_executable(osscaling osscaling.cpp
         file.cpp
-        graph.cpp
-        graph.h)
+        graph.cpp)
+
+add_executable(kosr kosr.cpp
+        dijkstra.cpp)
+
