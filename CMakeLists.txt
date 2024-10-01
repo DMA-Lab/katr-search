@@ -14,5 +14,7 @@ add_executable(osscaling osscaling.cpp
         graph.cpp)
 
 add_executable(kosr kosr.cpp
+        graph.cpp
+        file.cpp
         dijkstra.cpp)
 

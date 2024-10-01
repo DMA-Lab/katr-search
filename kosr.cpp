@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include <iostream>
 
 #include "graph.h"
 #include "poi.h"
@@ -58,9 +59,7 @@ struct Path {
             && this->distance < other.distance;
     }
 
-    /// 在路径上扩展一个顶点，并更新 label
-    ///
-    /// budget 表示从当前路径最后一个顶点到 v 的权重, objective 表示加入点 v 带来的收益（即，v 的兴趣值）.
+    /// 在路径上扩展一个顶点
     [[nodiscard]] Path extend(const Vertex v, const EdgeWeight weight, const optional<Poi> &poi_of_v) const {
         // 阻止路径成环
         if (ranges::any_of(this->vertices, [v](const Vertex u) { return u == v; })) {
@@ -73,7 +72,7 @@ struct Path {
         new_path.weights.push_back(weight);
 
         {
-            auto poi_type = poi_of_v.has_value() ? poi_of_v->type : INVALID_POI_TYPE;
+            const auto poi_type = poi_of_v.has_value() ? poi_of_v->type : INVALID_POI_TYPE;
             new_path.included_poi_types.push_back(poi_type);
         }
         return new_path;
@@ -94,7 +93,8 @@ struct Path {
         return this->vertices == other.vertices;
     }
 
-    [[nodiscard]] Path left(const size_t n) const {
+    /// 截取路径的前 n 个顶点
+    [[nodiscard]] Path take(const size_t n) const {
         auto result = *this;
         result.vertices = std::vector(vertices.begin(), vertices.begin() + static_cast<long>(n));
         result.included_poi_types = {};
@@ -134,7 +134,7 @@ class kOSR
     Graph &graph;
 
 public:
-    kOSR(PoiSet &pois, Graph &graph) : pois(pois), graph(graph) {}
+    kOSR(Graph &graph, PoiSet &pois) : pois(pois), graph(graph) {}
 
     /// 查找 v_i 在 C_{i+1} 中的第 x 近顶点. 这里使用了论文 p6 中提到的一个朴素的方法，即，每次使用一个 Dijkstra 算法求解.
     [[nodiscard]] Vertex find_nn(const Vertex v, const PoiType poi_type, const unsigned int k) const {
@@ -148,7 +148,7 @@ public:
     }
 
     /// PruningKOSR algorithm, as the Algorithm 2 in the paper.
-    [[nodiscard]] std::vector<Path> run(const Vertex source, const Vertex target, const std::vector<PoiType> &sequence = {}, const unsigned int k) const {
+    [[nodiscard]] std::vector<Path> run(const Vertex source, const Vertex target, const std::vector<PoiType> &sequence, const unsigned int k) const {
         std::vector<Path> result;
 
         // HT≺C: a hash table storing the best path for each vertex v.
@@ -161,7 +161,7 @@ public:
 
         std::priority_queue<std::pair<Path, unsigned int>> Q;
         Q.emplace(Path(source), 1);
-        while (!Q.empty()) {
+        while (!Q.empty() && result.size() < k) {
             auto [p, x] = Q.top();
             Q.pop();
 
@@ -171,8 +171,8 @@ public:
             if (q == sequence.size() + 1) { /* line 6 */
                 result.push_back(p); /* line7 */
                 // comment: reconsider dominated routes
-                for (int i = 1; i < q; ++i) {
-                    if (p.left(i) == ht1[v_q][i+1]) {
+                for (auto i = 1; i < q; ++i) {
+                    if (auto it = ht1[v_q].find(i + 1); it != ht1[v_q].end() && p.take(i) == it->second) {
                         auto p_prime = ht2[v_q][i].top();
                         Q.emplace(p_prime, 0);
                         ht1[v_q].erase(ht1[v_q].find(i + 1));
@@ -211,7 +211,14 @@ public:
 
 int main() {
     auto g = load_graph("USA-road-t.NY-stripped-1000.gr");
-    const PoiSet pois = load_poi("USA-road-t.NY-stripped-1000.poi");
+    auto pois = load_poi("USA-road-t.NY-stripped-1000.poi");
 
+    kOSR kosr(g, pois);
+    vector<PoiType> poi_wants = {1, 2, 5};
+    if (auto path = kosr.run(810, 1020, poi_wants, 1); !path.empty()) {
+        std::cout << path.size() << " path(s) found." << std::endl;
+    } else {
+        std::cout << "No path found." << std::endl;
+    }
     return 0;
 }
