@@ -261,23 +261,35 @@ struct Score {
     unsigned int interest;
 
     [[nodiscard]] double score(const double alpha = 0.5) const {
-       return - (1 - alpha) * distance + alpha * interest;
+       return - alpha * distance + (1 - alpha) * interest;
     }
 
-    [[nodiscard]] std::string to_string() const  {
+    [[nodiscard]] std::string to_string(const double alpha = 0.5) const  {
         return "Score [distance = " + std::to_string(distance) + ", interest = " + std::to_string(interest)
-            + ", score = " + std::to_string(score()) + "]";
+            + ", score = " + std::to_string(score(alpha)) + "]";
+    }
+
+    Score operator / (const int n) const {
+        Score result = *this;
+        result.distance /= n;
+        result.interest /= n;
+        return result;
+    }
+
+    Score operator + (const Score &other) const {
+        Score result = *this;
+        result.distance += other.distance;
+        result.interest += other.interest;
+        return result;
     }
 };
 
-Score estimate(const Graph &graph, const PoiSet &pois, const Path &path) {
-    Score ret {};
+Score estimate(const Graph &_graph, const PoiSet &pois, const Path &path) {
+    Score ret {
+        .distance = path.distance / 1000
+    };
 
     for (auto i = 0; i < path.size() - 1; ++i) {
-        Dijkstra dijkstra(graph, path.vertices[i]);
-        const auto distance = dijkstra.get(path.vertices[i + 1]);
-
-        ret.distance += distance / 1000;
         ret.interest += pois.interest_or_zero(path.vertices[i + 1]);
     }
     return ret;
@@ -288,14 +300,19 @@ int main() {
     auto pois = load_poi("USA-road-t.NY-stripped-1000.poi");
 
     kOSR kosr(g, pois);
-    vector<PoiType> poi_wants = {1, 2, 5};
-    if (auto paths = kosr.run(810, 1020, poi_wants, 5); !paths.empty()) {
+    vector<PoiType> poi_wants = {1, 2, 5, 6};
+    auto k = 5;
+
+    if (auto paths = kosr.run(810, 1020, poi_wants, k); !paths.empty()) {
         std::cout << paths.size() << " path(s) found." << std::endl;
 
+        Score total {};
         for (const auto& path: paths) {
-            auto score = estimate(g, pois, path);
+            const auto score = estimate(g, pois, path);
+            total = total + score;
             std::cout << score.to_string() << std::endl;
         }
+        std::cout << "Total: " << (total / k).to_string(0.8) << std::endl;
     } else {
         std::cout << "No path found." << std::endl;
     }
