@@ -119,19 +119,25 @@ void print_distance_matrix(const Graph &g, const DistanceMatrix<W> &matrix) {
 template <typename W>
 struct DistanceVector
 {
-    std::unordered_map<Vertex, W> distances;
-    W inf;
-    Vertex source;
+    const W inf = ~0;
 
-    explicit DistanceVector(const Vertex source): source(source) {
-        inf = ~0;
-    }
+    Vertex source;
+    std::unordered_map<Vertex, W> distances;
+
+    explicit DistanceVector(const Vertex source): source(source) {}
 
     W operator[](const Vertex target) const {
-        return distances.contains(target) ? distances.at(target) : inf;
+        return get(target);
     }
 
-    W& operator[](const Vertex target) {
-        return distances[target];
+    void set(const Vertex target, W weight) {
+        this->distances[target] = weight;
+    }
+
+    W get(const Vertex target) const {
+        if (auto it = distances.find(target); it != distances.end()) {
+            return it->second;
+        }
+        return inf;
     }
 };

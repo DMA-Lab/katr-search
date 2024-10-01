@@ -7,6 +7,10 @@ add_executable(poi-generator poi-generator.cpp
         file.cpp
         graph.cpp)
 
+add_executable(debug-dijkstra dijkstra.cpp
+        file.cpp
+        graph.cpp)
+
 add_executable(katr_cpp katr.cpp)
 
 add_executable(osscaling osscaling.cpp

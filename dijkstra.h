@@ -5,15 +5,15 @@
 #pragma once
 
 #include <queue>
-
 #include "graph.h"
 #include "distance.h"
 
 struct ContinuousDijkstra
 {
+    using PQ_PAIR = std::pair<EdgeWeight, Vertex>;
 private:
     std::unordered_set<Vertex> visited;
-    priority_queue<std::pair<EdgeWeight, Vertex>> pq;
+    priority_queue<PQ_PAIR, std::vector<PQ_PAIR>, std::greater<>> pq;
 
 public:
     const Graph &graph;
