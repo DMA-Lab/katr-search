@@ -6,8 +6,10 @@
 #include <ranges>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 #include <queue>
 #include <iostream>
+#include <sstream>
 
 #include "graph.h"
 #include "poi.h"
@@ -15,18 +17,20 @@
 #include "dijkstra.h"
 
 
+/// KOSR 对算法做出如下约定：
+/// 第一个顶点是源点，最后一个顶点是目标点，中间的顶点是 POI 点. 源点不参与任何 POI 类型.
+/// 路径可以不连续
 struct Path {
     std::vector<PoiType> included_poi_types;
     std::vector<Vertex> vertices;
     // 全长的权重
-    unsigned int distance;
+    unsigned int distance {};
     // 路径上两点之间的距离
-    std::vector<EdgeWeight> weights;
+    std::vector<EdgeWeight> weights {};
 
     explicit Path(Vertex v, PoiType type = INVALID_POI_TYPE) : vertices({v}) {
-        if (type != INVALID_POI_TYPE) {
-            included_poi_types.push_back(type);
-        }
+        assert(type == INVALID_POI_TYPE);
+        included_poi_types.push_back(type);
     }
 
     void pop() {
@@ -79,8 +83,9 @@ struct Path {
     }
 
     /// 比较两个路径，用于优先队列. 比较依据是两个路径的长度
+    /// 由于 STL 的优先队列是大顶堆，所以这里使用 > 号
     bool operator < (const Path &other) const {
-        return this->distance < other.distance;
+        return this->distance > other.distance;
     }
 
     /// 判断两个路径是否不等，用于 ::remove_from_pq
@@ -97,7 +102,7 @@ struct Path {
     [[nodiscard]] Path take(const size_t n) const {
         auto result = *this;
         result.vertices = std::vector(vertices.begin(), vertices.begin() + static_cast<long>(n));
-        result.included_poi_types = {};
+        result.included_poi_types = std::vector(included_poi_types.begin(), included_poi_types.begin() + static_cast<long>(n));
         return result;
     }
 
@@ -119,11 +124,13 @@ struct Path {
     }
 
     [[nodiscard]] std::string to_string() const {
-        std::string s = "Path [ ";
+        std::stringstream ss;
+        ss << "Path [ ";
         for (auto v : vertices) {
-            s += std::to_string(v) + " ";
+            ss << std::to_string(v) << " ";
         }
-        return s + "]";
+        ss << "] (d = " << distance << ", poi = " << this->included_poi_types.size() << ")";
+        return ss.str();
     }
 };
 
@@ -137,14 +144,50 @@ public:
     kOSR(Graph &graph, PoiSet &pois) : pois(pois), graph(graph) {}
 
     /// 查找 v_i 在 C_{i+1} 中的第 x 近顶点. 这里使用了论文 p6 中提到的一个朴素的方法，即，每次使用一个 Dijkstra 算法求解.
-    [[nodiscard]] Vertex find_nn(const Vertex v, const PoiType poi_type, const unsigned int k) const {
+    /// 若找到了，则返回一个 pair，其中第一个元素是顶点，第二个元素是顶点到 v_i 的距离.
+    /// 否则返回 nullopt.
+    [[nodiscard]] std::optional<std::pair<Vertex, EdgeWeight>> find_nn(const Vertex v, const PoiType poi_type, const unsigned int k) const {
         Dijkstra dijkstra(graph, v);
         std::vector<Vertex> candidates = this->pois.vertex_of_type(poi_type);
 
         ranges::sort(candidates, [&](const Vertex _u, const Vertex _v) {
             return dijkstra.get(_u) < dijkstra.get(_v);
         });
-        return candidates[k];
+
+        if (k >= candidates.size()) {
+            return std::nullopt;
+        }
+        const auto final_v = candidates[k];
+        const auto d = dijkstra.get(final_v);
+        return {{final_v, d}};
+    }
+
+    /// PNE algorithm, as the Algorithm 1 in the paper.
+    [[nodiscard]] std::vector<Path> pne(const Vertex source, const Vertex target, const std::vector<PoiType> &sequence) const {
+        std::vector<Path> result;
+        std::priority_queue<Path> Q;
+
+        {
+            const auto source_poi = pois.get(source);
+            const auto source_poi_type = source_poi.has_value() ? source_poi->type : INVALID_POI_TYPE;
+            Q.emplace(source, source_poi_type);
+        }
+
+        while (!Q.empty()) {
+            const auto path = Q.top();
+            Q.pop();
+
+            const auto q = path.size() - 1;
+            const auto v_q = path.back();
+            if (q == sequence.size() + 1) {
+                result.push_back(path);
+            } else {
+                const auto [next_v_q, d_next_v_q] = *find_nn(v_q, sequence[q + 1], 1);
+                const auto new_path = path.extend(next_v_q, d_next_v_q, pois.get(next_v_q));
+                Q.emplace(new_path);
+            }
+        }
+        return result;
     }
 
     /// PruningKOSR algorithm, as the Algorithm 2 in the paper.
@@ -162,19 +205,24 @@ public:
         std::priority_queue<std::pair<Path, unsigned int>> Q;
         Q.emplace(Path(source), 1);
         while (!Q.empty() && result.size() < k) {
+            // variable p is path
             auto [p, x] = Q.top();
             Q.pop();
 
             // q 是最后一个顶点的次序
             auto q = p.size() - 1;
             auto v_q = p.back();
-            if (q == sequence.size() + 1) { /* line 6 */
+            if (q == sequence.size() - 1) { /* line 6 */
                 result.push_back(p); /* line7 */
                 // comment: reconsider dominated routes
                 for (auto i = 1; i < q; ++i) {
+                    // line 9
                     if (auto it = ht1[v_q].find(i + 1); it != ht1[v_q].end() && p.take(i) == it->second) {
+                        // line 10
                         auto p_prime = ht2[v_q][i].top();
+                        // line 11
                         Q.emplace(p_prime, 0);
+                        // line 12
                         ht1[v_q].erase(ht1[v_q].find(i + 1));
                     }
                 }
@@ -183,8 +231,8 @@ public:
                 /* line14 */
                 if (auto length_of_p = p.size(); !ht1[v_q].contains(length_of_p)) {
                     ht1[v_q].insert({p.size(), p});
-                    auto next_v_q = find_nn(v_q, sequence[q + 1], 1);
-                    auto new_path = p.extend(next_v_q, graph.get_weight(v_q, next_v_q), pois.get(next_v_q));
+                    auto [next_v_q, d_next_v_q] = *find_nn(v_q, sequence[q + 1], 1);
+                    auto new_path = p.extend(next_v_q, d_next_v_q, pois.get(next_v_q));
                     Q.emplace(new_path, 1);
                 } else {
                     if (!ht2[v_q].contains(p.size())) {
@@ -195,11 +243,11 @@ public:
 
                 if (q > 0) {
                     // line 21
-                    auto previous_v_q = p.vertices[q - 1];
-                    auto v_q_prime = find_nn(previous_v_q, sequence[q], x + 1);
+                    auto previous_v_q = p.vertices[q - 1]; // v_{q-1}
+                    auto [v_q_prime, d_v_q_prime] = *find_nn(previous_v_q, sequence[q], x + 1);
                     // line 22
                     p.pop();
-                    auto new_path = p.extend(v_q_prime, graph.get_weight(v_q, v_q_prime), pois.get(v_q_prime));
+                    auto new_path = p.extend(v_q_prime, d_v_q_prime, pois.get(v_q_prime));
                     Q.emplace(new_path, x + 1);
                 }
             }
@@ -208,6 +256,32 @@ public:
     }
 };
 
+struct Score {
+    EdgeWeight distance;
+    unsigned int interest;
+
+    [[nodiscard]] double score(const double alpha = 0.5) const {
+       return - (1 - alpha) * distance + alpha * interest;
+    }
+
+    [[nodiscard]] std::string to_string() const  {
+        return "Score [distance = " + std::to_string(distance) + ", interest = " + std::to_string(interest)
+            + ", score = " + std::to_string(score()) + "]";
+    }
+};
+
+Score estimate(const Graph &graph, const PoiSet &pois, const Path &path) {
+    Score ret {};
+
+    for (auto i = 0; i < path.size() - 1; ++i) {
+        Dijkstra dijkstra(graph, path.vertices[i]);
+        const auto distance = dijkstra.get(path.vertices[i + 1]);
+
+        ret.distance += distance / 1000;
+        ret.interest += pois.interest_or_zero(path.vertices[i + 1]);
+    }
+    return ret;
+}
 
 int main() {
     auto g = load_graph("USA-road-t.NY-stripped-1000.gr");
@@ -215,8 +289,13 @@ int main() {
 
     kOSR kosr(g, pois);
     vector<PoiType> poi_wants = {1, 2, 5};
-    if (auto path = kosr.run(810, 1020, poi_wants, 1); !path.empty()) {
-        std::cout << path.size() << " path(s) found." << std::endl;
+    if (auto paths = kosr.run(810, 1020, poi_wants, 5); !paths.empty()) {
+        std::cout << paths.size() << " path(s) found." << std::endl;
+
+        for (const auto& path: paths) {
+            auto score = estimate(g, pois, path);
+            std::cout << score.to_string() << std::endl;
+        }
     } else {
         std::cout << "No path found." << std::endl;
     }
