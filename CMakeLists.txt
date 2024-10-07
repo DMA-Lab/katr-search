@@ -11,13 +11,15 @@ add_executable(debug-dijkstra dijkstra.cpp
         file.cpp
         graph.cpp)
 
-add_executable(katr_cpp katr.cpp)
+add_executable(KATR-Search katr-search.cpp)
 
-add_executable(osscaling osscaling.cpp
+add_executable(ROSE rose.cpp)
+
+add_executable(OSSCaling osscaling.cpp
         file.cpp
         graph.cpp)
 
-add_executable(kosr kosr.cpp
+add_executable(KOSR kosr.cpp
         graph.cpp
         file.cpp
         dijkstra.cpp)
