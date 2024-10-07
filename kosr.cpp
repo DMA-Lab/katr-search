@@ -301,7 +301,7 @@ int main() {
 
     kOSR kosr(g, pois);
     vector<PoiType> poi_wants = {1, 2, 5, 6};
-    auto k = 5;
+    auto k = 1;
 
     if (auto paths = kosr.run(810, 1020, poi_wants, k); !paths.empty()) {
         std::cout << paths.size() << " path(s) found." << std::endl;
@@ -310,7 +310,7 @@ int main() {
         for (const auto& path: paths) {
             const auto score = estimate(g, pois, path);
             total = total + score;
-            std::cout << score.to_string() << std::endl;
+            std::cout << score.to_string(0.8) << std::endl;
         }
         std::cout << "Total: " << (total / k).to_string(0.8) << std::endl;
     } else {

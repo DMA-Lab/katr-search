@@ -356,16 +356,63 @@ std::optional<Path> OSScaling::run(const Vertex source, const Vertex target, Bud
     return last_path;
 }
 
+struct Score {
+    EdgeWeight distance;
+    unsigned int interest;
+
+    [[nodiscard]] double score(const double alpha = 0.5) const {
+        return - alpha * distance / 1000 + (1 - alpha) * interest;
+    }
+
+    [[nodiscard]] std::string to_string(const double alpha = 0.5) const  {
+        return "Score [distance = " + std::to_string(distance) + ", interest = " + std::to_string(interest)
+            + ", score = " + std::to_string(score(alpha)) + "]";
+    }
+
+    Score operator / (const int n) const {
+        Score result = *this;
+        result.distance /= n;
+        result.interest /= n;
+        return result;
+    }
+
+    Score operator + (const Score &other) const {
+        Score result = *this;
+        result.distance += other.distance;
+        result.interest += other.interest;
+        return result;
+    }
+};
+
+
+Score estimate(const Graph &_graph, const PoiSet &pois, const Path &path, const std::vector<PoiType> &poi_types_wanted) {
+    Score ret {};
+
+    unordered_map<PoiType, Interest> max_interests;
+    for (auto i = 0; i < path.vertices.size() - 1; ++i) {
+        ret.distance += _graph.get_weight(path.vertices[i], path.vertices[i + 1]);
+        if (auto poi = pois.get(path.vertices[i]);
+            poi.has_value() && ranges::find(poi_types_wanted, poi->type) != poi_types_wanted.end()) {
+            max_interests[poi->type] = std::max(max_interests[poi->type], poi->interest);
+        }
+    }
+
+    for (const auto& interest : max_interests | views::values) {
+        ret.interest += interest;
+    }
+    return ret;
+}
 
 int main() {
     auto g = load_graph("USA-road-t.NY-stripped-1000.gr");
     const PoiSet pois = load_poi("USA-road-t.NY-stripped-1000.poi");
 
     OSScaling osscaling(g, pois);
-    vector<PoiType> poi_wants = {1, 2, 5};
+    vector<PoiType> poi_wants = {1, 2, 5, 6};
     if (auto path = osscaling.run(810, 1020, UINT_MAX, poi_wants); path.has_value()) {
         std::cout << "Path found: ";
-        std::cout << path->to_string() << std::endl;
+        auto score = estimate(g, pois, *path, poi_wants);
+        std::cout << score.to_string(0.8) << std::endl;
     } else {
         std::cout << "No path found." << std::endl;
     }
